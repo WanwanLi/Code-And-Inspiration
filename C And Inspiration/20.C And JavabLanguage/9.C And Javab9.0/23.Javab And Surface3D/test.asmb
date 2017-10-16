@@ -1,0 +1,77 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=14
+integerNumber=9
+integerTableLength=8
+integerTable[0]=2
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=0
+integerTable[5]=0
+integerTable[6]=1
+integerTable[7]=1
+doubleNumber=44
+doubleTableLength=18
+doubleTable[0]=50.000000
+doubleTable[1]=0.400000
+doubleTable[2]=0.500000
+doubleTable[3]=0.350000
+doubleTable[4]=0.020000
+doubleTable[5]=0.050000
+doubleTable[6]=0.400000
+doubleTable[7]=0.400000
+doubleTable[8]=0.400000
+doubleTable[9]=0.400000
+doubleTable[10]=0.400000
+doubleTable[11]=0.400000
+doubleTable[12]=0.400000
+doubleTable[13]=0.400000
+doubleTable[14]=0.400000
+doubleTable[15]=0.400000
+doubleTable[16]=0.400000
+doubleTable[17]=0.400000
+stringNumber=0
+stringTableLength=0
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=34
+0: MOV #18,@1
+1: MOV #19,@2
+2: NEG @8,@3
+3: MOV #20,@8
+4: LIGHT @0,~18
+5: MOV %2, 21
+6: MOV #21,#0
+7: MOV %3, 22
+8: MOV %4, 23
+9: MOV %6, 24
+10: MOV #24,@4
+11: MOV %7, 25
+12: MOV #25,#1
+13: GAU #27,^3,^6,^7
+14: GAU #28,^4,^6,^7
+15: MUL #26,#2,*#27,*#28
+16: ADD #29,#26,-#3
+17: MUL #32,^2,*^3
+18: SIN #31,#32
+19: MUL #34,^2,*^4
+20: SIN #33,#34
+21: MUL #30,#4,*#31,*#33
+22: MOV #35,@5
+23: MOV #36,@6
+24: MOV #37,@7
+25: COLOR ~35
+26: NEG #38,#6
+27: NEG #39,#8
+28: NEG #40,#10
+29: NEG #41,#12
+30: NEG #42,#14
+31: NEG #43,#16
+32: SURF3D #29,22,23,#38,#7,#39,#9,9,17,#30,22,23,#40,#11,#41,#13,17,22,#5,22,23,#42,#15,#43,#17,22,22,
+33: EXIT

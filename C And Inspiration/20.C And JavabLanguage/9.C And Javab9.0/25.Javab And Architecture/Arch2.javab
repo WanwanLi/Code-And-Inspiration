@@ -1,0 +1,41 @@
+double F(double X,double Z,double H,double G)
+{
+	double a=1.3,b=1.4,c=0.1;
+	double y=a*X*X*Z-b*X*X*X*X-c*Z*Z*Z;
+	if(y<G)y=G;
+	else if(y>H)y=H;
+	return y;
+}
+public test()
+{
+	addLight(0.02,<0,0,-1>);
+	double r=13.5,h=24.5,g=-10.0;
+	setStep(<200,200,1>);
+	func(x,z) f=F(x,z,h,g),
+	g=0.0005*sin(100.0*x*z),
+	q=-0.0005*sin(100.0*x*z);
+	setColor(<1,1,1>);
+	share("Group1")
+	{
+		translate(<0,0.0,r>);
+		[
+			addSurface(f,-r:r,-r:r);
+		]
+	}
+	int length=10;
+	double w=2.0PI/(length-1);
+	share("Group2")
+	{
+		for(int i=0;i<length;i++)
+		{
+			rotate(<0,1,0>,-w*i);
+			[
+				addGroup("Group1");
+			]
+		}
+	}
+	translate(<0,-1.0,-r>);
+	[
+		addGroup("Group2");
+	]	
+}

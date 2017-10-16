@@ -1,0 +1,35 @@
+For copy source code:
+cd c:
+cd Java\ And\ Inspiration/8.Java\ And\ ComputerGraphics/1.Java\ And\ Java2D/8.Java\ And\ Hadoop/1.Java\ And\ JavaAndFileCount/
+scp JavaAndFileCount.java wa448855@maverick.tacc.xsede.org:hadoop/JavaAndFileCount.java
+RhinoEiton@126.com
+
+scp ./input/file1.txt wa448855@maverick.tacc.xsede.org:hadoop/input/file1
+RhinoEiton@126.com
+
+scp ./input/file2.txt wa448855@maverick.tacc.xsede.org:hadoop/input/file2
+RhinoEiton@126.com
+
+To log on to the maverick server:
+ssh wa448855@maverick.tacc.xsede.org
+RhinoEiton@126.com
+cd hadoop
+chmod u+rwx input/*
+
+Change in conf/hadoop-env.sh is:
+export JAVA_HOME=/usr/java/jdk1.8.0_51
+
+mkdir JavaAndFileCount
+chmod u+rwx JavaAndFileCount.java
+
+To complie the code :
+javac -classpath hadoop-0.20.0/hadoop-0.20.0-core.jar  -d JavaAndFileCount JavaAndFileCount.java
+
+To create a jar :
+jar -cvf JavaAndFileCount.jar -C JavaAndFileCount/ .
+
+To run the job:
+rm -r output/ && ./hadoop-0.20.0/bin/hadoop jar JavaAndFileCount.jar JavaAndFileCount input output
+
+Check the result:
+nano output/part-00000

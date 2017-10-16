@@ -1,0 +1,14 @@
+public test()
+{
+	addLight(1.8,<0,0,-1>);
+	setColor(<0,1,1>);
+	func(u,v) f=
+	[
+		R=2.0,r=1.5,
+		m=cos(v/2)*sin(u)-sin(v/2)*sin(2.0*u),
+		n=sin(v/2)*sin(u)+cos(v/2)*sin(2.0*u)
+	]
+	<(R+m)*cos(v),r*n,(R+m)*sin(v)>/10;
+	setStep(<20,20,80>);
+	addMesh3D(f,0:PI,0:4.0PI,0.005);
+}

@@ -1,0 +1,38 @@
+6
+Test_Class
+5
+0
+1
+3
+16
+0
+0
+7
+5
+3
+Test_Class:
+,
+,
+2
+1
+0.5
+0
+0
+17
+INT &1
+DEQ &1
+STR &2
+MOV &2,$3
+DEQ &2
+DOU &3
+MOV &3,#1
+DEQ &3
+INT &5
+MUL &5,&1,% 3
+MOV &1,&5
+PRO &3,*#0
+STR &6
+MOV &6,$4
+ADD $4,$0,+&1,+$1,+&2,+$2,+&3
+PRINT &6
+EXIT

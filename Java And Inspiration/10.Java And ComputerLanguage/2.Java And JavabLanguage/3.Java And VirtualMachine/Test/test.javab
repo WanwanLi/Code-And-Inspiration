@@ -1,0 +1,30 @@
+class test3,test2;
+public main()
+{
+	new test2(3+1*4,5);
+	int t=1+test2.power(2,10);
+	this.println("t="+t);
+	int b=1,l;
+	int m=-3*(-b+5);
+
+	this.println("m="+m);
+	int[] a=new int[]
+	{
+		(1+2)*b,2,3,2,5,4,3,2,1
+	};
+	a[b*3]=a[a[0]*a[2]-2];
+	l=this.length(a);
+	for(int i=0;i<l;i++)
+	{
+		this.println("a["+i+"]="+a[i]);
+	}
+	int[] c=new int[10];
+}
+int add(int a,int b)
+{
+	return a+b;
+}
+int sub(int a,int b)
+{
+	return a-b;
+}

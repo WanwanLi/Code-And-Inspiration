@@ -1,0 +1,2 @@
+gcc CAndAverageCalculator.c -o CAndAverageCalculator
+CAndAverageCalculator.exe

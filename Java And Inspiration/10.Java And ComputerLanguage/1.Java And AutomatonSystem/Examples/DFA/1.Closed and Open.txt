@@ -1,0 +1,19 @@
+type=FA;
+state=Closed,Open;
+input=n,y;
+init=Closed;
+final=Closed;
+transit=
+{
+	(Closed,n)=Closed;
+	(Closed,y)=Open;
+	(Open,n)=Open;
+	(Open,y)=Closed;
+}
+
+test=n,y,y,n,y,n,y,y,n,y,y,n;
+
+
+
+
+

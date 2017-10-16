@@ -1,0 +1,41 @@
+INT &9 : new a integer from the Integer[9]
+MOV &8, 2 : move 2 into Integer[8] : " 2" means immediate number 2 , "&2" means Integer[2]
+MOV @8, 2 : move 2 into Integer[Integer[8]] : " 2" means immediate number 2 , "@2" means Integer[Integer[2]]
+MOV #8,#2 : move double[2] into double[8] : "#2" means double[2]
+MOV $8,$2 : move String[2] into String[8] : "$2" means String[2]
+MOV ^8,#2 : move double[2] into double[integer[8]]  
+MOV ~8,$2 : move String[2] into String[integer[8]]  
+MOVLEN &27,&6 £º move  the length of Integer array whose pointer is in Integer[6] into Integer[27] 
+ADD &36, 10,+ 14,-&5 : Integer[36]=10+14-Integer[5]
+MUL &32,&7,/ 15,*&8 : Integer[32]=Integer[7]/15*Integer[8]
+AND &41,&40,+&42,*&43 : Integer[41]=(Integer[40] + Integer[42] ) * Integer[43] if Integer[41]>0 then Integer[41]=1
+EQ &50,&49,&13 : if Integer[49]==Integer[13] then Integer[50]=1 else Integer[50]=0
+NE &50,&49,&13 : if Integer[49]!=Integer[13] then Integer[50]=1 else Integer[50]=0
+LE &50,&49,&13 : if Integer[49]<=Integer[13] then Integer[50]=1 else Integer[50]=0
+LT &50,&49,&13 : if Integer[49]<Integer[13] then Integer[50]=1 else Integer[50]=0
+GE &50,&49,&13 : if Integer[49]>=Integer[13] then Integer[50]=1 else Integer[50]=0
+GT &50,&49,&13 : if Integer[49]>Integer[13] then Integer[50]=1 else Integer[50]=0
+JZ &50,126 : if Integer[50]==0 then Jump to 126
+ACC &7,&13 : accumulate (Integer[7]+Integer[13]) into Integer[7]
+DEL &7,&13 : delete (Integer[7]-Integer[13]) from Integer[7]
+INC &7 : increase Integer[7]=Integer[7]+1
+DEC &7 : decrease Integer[7]=Integer[7]-1
+ENQI &8 : enqueue a integer into the Queue from the Integer[8]
+DEQI  &8 : dequeue a integer from the Queue into the Integer[8]
+JMP 0 : move the instruction pointer to 0
+CALL 0 : push (current instruction pointer+1) into stack and	move the instruction pointer to 0
+RET : pop a integer from the Stack into the instruction pointer
+CLASS test2 : declare test as a class
+NEW 2  : push (current instruction pointer+1) into stack and run Class[2] : virtualMachine[2].run()
+METHOD 2,power : push (current instruction pointer+1) into stack and execute class[2].power method
+INSTANCE 2,3 : push (current instruction pointer+1) into stack and the instance[2] is the instance of Class[3] : virtualMachine[classNuber+2].run()
+EXIT : exit and stop the machine
+_____________________________________________________________________________________________________________________________________
+PRINT &14 : System.out.println(Integer[14]);
+READI &14 : Integer[14]=scanner.nextInt();
+COLOR &18, 19,&21 £º g.setColor(new Color(Integer[18],19,Integer[21]));
+LINE  7,&23, 8,&24 : g.drawLine(7,Integer[23],8,Integer[24]);
+DRECT  7,&23, 8,&24 : g.drawRect(7,Integer[23],8,Integer[24]);
+FRECT  7,&23, 8,&24 : g.fillRect(7,Integer[23],8,Integer[24]);
+IMAGE $2,&9,&27 : g.drawImage(String[2],Integer[9],8,Integer[27]);
+FPOLY &47 £º 

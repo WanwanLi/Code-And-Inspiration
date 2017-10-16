@@ -1,0 +1,16 @@
+double func(int x1,double x2,int p,String s,double k)
+{
+	this.println("p="+p+" s="+s);
+	this.println("k="+k);
+	return x1+x2;
+}
+public Test8()
+{
+	int p4=10;
+	double p5=1.35;
+	int[] p6=new int[]{2,4,6};
+	String[] p7=new String[]{"a","s","f"};
+	double[] p8=new double[]{1.1,2.2,3.3,4.4};
+	double f=func(p4,p5,p6[1],p7[2],p8[3]);
+	this.println(f);
+}

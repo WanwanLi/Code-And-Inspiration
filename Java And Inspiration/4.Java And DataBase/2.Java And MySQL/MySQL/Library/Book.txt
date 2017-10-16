@@ -1,0 +1,10 @@
+Introduction to Algorithms	The MIT Press	2009	1312	87.00
+Algorithm Design	Addison Wesley	2005	864	119.00
+Computational Complexity:A Modern Approach	Cambridge University Press	2009	594	55.00
+Approximation Algorithms	Springer Berlin Heidelberg	2010	54.95
+Network Flows:Theory, Algorithms, and Applications	Prentice Hall	1993	864	176.00
+Randomized Algorithms	Cambridge University Press	1995	492	80.00
+The Probabilistic Method	Wiley-Interscience	2008	376	130.00
+Probability and Computing:Randomized Algorithms and Probabilistic Analysis	Cambridge University Press	2005	368	66.00
+Combinatorial Optimization:Algorithms and Complexity	Dover Publications	1998	528	19.95
+Convex Optimization	Cambridge University Press	2004	730	80.00

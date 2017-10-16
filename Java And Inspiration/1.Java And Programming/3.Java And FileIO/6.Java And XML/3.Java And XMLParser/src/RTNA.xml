@@ -1,0 +1,16 @@
+<RuntimeTotalizerReport lastUpdate="1/13/2011 7:34:31 AM" RTT_Version="">
+  <Station name="NA">
+    <StationNomenclature>NA</StationNomenclature>
+    <StationPartNumber>NA</StationPartNumber>
+    <StationSerialNumber>NA</StationSerialNumber>
+    <StationConfigFile>NA</StationConfigFile>
+    <StationOS_Version>2.030</StationOS_Version>
+    <StationSoftwareVersion>1.0.74.5 </StationSoftwareVersion>
+    <StationSMAT_Version>NA</StationSMAT_Version>
+    <StationDevVersion>NA</StationDevVersion>
+    <StationTotalHoursOn>0</StationTotalHoursOn>
+    <StationPowerOnCycles>1</StationPowerOnCycles>
+    <StationTotalHealhtyHoursOn>0</StationTotalHealhtyHoursOn>
+  </Station>
+  <Assets />
+</RuntimeTotalizerReport>

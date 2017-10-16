@@ -1,0 +1,14 @@
+public test()
+{
+	addLight(2,<0,0,-1>);
+	double w=50.0;
+	func(x,y) f=[u=0,d=0.4]0.5*gauss(x,u,d)*gauss(y,u,d)-0.35,
+	g=0.02*sin(w*x)*sin(w*y),q=0.05;
+	setColor(<0,1,1>);
+	addSurface3D
+	(
+		f,-0.4:0.4,-0.4:0.4,
+		g,-0.4:0.4,-0.4:0.4,
+		q,-0.4:0.4,-0.4:0.4
+	);
+}

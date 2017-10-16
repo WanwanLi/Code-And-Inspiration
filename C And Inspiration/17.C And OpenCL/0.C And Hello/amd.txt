@@ -1,0 +1,10 @@
+Installing to /home/wanwan/AMDAPPSDK-3.0-0-Beta.
+Exported AMDAPPSDKROOT=/home/wanwan/AMDAPPSDK-3.0-0-Beta via /home/wanwan/.bashrc.
+Exported LD_LIBRARY_PATH=/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64/ via /home/wanwan/.bashrc.
+Exported OPENCL_VENDOR_PATH=/home/wanwan/AMDAPPSDK-3.0-0-Beta/etc/OpenCL/vendors/ via /home/wanwan/.bashrc.
+Done updating Environment variables for wanwan
+Checking Internet connectivity. Please wait...
+which: no wget in (/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/wanwan/.local/bin:/home/wanwan/bin)
+Installation Log file: /home/wanwan/AMDAPPSDK-3.0-0-Beta/InstallLog_06-23-2015T16-08-43.log
+You will need to log back in/open another terminal for the environment variable updates to take effect.
+[wanwan@localhost CAndOpenCL]$

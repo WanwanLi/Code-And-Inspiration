@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Image</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			uniform mat4 viewMatrix;
+			attribute vec2 texCoord;
+			attribute vec3 coordinate;
+			varying vec2 glTexCoord;
+			vec3 imageSize=vec3(1.0,1.0,0.0);
+			void main(void)
+			{
+				gl_Position=vec4(coordinate*imageSize,1.0);
+				glTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			varying vec2 glTexCoord;
+			uniform sampler2D sampler;
+			void main(void)
+			{
+				vec4 texColor=texture2D(sampler,glTexCoord);
+				gl_FragColor=texColor;
+			}
+		</script>
+		<script>
+			var gl=null;
+			function main()
+			{
+				var canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					gl.canvas=canvas;
+					glInitShaders();
+					glCreateGeometryInfo()
+					glCreateElementsBuffer();
+					glCreateTexture("image.jpg");
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				gl.vertexShader=glCreateShader(gl.VERTEX_SHADER);
+				gl.fragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				gl.program=gl.createProgram();
+				gl.attachShader(gl.program,gl.vertexShader);
+				gl.attachShader(gl.program,gl.fragmentShader);
+				gl.linkProgram(gl.program);
+				if(!gl.getProgramParameter(gl.program,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(gl.program);
+				gl.program.viewMatrix=gl.getUniformLocation(gl.program,"viewMatrix");
+				gl.program.coordinate=gl.getAttribLocation(gl.program,"coordinate");
+				gl.program.texCoord=gl.getAttribLocation(gl.program,"texCoord");
+				gl.enableVertexAttribArray(gl.program.coordinate);
+				gl.enableVertexAttribArray(gl.program.texCoord);
+				gl.sampler=gl.getUniformLocation(gl.program,"sampler");
+				gl.uniform1i(gl.sampler,0);
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}	
+			function glCreateGeometryInfo()
+			{
+				var geometryInfo=[];
+				geometryInfo.coordinates=
+				[
+					-1.0, -1.0,  0.0,
+					1.0, -1.0,  0.0,
+					1.0,  1.0,  0.0,
+					-1.0,  1.0,  0.0
+
+				];
+				geometryInfo.texCoords=
+				[
+					0.0, 1.0,
+					1.0, 1.0,
+					1.0, 0.0,
+					0.0, 0.0,
+				];
+				geometryInfo.indices=[0,1,2,2,3,0];
+				gl.geometryInfo=geometryInfo;
+			}
+			function glCreateElementsBuffer()
+			{
+				var coordinates=gl.geometryInfo.coordinates;
+				var texCoords=gl.geometryInfo.texCoords;
+				var indices=gl.geometryInfo.indices;
+				var coordinatesData=new Float32Array(coordinates);
+				var texCoordsData=new Float32Array(texCoords);
+				var indicesData=new Uint16Array(indices);
+				gl.coordinatesBuffer=gl.createBuffer();
+				gl.texCoordsBuffer=gl.createBuffer();
+				gl.indicesBuffer=gl.createBuffer();
+				glBindBufferData(gl.ARRAY_BUFFER,gl.coordinatesBuffer,coordinatesData,3);
+				glBindBufferData(gl.ARRAY_BUFFER,gl.texCoordsBuffer,texCoordsData,2);
+				glBindBufferData(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer,indicesData,1);
+			}
+			function glBindBufferData(gl_ARRAY_BUFFER,buffer,data,itemSize)
+			{
+				gl.bindBuffer(gl_ARRAY_BUFFER,buffer);
+				gl.bufferData(gl_ARRAY_BUFFER,data,gl.STATIC_DRAW);
+				buffer.itemSize=itemSize;
+				buffer.numItems=data.length/itemSize;
+			}
+			function glDrawElements()
+			{
+				gl.bindBuffer(gl.ARRAY_BUFFER,gl.coordinatesBuffer);
+				gl.vertexAttribPointer(gl.program.coordinate,gl.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,gl.texCoordsBuffer);
+				gl.vertexAttribPointer(gl.program.texCoord,gl.texCoordsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,gl.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glDisplayFunc()
+			{
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,0.0);
+				gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,gl.texture);
+				glDrawElements();
+			}
+			function glCreateTexture(imageName)
+			{
+				gl.texture=gl.createTexture();
+				gl.texture.image=new Image();
+				gl.texture.image.onload=function(){glLoadTexture();}
+				gl.texture.image.src=imageName;
+			}
+			function glLoadTexture()
+			{
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,gl.texture);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gl.texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+				glDisplayFunc();
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="620">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</body>
+</html>

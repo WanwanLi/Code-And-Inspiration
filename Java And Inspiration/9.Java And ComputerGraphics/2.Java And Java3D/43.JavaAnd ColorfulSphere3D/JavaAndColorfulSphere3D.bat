@@ -1,0 +1,2 @@
+javac -Xlint:deprecation JavaAndColorfulSphere3D.java
+java JavaAndColorfulSphere3D

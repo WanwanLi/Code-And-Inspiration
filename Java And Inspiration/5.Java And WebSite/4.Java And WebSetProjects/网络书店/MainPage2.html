@@ -1,0 +1,528 @@
+<Html>
+       <Head><Title></Title></Head>
+       <Body Text=White BackGround=8.jpg >
+	<Br><Br>
+	<Center><Font Face=微软雅黑 Size=30 ><B>计算机类丛书网络图书内容简介———数据结构类<Br></B></Font></Center>
+	<Center><B>______________________________________________________________________________________</B></Font></Center>
+	<Br><Br><Br><Br><Br><Br><Marquee Behavior=Alternate ScrollAmount=20><B>网页作者：李万万</B></Marquee>
+	<Form Action=http://localhost:8080/JavaWebSetPrograming/网络书店/WebSite.jsp Method=post>
+		<Center>
+			<Table Width=1200 Border=1 BorderColorLight=White BorderColorDark=Black >
+				<Tr>
+					<Td Align=Center><Img Src=Java语言类.jpg Width=200 Height=150></Td>
+					<Td Align=Center><Img Src=数据结构类.jpg Width=200 Height=150></Td>
+					<Td Align=Center><Img Src=计算机硬件类.jpg Width=200 Height=150></Td>
+					<Td Align=Center><Img Src=操作系统类.jpg Width=200 Height=150></Td>
+				</Tr>
+				<Tr>
+					<Td Align=Center><Input Type=Submit Value=Java语言类 Name=Submits></Td>
+					<Td Align=Center><Input Type=Submit Value=数据结构类 Name=Submits></Td>
+					<Td Align=Center><Input Type=Submit Value=计算机硬件类 Name=Submits></Td>
+					<Td Align=Center><Input Type=Submit Value=操作系统类 Name=Submits></Td>
+				</Tr>
+				<Tr><Td Align=Center ColSpan=4>Java语言类图书内容简介</Td></Tr>
+				<Tr>
+					<Td ColSpan=4>
+ 冒泡排序算法的思想：很简单，每次遍历完序列都把最大（小）的元素放在最前面，然后再对剩下的序列从父前面的一个过程，每次遍历完之后待排序序列就少一个元素，当待排序序列减小为只有一个元素的时候排序就结束了。因此，复杂度在最坏的情况下是O（N ^ 2）。
+void　 Swap( int　　 * a,　 int　　 * b)
+　 {
+　　　　 int　 temp;<Br>
+
+　　　 temp　 =　　 * a;<Br>
+　　　　 * a　　　 =　　 * b;<Br>
+　　　　 * b　　　 =　 temp;<Br>
+}
+　
+　//　 冒泡排序
+　void　 BubbleSort( int　 array[],　 int　 length)
+　 {
+　　　　 //　 记录一次遍历中是否有元素的交换
+　
+　　　　 for　 ( int　 i　 =　　 0 ;<Br> i　 <　 length;<Br>　 ++ i)
+　　　　　 {
+　　　　　　
+　　　　　　　　 for　 ( int　 j　 =　 i　 +　　 1 ;<Br> j　 <　 length;<Br>　 ++ j)
+　　　　　　　　　 {
+　　　　　　　　　　　　 if　 (array[j]　 <　 array[i])
+　　　　　　　　　　　　　 {
+　　　　　　　　　　　　　　　 exchange　 =　　 true ;<Br>
+　　　　　　　　　　　　　　　 Swap( & array[j],　 & array[i]);<Br>
+　　　　　　　　　　　 }
+　　　　　　　 }
+　　　　　　　
+　　　 }
+}
+
+==============================================================================================================================
+插入排序是最简单最直观的排序算法了，它的依据是：遍历到第N个元素的时候前面的N-1个元素已经是排序好的了，那么就查找前面的N-1个元素把这第N个元素放在合适的位置，如此下去直到遍历完序列的元素为止。
+
+    算法的复杂度也是简单的，排序第一个需要1的复杂度，排序第二个需要2的复杂度，因此整个的复杂度就是
+
+    1 + 2 + 3 + …… + N = O（N ^ 2）的复杂度。
+
+// 插入排序
+void InsertSort(int array[], int length)
+{
+　　　 int i, j, key;<Br>
+
+　　　 for (i = 1;<Br> i < length;<Br> i++)
+　　　 {
+　　　　　　　 key = array[i];<Br>
+　　　　　　　 // 把i之前大于array[i]的数据向后移动
+　　　　　　　 for (j = i - 1;<Br> j >= 0 && array[j] > key;<Br> j--)
+　　　　　　　 {
+　　　　　　　　　　　 array[j + 1] = array[j];<Br>
+　　　　　　　 }
+　　　　　　　 // 在合适位置安放当前元素
+　　　　　　　 array[j + 1] = key;<Br>
+　　　 }
+}
+
+===============================================================================================================================
+shell排序是对插入排序的一个改装，它每次排序把序列的元素按照某个增量分成几个子序列，对这几个子序列进行插入排序，然后不断的缩小增量扩大每个子序列的元素数量，直到增量为一的时候子序列就和原先的待排列序列一样了，此时只需要做少量的比较和移动就可以完成对序列的排序了。
+// shell排序
+void ShellSort(int array[], int length)
+{
+　　　 int temp;<Br>
+
+　　　 // 增量从数组长度的一半开始,每次减小一倍
+　　　 for (int increment = length / 2;<Br> increment > 0;<Br> increment /= 2)
+　　　　　　　 for (int i = increment;<Br> i < length;<Br> ++i)
+　　　　　　　 {
+　　　　　　　　　　　 temp = array[i];<Br>
+　　　　　　　　　　　 // 对一组增量为increment的元素进行插入排序
+　　　　　　　　　　　 for (int j = i;<Br> j >= increment;<Br> j -= increment)
+　　　　　　　　　　　 {
+　　　　　　　　　　　　　　　 // 把i之前大于array[i]的数据向后移动
+　　　　　　　　　　　　　　　 if (temp < array[j - increment])
+　　　　　　　　　　　　　　　 {
+　　　　　　　　　　　　　　　　　　　 array[j] = array[j - increment];<Br>
+　　　　　　　　　　　　　　　 }
+　　　　　　　　　　　　　　　 else
+　　　　　　　　　　　　　　　 {
+　　　　　　　　　　　　　　　　　　　 break;<Br>
+　　　　　　　　　　　　　　　 }
+　　　　　　　　　　　 }
+　　　　　　　　　　　 // 在合适位置安放当前元素
+　　　　　　　　　　　 array[j] = temp;<Br>
+　　　　　　　 }
+}
+=============================================================================================================================
+
+ 快速排序的算法思想： 选定一个枢纽元素，对待排序序列进行分割，分割之后的序列一个部分小于枢纽元素，一个部分大于枢纽元素，再对这两个分割好的子序列进行上述的过程。
+
+ // 对一个给定范围的子序列选定一个枢纽元素,执行完函数之后返回分割元素所在的位置,
+// 在分割元素之前的元素都小于枢纽元素,在它后面的元素都大于这个元素
+int Partition(int array[], int low, int high)
+{
+　　　 // 采用子序列的第一个元素为枢纽元素
+　　　 int pivot = array[low];<Br>
+
+　　　 while (low < high)
+　　　 {
+　　　　　　　 // 从后往前在后半部分中寻找第一个小于枢纽元素的元素
+　　　　　　　 while (low < high && array[high] >= pivot)
+　　　　　　　 {
+　　　　　　　　　　　 --high;<Br>
+　　　　　　　 }
+
+　　　　　　　 // 将这个比枢纽元素小的元素交换到前半部分
+　　　　　　　 Swap(&array[low], &array[high]);<Br>
+
+　　　　　　　 // 从前往后在前半部分中寻找第一个大于枢纽元素的元素
+　　　　　　　 while (low < high && array[low] <= pivot)
+　　　　　　　 {
+　　　　　　　　　　　 ++low;<Br>
+　　　　　　　 }
+
+　　　　　　　 // 将这个比枢纽元素大的元素交换到后半部分
+　　　　　　　 Swap(&array[low], &array[high]);<Br>
+　　　 }
+
+　　　 // 返回枢纽元素所在的位置
+　　　 return low;<Br>
+}
+
+// 快速排序
+void QuickSort(int array[], int low, int high)
+{
+　　　 if (low < high)
+　　　 {
+　　　　　　　 int n = Partition(array, low, high);<Br>
+　　　　　　　 QuickSort(array, low, n);<Br>
+　　　　　　　 QuickSort(array, n + 1, high);<Br>
+　　　 }
+}
+====================================================================================================
+1,归并排序是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。 
+2,归并（Merge）排序法是将两个（或两个以上）有序表合并成一个新的有序表，即把待排序序列分为若干个子序列，每个子序列是有序的。然后再把有序子序列合并为整体有序序列。 
+3.算法分析 
+（1）稳定性 
+     　归并排序是一种稳定的排序。 
+（2）时间复杂度 
+    　对长度为n的文件，需进行lgn趟二路归并，每趟归并的时间为O(n)，故其时间复杂度无论是在最好情况下还是在最坏情况下均是O(nlgn)。 
+（4）空间复杂度 
+   　 需要一个辅助向量来暂存两有序子文件归并的结果，故其辅助空间复杂度为O(n)，显然它不是就地排序。 
+4,实例代码: 
+
+#include <iostream>   
+using namespace std;<Br>   
+  
+void merge(int a[],int low,int mid,int high)   
+{   
+    int* temp=new int[high-low+1];<Br>   
+    int i=low;<Br>   
+    int j=mid+1;<Br>   
+    int k=0;<Br>   
+  
+    while(i<=mid&&j<=high)   
+    {   
+        if(a[i]<=a[j])   
+            temp[k++]=a[i++];<Br>   
+        else  
+            temp[k++]=a[j++];<Br>   
+    }   
+    if(i==mid+1)   
+    {   
+        while(j<=high)   
+            temp[k++]=a[j++];<Br>   
+    }   
+    else  
+    {   
+        while(i<=mid)   
+            temp[k++]=a[i++];<Br>   
+    }   
+    int n=0;<Br>   
+    for(int m=low;<Br>m<=high;<Br>m++)//重新赋值给a   
+        a[m]=temp[n++];<Br>   
+    delete temp;<Br>   
+}   
+  
+void MergeSort(int a[],int low,int high)   
+{   
+    if(high>low)   
+    {   
+        int mid=(high+low)/2;<Br>   
+        MergeSort(a,low,mid);<Br>   
+        MergeSort(a,mid+1,high);<Br>   
+        merge(a,low,mid,high);<Br>   
+    }   
+}   
+
+
+================================================================================================================
+
+
+“堆”定义
+　　n个关键字序列Kl，K2，…，Kn称为(Heap)，当且仅当该序列满足如下性质(简称为堆性质)： 　　(1) ki≤K2i且ki≤K2i+1 或(2)Ki≥K2i且ki≥K2i+1(1≤i≤ n) //ki相当于二叉树的非叶结点，K2i则是左孩子，k2i+1是右孩子 　　若将此序列所存储的向量R[1..n]看做是一棵完全二叉树的存储结构，则堆实质上是满足如下性质的完全二叉树： 
+
+
+堆排序
+　　堆排序利用了大根堆(或小根堆)堆顶记录的关键字最大(或最小)这一特征，使得在当前无序区中选取最大(或最小)关键字的记录变得简单。 　　（1）用大根堆排序的基本思想 　　① 先将初始文件R[1..n]建成一个大根堆,此堆为初始的无序区 　　② 再将关键字最大的记录R[1](即堆顶)和无序区的最后一个记录R[n]交换，由此得到新的无序区R[1..n-1]和有序区R[n]，且满足R[1..n-1].keys≤R[n].key 　　③由于交换后新的根R[1]可能违反堆性质，故应将当前无序区R[1..n-1]调整为堆。然后再次将R[1..n-1]中关键字最大的记录R[1]和该区间的最后一个记录R[n-1]交换，由此得到新的无序区R[1..n-2]和有序区R[n-1..n]，且仍满足关系R[1..n-2].keys≤R[n-1..n].keys，同样要将R[1..n-2]调整为堆。 　　…… 　　直到无序区只有一个元素为止。 
+
+
+
+  堆排序
+  (1)用大根堆排序的基本思想
+  ① 先将初始文件R[1..n]建成一个大根堆，此堆为初始的无序区
+  ② 再将关键字最大的记录R[1](即堆顶)和无序区的最后一个记录R[n]交换，
+  由此得到新的无序区R[1..n-1]和有序区R[n]，且满足R[1..n-1].keys≤R[n].key
+  ③ 由于交换后新的根R[1]可能违反堆性质，故应将当前无序区R[1..n-1]调整为堆。
+  然后再次将R[1..n-1]中关键字最大的记录R[1]和该区间的最后一个记录R[n-1]交换，
+  由此得到新的无序区R[1..n-2]和有序区R[n-1..n]，且仍满足关系R[1..n- 2].keys≤R[n-1..n].keys，
+ 同样要将R[1..n-2]调整为堆。
+ ……
+ 直到无序区只有一个元素为止。
+ (2)大根堆排序算法的基本操作：
+ ① 初始化操作：将R[1..n]构造为初始堆；
+ ② 每一趟排序的基本操作：将当前无序区的堆顶记录R[1]和该区间的最后一个记录交换，然后将新的无序区调整为堆(亦称重建堆)。
+ 注意：
+ ①只需做n-1趟排序，选出较大的n-1个关键字即可以使得文件递增有序。
+ ②用小根堆排序与利用大根堆类似，只不过其排序结果是递减有序的。
+ 堆排序和直接选择排序相反：在任何时刻，堆排序中无序区总是在有序区之前，
+ 且有序区是在原向量的尾部由后往前逐步扩大至整个向量为止。 
+ */
+ 
+ //生成大根堆
+ void HeapAdjust(int SortData[],int StartIndex, int Length)
+ {
+     while(2*StartIndex+1 < Length)
+     {
+        int MinChildrenIndex = 2*StartIndex+1 ;<Br>
+        if(2*StartIndex+2 < Length )
+        {
+             //比较左子树和右子树，记录最大值的Index
+             if(SortData[2*StartIndex+1]<SortData[2*StartIndex+2])
+             {
+                MinChildrenIndex = 2*StartIndex+2;<Br>
+             }
+        }
+       if(SortData[StartIndex] < SortData[MinChildrenIndex])
+         {
+            //交换i与MinChildrenIndex的数据
+            int tmpData =SortData[StartIndex];<Br>
+            SortData[StartIndex] =SortData[MinChildrenIndex];<Br>
+             SortData[MinChildrenIndex] =tmpData;<Br>
+             //堆被破坏，需要重新调整
+            StartIndex = MinChildrenIndex ;<Br>
+         }
+         else
+         {
+             //比较左右孩子均大则堆未破坏，不再需要调整
+             break;<Br>
+         }
+     }
+ 
+    return;<Br>
+}
+ 
+ //堆排序
+ void HeapSortData(int SortData[], int Length)
+ {
+     int i=0;<Br>
+
+     //将Hr[0,Lenght-1]建成大根堆
+     for (i=Length/2-1;<Br> i>=0;<Br> i--)
+     {
+         HeapAdjust(SortData, i, Length);<Br>
+     }
+ 
+    for (i=Length-1;<Br> i>0;<Br> i--)
+     {
+         //与最后一个记录交换
+        int tmpData =SortData[0];<Br>
+         SortData[0] =SortData[i];<Br>
+         SortData[i] =tmpData;<Br>
+         //将H.r[0..i]重新调整为大根堆
+         HeapAdjust(SortData, 0, i);<Br>
+    }
+  
+     return;<Br>
+ }
+
+
+
+
+ ]====================================================================================================================================
+
+
+1 #include <iostream>
+  2 using namespace std;<Br>
+  3 
+  4 /*/////////////////////////////////////////////////////////////////////////
+  5 以下为快速排序
+  6 /////////////////////////////////////////////////////////////////////////*/
+  7 /*
+  8 冒泡排序
+  9 算法：
+ 10 核心思想是扫描数据清单，寻找出现乱序的两个相邻的项目。当找到这两个项目后
+ 11 交换项目的位置然后继续扫描。重复上面的操作直到所有的项目都按顺序排好
+ 12 时间复杂度n*n  (n-1)*n/2
+ 13 */
+ 14 void BubbleSortData(int SortData[], int Length)
+ 15 {
+ 16     int tmpData =0;<Br>
+ 17     bool swapFlag =true;<Br>
+ 18 
+ 19     for (int i=Length-1;<Br> i>0 && swapFlag;<Br> i--)
+ 20     {
+ 21         swapFlag =false;<Br>
+ 22         for(int j=0;<Br> j<i;<Br> j++)
+ 23         {
+ 24             if ( SortData[j] > SortData[j+1])
+ 25             {
+ 26                 tmpData =SortData[j];<Br>
+ 27                 SortData[j] =SortData[j+1];<Br>
+ 28                 SortData[j+1] =tmpData;<Br>
+ 29                 swapFlag =true;<Br>
+ 30             }
+ 31         }
+ 32     }
+ 33 
+ 34     return;<Br>
+ 35 }
+ 36 /*
+ 37 快速排序是对起泡排序的一种改进，通过一趟排序将待排序记录分割成独立的两部分，其中一部分记录的关键字均比另一部分记录的关键
+ 38 字小，则可分别对这两部分继续进行排序，以达到整个序列有序.
+ 39 交换顺序表L中子表L.r[low..high]的记录，使枢轴记录到位，并返回其所在位置，此时在它之前(后)的记录均不大(小)于它
+ 40 时间复杂度为 n*logn,其平均性能最好，若初始记录序列按关键字有序或基本有序，快速排序将锐化为起泡排序
+ 41 */
+ 42 int  Partition(int SortData[], int low, int high)
+ 43 {
+ 44     int tmpData =SortData[low];<Br>//用于子表的第一个记录作枢轴记录
+ 45     int temp=0;<Br>
+ 46 
+ 47     while ( low<high )
+ 48     {
+ 49         //从表的两端交替的向中间扫描
+ 50         while (low<high && SortData[high]>=tmpData)
+ 51         {
+ 52             high--;<Br>
+ 53         }
+ 54         //将比枢轴记录小的记录移到低端
+ 55         SortData[low] =SortData[high];<Br>
+ 56 
+ 57         while (low<high && SortData[low]<=tmpData)
+ 58         {
+ 59             low++;<Br>
+ 60         }
+ 61         //将比枢轴记录大的记录移到高端
+ 62         SortData[high] =SortData[low];<Br>
+ 63     }
+ 64     //枢轴记录到位
+ 65     SortData[low] =tmpData;<Br>
+ 66 
+ 67     return low;<Br>//返回枢轴所在位置
+ 68 }
+ 69 
+ 70 void QuickSortData(int SortData[], int low, int high)
+ 71 {
+ 72     int offset;<Br>
+ 73 
+ 74     if ( low<high )
+ 75     {
+ 76         offset =Partition(SortData, low, high);<Br>
+ 77         QuickSortData(SortData, low, offset-1);<Br>
+ 78         QuickSortData(SortData, offset+1, high);<Br>
+ 79     }
+ 80 }
+ 81 
+ 82 /*/////////////////////////////////////////////////////////////////////////
+ 83 以下为插入排序
+ 84 /////////////////////////////////////////////////////////////////////////*/
+ 85 /*
+ 86 直接插入排序
+ 87 算法：经过i-1遍处理后，L[1..i-1]己排好序。第i遍处理仅将L[i]插入L[1..i-1]的适当位置，
+ 88 使得L[1..i]又是排好序的序列。要达到这个目的，我们可以用顺序比较的方法。
+ 89 首先比较L[i]和L[i-1]，如果L[i-1]<=L[i]，则L[1..i]已排好序，第i遍处理就结束了;<Br>
+ 90 否则交换L[i]与L[i-1]的位置，继续比较L[i-1]和L[i-2]，直到找到某一个位置j(1≤j≤i-1)，
+ 91 使得L[j] ≤L[j+1]时为止
+ 92 优点:移动元素次数少，只需要一个辅助空间
+ 93 时间复杂度n*n
+ 94 当待排序记录的数量n很小时，这是一种很好的排序方法。但是n很大时，则不适合
+ 95 */
+ 96 void InsertSortData(int SortData[], int Length)
+ 97 {
+ 98     int tmpData =0;<Br>
+ 99     int i=0;<Br>
+100     int j=0;<Br>
+101 
+102     for(i=1;<Br> i<Length;<Br> i++)
+103     {
+104         if ( SortData[i] <SortData[i-1])
+105         {
+106             tmpData =SortData[i];<Br>
+107             //数据往后移动
+108             for (j=i-1;<Br> j>=0 && tmpData<SortData[j];<Br> j--)
+109             {
+110                 SortData[j+1] =SortData[j];<Br>
+111             }
+112             //将数据插入到j+1位置
+113             SortData[j+1] =tmpData;<Br>
+114         }
+115     }
+116 
+117     return;<Br>
+118 }
+119 
+120 /*
+121 拆半插入排序所需要的辅助空间和直接插入排序相同，从时间上比较，折半插入排序仅减少了关键字间的比较次数，而记录的移动次数不变。
+122 因为时间复杂度仍为n*n
+123 */
+124 void BInsertSortData(int SortData[], int Length)
+125 {
+126     int tmpData =0;<Br>
+127     int i=0;<Br>
+128     int j=0;<Br>
+129     int low;<Br>
+130     int high;<Br>
+131     int middle;<Br>
+132 
+133     for(i=1;<Br> i<Length;<Br> i++)
+134     {
+135         tmpData =SortData[i];<Br>
+136         low =0;<Br>
+137         high =i-1;<Br>
+138         //在r[low..high]中折半查找有序插入的位置
+139         while ( low<=high )
+140         {
+141             middle =(low+high)/2;<Br>
+142             if ( tmpData <SortData[middle] )
+143             {
+144                 high =middle-1;<Br>
+145             }
+146             else
+147             {
+148                 low =middle+1;<Br>
+149             }
+150         }
+151         //记录后移
+152         for (j=i-1;<Br> j>=high+1;<Br> j--)
+153         {
+154             SortData[j+1] =SortData[j];<Br>
+155         }
+156         SortData[high+1] =tmpData;<Br>
+157     }
+158 
+159     return;<Br>
+160 }
+161 
+162 
+163 //////////////////////////////////////////////////////////////////////////
+164 
+165 /*
+166 简单选择排序
+167 算法：首先找到数据清单中的最小的数据，然后将这个数据同第一个数据交换位置；接下来找第二小的数据，再将其同第二个数据交换位置，以此类推。
+168 所需移动的操作次数最少为0,,最大为3(n-1)
+169 然而无论记录的初始排列如何，需要比较的次数相同n(n-1)/2 复杂度为n*n
+170 */
+171 void SelectSortData(int SortData[], int Length)
+172 {
+173     int tmpData;<Br>
+174     int offset =0;<Br>
+175     int j=0;<Br>
+176 
+177     for (int i=0;<Br> i<Length-1;<Br> i++)
+178     {
+179         offset =0;<Br>
+180         tmpData =SortData[i];<Br>
+181         for (j=i+1;<Br> j<Length;<Br> j++)
+182         {
+183             if ( tmpData>SortData[j] )
+184             {
+185                 tmpData =SortData[j];<Br>
+186                 offset =j;<Br>
+187             }
+188         }
+189 
+190         if( offset >i)
+191         {
+192             SortData[offset] =SortData[i];<Br>
+193             SortData[i] =tmpData;<Br>
+194         }
+195     }
+196 
+197     return;<Br>
+198 }
+199 
+200 int main()
+201 {
+202     //int Buffer[] ={1,2,3,4,5,6};<Br>
+203     int Buffer[] ={6,5,4,3,2,1};<Br>
+204 
+205     QuickSortData(Buffer,0, 5);<Br>
+206 
+207     for (int i=0;<Br> i<6;<Br> i++)
+208     {
+209         cout<<Buffer[i]<<" ";<Br>
+210     }
+211     cout<<endl;<Br>
+212 
+213     return 0;<Br>
+214 }
+				
+				</Tr>
+		</Center>
+	</Form>
+       </Body>
+</Html>									

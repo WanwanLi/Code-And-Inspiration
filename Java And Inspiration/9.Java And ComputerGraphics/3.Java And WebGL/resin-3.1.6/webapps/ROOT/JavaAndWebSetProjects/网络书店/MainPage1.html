@@ -1,0 +1,556 @@
+<Html>
+       <Head><Title></Title></Head>
+       <Body Text=White BackGround=7.jpg>
+	<Br><Br>
+	<Center><Font Face=微软雅黑 Size=30 ><B>计算机类丛书网络图书内容简介———Java语言类<Br></B></Font></Center>
+	<Center><B>______________________________________________________________________________________</B></Font></Center>
+	<Br><Br><Br><Br><Br><Br><Marquee Behavior=Alternate ScrollAmount=20><B>网页作者：李万万</B></Marquee>
+	<Form Action=http://localhost:8080/JavaWebSetPrograming/网络书店/WebSite.jsp Method=post>
+		<Center>
+			<Table Width=1200 Border=1 BorderColorLight=White BorderColorDark=Black >
+				<Tr>
+					<Td Align=Center><Img Src=Java语言类.jpg Width=200 Height=150></Td>
+					<Td Align=Center><Img Src=数据结构类.jpg Width=200 Height=150></Td>
+					<Td Align=Center><Img Src=计算机硬件类.jpg Width=200 Height=150></Td>
+					<Td Align=Center><Img Src=操作系统类.jpg Width=200 Height=150></Td>
+				</Tr>
+				<Tr>
+					<Td Align=Center><Input Type=Submit Value=Java语言类 Name=Submits></Td>
+					<Td Align=Center><Input Type=Submit Value=数据结构类 Name=Submits></Td>
+					<Td Align=Center><Input Type=Submit Value=计算机硬件类 Name=Submits></Td>
+					<Td Align=Center><Input Type=Submit Value=操作系统类 Name=Submits></Td>
+				</Tr>
+				<Tr><Td Align=Center ColSpan=4>Java语言类图书内容简介</Td></Tr>
+				<Tr>
+					<Td ColSpan=4>
+0 第一章
+    1.1 Java 的诞生
+    Java 是 1995 年 6 月由 Sun 公司引进的革命性编程语言, 之所以称 Java 为革命性编程语 言, 是因为传统的软件往往与具体的实现环境有关, 一旦环境有所变化就需要对软件做一番 改动,耗时费力,而 Java 编写的软件能在执行码上兼容.这样,只要计算机提供了 Java 解 释器,用 Java 编写的软件就能在其上运行. 注:印度尼西亚有一个重要的盛产咖啡的岛屿,中文名叫爪哇,开发人员为这种新的 语言起名为 Java,其寓意是为世人端上一杯热咖啡.
+    Java 语言入门
+    1.2 Java 的特点
+    Java 是目前使用最为广泛的网络编程语言之一.它具有简单,面向对象,稳定,与平 台无关,解释型,多线程,动态等特点.
+    1.3 Java 程序的开发过程
+    Java 程序的开发过程如图 1.1 所示. (p1)
+    源文件 编译 文件扩展名 .java
+    编译器 javac.exe
+    生成 字节码文件 由 Web 文件扩展名 对于 Java 小应用程序 浏览器 .class Java Applet 运行
+    对于 Java 应用程序 Java Application 由 Java 解释器 java.exe 运行
+    注:字节码文件是与平台无关的二进制码,执行时由解释器解释成本地机器码,解释 一句,执行一句. 1.编写源文件 .编写源文件:使用一个文字编辑器,如 Edit 或记事本.不可使用 Word.将编好 的源文件保存起来,源文件的扩展名必须是 Java. 2.编译 Java 源程序 源程序:使用 Java 编译器(javac.exe);编译源文件得到字节码文件. . 3.运行 Java 程序 程序:Java 程序分为两类——Java 应用程序(Java Application)和 Java 小 .
+    1
+    应用程序(Java Applet),Java 应用程序必须通过 Java 解释器(java.exe)来解释执行其字节 码文件;Java 小应用程序必须通过支持 Java 标准的浏览器来解释执行.
+    1.4 一个简单的 Java 应用程序(Java Application)
+    1.编写源文件 . (p2)
+    注意:Java 源程序中的小括号及标点符号都是英文状态下输入的括号和标点符号. 注意 一个 Java 源程序是由若干个类组成的.上面的这个 Java 应用程序简单到只有一个类, 类的名字是由我们起的,叫 Hello. class 是定义类的关键字.第一个大括号和最后一个大括号以及它们之间的内容叫做类 体. public static void main(String args[])是类体中的一个方法,之后的两个大括号以及之间 的内容叫做方法体.一个 Java 应用程序必须且只有一个类含有 main 方法,这个类称为 主类.在一个 Java 应用程序中 main 方法必须被说明为 public static void. String args[]声明一个字符串类型的数组 args[](注意 String 的第一个字母是大写的),它 是 main 方法的参数 源文件的命名规则是,如果源文件中有多个类,那么只能有一个类是 public 类.如果 有一个类是 public 类,那么源文件的名字必须与这个类的名字完全相同,扩展名是 java;如 果源文件没有 public 类,那么源文件的名字只要和某个类的名字相同,并且扩展名是 java 就可以了.另外,Java 语言是区分大小写的语言. 2.编译 . 创建了源文件后,要使用 Java 编译器(javac.exe)进行编译. C:\>iavac Hello.java 编译完成后生成字节码文件(Hello.class).如果 Java 源程序中包含多个类,编译后将 生成多个扩展名为 class 的文件,每个文件的文件名与该类的名字相同. 注:如果在安装 JDK 时没有另外指定目录,则 javac.exe 和 java.exe 将被存放在 C:\jdk\bin 下. 3.运行 . 使用 Java 解释器(java.exe)运行应用程序. C:\>java Hello
+    2
+    屏幕显示: 你好,很高兴学习 Java
+    注意:当 Java 应用程序中有多个类时,java 命令后的类名必须是包含了 main()方法的 注意 那个类的名字. (上机 p3)
+    1.5
+    一个简单的 Java 小应用程序(Java Applet)
+    (p4)
+    1.编写源程序 .
+    一个 Java Applet 也是由若干个类组成的,一个 Java Applet 不要 main 方法,但必须 有一个类,它是 Applet 类(系统提供的类)的子类,这个类是 Java Applet 的主类, Java Applet 的主类必须是 public 的. 注:上述源程序中我们使用了 import 语句,这是因为我们要使用系统提供给我们的 Applet 类. 2.编译 .
+    3
+    C:\>javac boy.java 编译成功后,生成一个 boy.class 文件.如果源文件有多个类,将生成多个 class 文件. 3.运行 . Java Applet 必须由浏览器来运行,为此必须编写一个超文本文件. 下面是一个最简单的一个 html 文件,通知浏览器运行我们的 JavaApplet.使用记事本 编辑如下:   上面的文件命名为 boy.html(扩展名必须是 html).
+    使用浏览器打开文件 boy.html.
+    注:也可以使用 JDK 提供的 appletviewer 运行小程序. C:\>appletviewer boy.html.
+    4
+    (上机 p6)
+    1.6
+    中
+    安装 Sun 公司的 JDK
+    JDK 光盘里有 3 个子目录:MACINTOSH,SOLARIS 和 WINDOWS.每个子目录
+    都包含完整的由 Sun 公司开发的 Java 开发工具即 JDK. 1. 列出了这张光盘中 JDK 表 1 目录下 3 个子目录中的内容. (p7)
+    1.7
+    什么是 JSP
+    5
+    第二章
+    2.1 标识符和关键字
+    标识符, 标识符,关键字和数据类型
+    1.标识符 . 用来标识类名,变量名,方法名,类型名,数组名,文件名的有效字符序列称为标识 符.简单地说,标识符就是一个名字. Java 语言规定标识符由字母,下划线,美元符号和数字组成,并且第一个字符不能是 数字.下列都是合法的标识符: (P9) Girl_$,www_12$,$23boy. 注:Java 语言使用 unicode 字符集,含有 65535 个字符.所以字母包括下面几种: (1)A-Z,a-z; (2)汉字,日文片假名,平假名和朝鲜文等. 2.关键字 . 关键字就是 Java 语言中已经被赋予特定意义的一些单词.不可以把这类词作为名字来 用.Java 的关键字有: (P9) abstract boolean break byte case catch char class continue do double else extends false find finally float for implements import instanceof int interface long nativenew null package pfivme public return short static super switch synchronized this throw true try void while
+    2.2 Java 语言基本数据类型
+    Java 的基本数据类型 基本数据类型: 基本数据类型 基本数据类型 布尔型 字符型 字节型 整数型 数值型
+    浮点数型
+    关键字 boolean char byte short int long float double 短整型 整型 长整型 浮点型 双精度型
+    占用位数 8 16 8 16 32 64 32 64
+    缺省数值 false '\u0000' 0 0 0 0 0.0F 0.0D
+    1.逻辑类型 . ● 常量:true,false. ● 变量的定义: 使用关键字 boolean 来定义逻辑变量 boolean x; boolean tom_12; 也可以一次定义几个 boolean x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是变量的名字.定义时也可以赋给初值 boolean x=true,tom=false,漂亮=true,jafei; 2.字符类型 . ● 常量: 'A''b''?''!''9''好''\t' , , , , , , .
+    6
+    Java 使用 unicode 字符集,所以常量共有 65535 个. ● 变量的定义: 使用关键字 char 来定义字符变量 char x, char tom_12; 也可以一次定义几个 char x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是变量名字.定义时也可以赋给初值 char x='A' ,tom='家' ,漂亮='假' ,jafei: 3.整数类型 . ● 常量:123,6000(十进制),077(八进制),0x3ABC(十六进制). ● 整型变量的定义分为三种: (1)int 型. 使用关键字 int 来定义 int 型整型变量 int x; int tom_12; 也可以一次定义几个 int x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是名字.定义时也可以赋给初值 int x=12,tom=–1230,漂亮=9898,jiafei: 注:对于 int 型变量,内存分配给 4 个字节, 占 32 位. (2)byte 型. 使用关键字 byte 来定义 byte 型整型变量 byte x; byte tom_12; 也可以一次定义几个 byte x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是名字.定义时也可以赋给初值 byte x=–12,tom=28,漂亮=98,jafei: 注:对于 byte 型变量,内存分配给 1 个字节,占 8 位. (3)short 型. 使用关键字 short 来定义 short 型整型变量 short x; short tom_12; 也可以一次定义几个 short x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是名字.定义时也可以赋给初值 short x=12,tom=1234,漂亮=9876,jafei: 注:对于 short 型变量,内存分配给 2 个字节,占 16 位. (4)long 型. 使用关键字 long 来定义 long 型整型变量 long x; long tom_12; 也可以一次定义几个 long x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是名字.定义时也可以赋给初值 long x=12,tom=1234,漂亮=9876,jafei: 注:对于 long 型变量,内存分配给 8 个字节,占 64 位.
+    7
+    4.浮点类型(实型 .浮点类型 实型 实型) 浮点型分两种. (1)float 型. ● 常量:123.5439f,12389.987F,123.0f,2e40f(2 乘以 10 的 40 次方,科学计数法). ● 变量的定义: 使用关键字 float 来定义 float 型变量 float x; float tom_12; 也可以一次定义几个 float x,tom,jafei,漂亮: x,tom,jafei 和"漂亮"都是名字.定义时也可以赋给初值 float x=12.76f,tom=1234.987f,漂亮=9876.0f,jafei: 注:对于 float 型变量,内存分配给 4 个字节,占 32 位. (2)double 型. ● 常量:12389.5439d(d 可以省略),12389908.987,123.0,6e–140(6 乘以 10 的–140 次方, 科学计数法). ● 变量的定义: 使用关键字 double 来定义 double 型变量 double x: double tom_12: 也可以一次定义几个 double x,tom,jafei,漂亮; x,tom,jafei 和"漂亮"都是名字.定义时也可以赋给初值 double x=12.76,tom=1234098.987,漂亮=9876.098d,jafei: 注:double 型变量,内存分配给 8 个字节,占 64 位. 例子( 例子(P12) )
+    8
+    第三章
+    3.1 运算符与表达式
+    运算符, 运算符,表达式和语句
+    1.算术运算 . 算术运算符用来对整型, 浮点型数据进行算术运算. 算术运算符根据操作数的个数分为 双目运算符和单目运算符两种. 1.双目运算符包括 +(加) -(减) *(乘) /(除) %(取余)五个,列表于下: 运算符 + - * / % 加 减 乘 除 取余 运算 例 a+b a-b a*b a/b a%b 功能 求 a 与 b 相加的和 求 a 与 b 相减的差 求 a 与 b 相乘的积 求 a 除以 b 的商 求 a 除以 b 所得的余数
+    注意: 两个整数类型的数据做除法时,结果是截取商的整数部分,小数部分被截断.如果需要 保留小数部分, 应该对除法运算的操作数做强制类型转换.例如 1/2 的结果是 0, (float) 而( 1)/2 的结果是 0.5 . 2.单目运算符包括 ++(自增) ――(自减) -(求反)三个: 运算符 ++ ―― - 运算 自增 自减 求反 例 a++或++a a――或――a -a 功能等价于 a=a+1 a=a-1 a=-a
+    注意,单目运算符的位置决定单目运算与复杂表达式的运算顺序,例如: int x=2; int y=(++x)*3; 运算执行的结果是 x=3,y=9 ; int x=2; int y=(x++)*3; 运算执行的结果是 x=3,y=6 .
+    9
+    2.关系运算 . 关系运算是比较两个数据之间大小关系的运算. 运算符 == != > < >= <= 等于 不等于 大于 小于 大于等于 小于等于 运算
+    关系运算的结果是布尔型的数据,即"真"或"假" .例如: int x=5,y=7; boolean b=(x==y) ; 给布尔型的变量 b 赋初值 false .
+    3.逻辑运算 . 逻辑运算的操作数与运算的结果都是布尔型的数据. 运算符 运算 例 运算规则 x 和 y 都真时结果才真
+    &
+    非简洁与
+    x&y
+    |
+    非简洁或
+    x|y
+    x 和 y 都假时结果才假
+    ! ^ && ||
+    取反 异或 简洁与 简洁或
+    !x x^y x&&y x||y
+    x 真时为假,假时为真 x 和 y 同则假,异则真 x 和 y 都真时结果才为真(在表达式中"简洁" ) x 和 y 都假时结果才为假(在表达式中"简洁" )
+    例子 LogicalOperation.java import java.awt.*; import java.applet.Applet; public class LogicalOperation extends Applet { boolean b1=true; boolean b2=false;
+    10
+    int x1=3,y1=5; int x2=3,y2=5; boolean b3=x1>y1&&x1++==y1--; boolean b4=x2>y2&x2++==y2--; public void paint(Graphics g) { g.drawString("/*逻辑运算*/",10,20); g.drawString(b1+"&"+b2+"="+(b1&b2),10,40); g.drawString(b1+"|"+b2+"="+(b1|b2),10,60); g.drawString(b1+"^"+b2+"="+(b1^b2),10,80); g.drawString("!"+b2+"="+(!b2),10,100); g.drawString(b1+"&&"+b2+"="+(b1&&b2),10,120); g.drawString(b1+"||"+b2+"="+(b1||b2),10,140); g.drawString("x="+x1+",y="+y1,10,160); g.drawString("(x>y&&x++==y--)="+b3+";x="+x1+",y="+y1,10,180); g.drawString("(x>y&x++==y--)="+b4+";x="+x2+",y="+y2,10,200); } }
+    4.赋值与强制类型转换 . 赋值运算就是给变量或对象赋予一定的内容.赋值运算使用赋值运算符 = ,格式: 变量或对象=表达式; 在进行赋值运算时, 可能会遇到赋值运算符左边与赋值运算符右边数据类型不一致的情 况,这时就需要把右边的数据类型转换成左边的数据类型. Java 的类型转换有严格的规定:凡是把占用内存较少的数据类型转换成占用内存较多 的数据类型,类型转换由编译系统自动完成(隐含类型转换) ;把占用内存较多的数据类型 转换成占用内存较少的数据类型,需要进行强制类型转换,强制类型转换的格式是: (数据类型)变量名 例如 int i=5; long j=i; int i=(int)j;
+    11
+    例子 TypeConversion.java import java.awt.*; import java.applet.Applet; public class TypeConversion extends Applet {
+    public void paint(Graphics g) { byte b=97; int i=66; double d=1234567.567; char ch1,ch2; int i1; short s; ch1=(char)b; ch2=(char)i; i1=(int)d; s=(short)d; g.drawString("ch1="+ch1,25,25); g.drawString("ch2="+ch2,25,40); g.drawString("i1="+i1,25,55); g.drawString("s="+s,25,70); } } 5.运算符的优先级与结合性 . 运算符的优先级决定了表达式中不同运算进行的先后顺序. 例如, 关系运算的优先级高 于逻辑运算,所以 x>y&&!z 相当于(x>y)&&(!z) . 而所谓运算符的结合性则决定了并列的相同运算的计算的先后顺序. 例如, 对于左结合 的+ ,x+y+z 等价于(x+y)+z,对于右结合的 ! ,!!x 则相当于 !(!x) .
+    12
+    Java 运算符的优先级与结合性列表如下:
+    运算符
+    instanceof * + >> < == & ^ | && || ?: =
+    运算符=
+    描述
+    最高优先级
+    优 先 级
+    1 2 3 4 5 6 7 8 9 10 11 12 13 14
+    结 合 性
+    左/右
+    [] ～ / << <= !=
+    () ! % >>> > >= ++ -强制类型转换符
+    单目运算 算术乘除 算术加减 移位运算 大小关系运算 相等关系运算 按位与,非简洁与 按位异或运算 按位或,非简洁或 简洁与 简洁或 三目条件运算 简单,复杂赋值
+    右 左 左 左 左 左 左 左 左 左 左 右 右
+    3.2 语句
+    1.Java 语言的控制语句 . 结构化程序设计必须而且只能使用"顺序,分支,循环"三种基本结构定义程序的 流程.
+    顺序
+    分支
+    循环
+    13
+    2.顺序结构 . "顺序" 结构是最简单的流程控制结构, 程序中语句的执行只是按照它的书写先后顺序 依次执行,Java 语言不需要专门的顺序结构控制语句. 3.分支结构 . 1)if 语句 if 语句的语法形式如下: if(条件表达式) if 分支的语句组; else else 分支的语句组; 如果分支不止两个,ifelse 语句可以嵌套, 例子 1(P17) public class Exp1_1 { public static void main(String args[]) { int math=65,english=85; if(math>60) { System.out.println("数学及格了"); } else { System.out.println("数学不及格"); } if(english>90) { System.out.println("英语是优"); } else { System.out.println("英语不是优"); } if(math>60&&english>90) { System.out.println("英语是优,数学也及格了"); } else {}
+    14
+    System.out.println("我在学习控制语句"); } }
+    if 语句可以没有 else 分支,语法形式如下: if(条件表达式) if 分支的语句组;
+    2)switch 语句 switch 语句是多分支语句,语法形式如下: switch(表达式) { case 判断值 1: 语句组 1 case 判断值 2: 语句组 2 case 判断值 n: 语句组 n default: 语句组 n+1 } 注意: (1)表达式的值必须是整型或字符型,并且应与各个 case 分支的判断值的类型一致. (2)switch 语句的每一个 case 判断,都只是分支的入口点,而不负责指定分支的出口 点,分支的出口点需要相应的跳转语句. 例子 2(P19) import java.applet.*; import java.awt.*; public class Exp1_2 extends Applet { public void paint(Graphics g) { int x=2,y=1; switch(x+y) { case 1: g.setColor(Color.red); g.drawString("i am 1",5,10);
+    15
+    break; case 2: g.setColor(Color.blue); g.drawString("i am 2",5,10); break; case 3: g.setColor(Color.green); g.drawString("i am 3",5,10); break; default: g.drawString("没有般配的",5,10); } } } 4.循环结构 循环语句实现在一定条件下,反复执行某段程序,被反复执行的语句组叫循环体.Java 的循环语句有三种:while 语句,dowhile 语句和 for 语句. 
+    1)while 语句 while 语句的语法形式如下: while(条件表达式) { 循环体 } 例子 5(P21)求从 1 加到 100 的和.
+    条件表达式 T 循环体
+    F
+    2)dowhile 语句 dowhile 语句的语法形式如下: do { 循环体 } while(条件表达式)
+    循环体
+    条件表达式 T
+    F
+    例如计算阶乘:
+    16
+    int p=1,n=5; do { p*=n--; } while(n>0);
+    3)for 语句 for 语句的语法形式如下: for(表达式 1;表达式 2;表达式 3) { 循环体 }
+    表达式 1
+    表达式 2 T 循环体
+    F
+    表达式 3
+    其中,表达式 1 完成初始化循环变量和其他变量;表达式 2 是布尔型的条件表达式;表 达式 3 修正循环变量,改变循环条件. 例子 3(P20)求从 1 加到 100 的和. 4)循环中的跳转语句 为了提高程序的可靠性,Java 语言不支持无条件跳转的 goto 语句.在循环中使用两个 跳转语句:continue 语句和 break 语句. (1)continue 语句 continue 语句必须用在循环结构中,continue 语句在使用时有两种形式,一种带标号 的 continue 语句,另一种是不带标号的 continue 语句. ①带标号的 continue 语句格式是: continue 标号名; 标号名应该符合标识名的规定.带标号的 continue 语句使程序的流程直接转入标号表 明的循环层次,进入下一轮循环. ②不带标号的 continue 语句 终止本轮循环,跳过本轮循环剩余的语句,进入当前循环结构的下一轮循环. (2)break 语句 break 语句在使用时也分带标号与不带标号两种形式. ①带标号的 break 语句的格式是:
+    17
+    break 标号名; 标号名标志某一个语句块, 执行 break 语句就从标号名标志的语句块中跳转出来, 流程 进入该语句块后面的语句. ②不带标号的 break 语句 从它所在的 switch 分支或循环体中跳转出来 (结束当前循环语句) 执行分支或循环体 , 后面的语句. 例子 6(P21) public class Exp1_6 { public static void main(String args[]) { int sum=0,i,j; for(i=1;i<=10;i++) { if(i%2==0) continue; //终止本轮循环,跳过本轮循环剩余的语句,进 入当前循环结构的下一轮循环 else { } sum=sum+i; } System.out.println("sum=1+3+5+7+9="+sum); System.out.println("50 以内的素数:"); for(j=2;j<=50;j++) // j 是待检测的数,即检测 j 是不是素数 { for(i=2;i<=j/2;i++) // 看 i 是否是 j 的约数. i<=j/2 ,不可能存在 i , i 是 j 的约数,而 i>j/2 { if(j%i==0) break; //从它所在的循环体中跳转出来(结束当前循环 语句) ,执行循环体后面的语句 } if(i>j/2) System.out.println(j); else { } } } }
+    18
+    第四章
+    4.1
+    类,对象和接口
+    编程语言的几个发展阶段
+    1.面向机器语言(如汇编语言 .面向机器语言 如汇编语言 如汇编语言) 2.面向过程语言 如 c 语言,Fortran 语言等 语言等) .面向过程语言(如 语言, 3.结构化程序设计阶段 . 4.面向对象编程(P26) .面向对象编程( )
+    4.2
+    类
+    类是组成 Java 程序的基本要素.类封装了一类对象的状态和方法.类是用来定义对象 的模板. 类的语法结构: [修饰符] class 类名 [extends 父类名] [implements 接口名] { 属性 方法 } 1.类头 1.类头 修饰符:说明类的性质 关键字:class 类名: 父类名: 关键字:extends 格式: 类名 extends 父类名
+    类头(类声明) 类体
+    子类 父类 子类 获得 父类 所有属性和方法 例如 public class boy extends Applet
+    继承
+    2.类体 2.类体 类体由两部分构成:一部分是变量的定义,另一部分是方法的定义. (1)变量 基本数据类型 变量(成员变量)
+    19
+    数组类型
+    引用数据类型 对象(类类型)
+    (2)方法 方法起两种作用: 一是围绕着类的属性进行各种操作; 二是与其他的类或对象进行数据 交换,消息传递.
+    3.成员变量和局部变量 . 我们已经知道类体分为两部分. 变量定义部分所定义的变量称为类的成员变量 在方法 成员变量. 成员变量 体中定义的变量和方法的参数称为局部变量 局部变量. 局部变量 (1) 成员变量和局部变量的类型可以是 Java 中的任何一种数据类型, 包括基本类型 引 基本类型和引 基本类型 用类型(数组类型和对象.对象也称作类类型变量 . 类类型变量) 用类型 类类型变量 (2) 成员变量在整个类内都有效,局部变量只在定义它的方法内有效. 例如: class A { int x; int f() { int a; x=a; //合法,x 在整个类内有效. } int g() { int y; y=a; //非法,因为 a 已失效,而方法 g 内又没有定义变量 a } } (3) 成员变量又分为实例成员变量 实例成员变量(简称实例变量)和类成员变量 类成员变量 用修饰符 实例成员变量 类成员变量(简称类变量). static 修饰的成员变量是类变量. 例如: class A { static int x; int y; } 其中 x 是类变量,y 是实例变量.
+    20
+    实例变量和类变量的区别(p38): 例如: class Takecare { static int x; //x 是类变量 int y; //y 是实例变量 … } class A { … Takecare A1=new Takecare(); Takecare A2=new Takecare(); … } x A1 A2
+    y
+    y
+    如果 A1.x=18; 则 A1.x 和 A2.x 的输出结果都是 18.
+    (4)局部变量的名字与成员变量的名字相同,则成员变量被隐藏 隐藏,即这个成员变量在这 隐藏 个方法内暂时失效. 例如: class Tom { int x=98,y; void f() { int x=3;
+    21
+    y=x; }
+    // y 得到的值是 3,不是 98.如果方法 f 中没有"int x=3;, " // y 的值是 98.
+    } (5)我们已经知道, 如果局部变量的名字与成员变量的名字相同, 则成员变量被隐藏. 这 时如果想在该方法内使用成员变量,必须使用关键字 this. 例如:
+    第四次作业 001(要求既输出 123, 又输出 456)
+    import java.applet.Applet; import java.awt.*; public class Thistest extends Applet { float x=1,y=2,z=3; public void paint(Graphics g) { float x=4,y=5,z=6; x=this.x;y=this.y;z=this.z;
+    //成员变量
+    //局部变量 //this.x,this.y,this.z //分别表示成员变量 x,y,z
+    g.drawString("变量 x="+x,20,40); g.drawString("变量 y="+y,20,60); g.drawString("变量 z="+z,20,80); } } 变量小结: 变量小结 实例变量 成员变量(类体中变量定义 部分所定义的变量) 类变量 (static 修饰) 变量 局部变量(方法体中定义的变量)
+    4. 方法 (1)方法定义 (1) 方法由方法头和方法体两部分组成,定义格式如下: [修饰符] 返回值类型 方法名(形式参数列表) { 局部变量声明; 语句序列;
+    22
+    } 方法头由方法名,形式参数列表,方法返回值类型,方法修饰符等组成. 方法体由局部变量声明,语句序列组成. 例如 方法头: boolean isPrime(int n) boolean 是方法返回值类型 isPrime 是方法名字 () 表明是方法 int n 定义整型变量 n ,n 是方法的形式参数 (2)方法的形式参数 (2) 定义方法,需要定义方法的输入输出数据,方法头中的参数列表定义方法的输入数据, 返回值是方法的输出数据.例如,在刚才举的例子中,n 是方法的形式参数,它的值来自调 用 isPrime()方法的语句,例如 f_i=isPrime(i); 执行这个调用语句时,变量 i 的值传递给参数 n ,同时程序的流程转到 isPrime()方 法,从 isPrime()方法的第一条语句开始执行. 方法也可以没有形式参数,表示方法不需要从调用它的语句中输入数据. (3)方法的返回值 方法返回值是方法的输出数据. 定义方法头时,返回值类型说明输出数据的类型. 定义方法体时,用 return 语句把一个确定的值返回给调用它的语句. return 语句的格式: return 表达式; return 语句使程序流程从方法调用中返回,表达式的值是方法的返回值. 注意: ①如果方法没有返回值,方法头返回值类型应该是关键字 void ,同时方法体中可以不 写 return 语句,或省略 return 语句后面的表达式. ②根据返回值的定义,每次调用方法只能返回一个数据. ③方法中定义的变量是局部变量,只在定义它的方法体中有效. (4)方法重载 (4) 方法的重载是指在一个类中可以定义几个同名但是参数集合 (参数的数量, 类型和顺序) 不同的方法.当调用一个重载的方法时,Java 编译器通过检查调用语句中的参数集合选择 方法.
+    例如第四次作业
+    002(改成 y 的立方)
+    import java.awt.*; import java.applet.Applet; public class MethodOverride extends Applet {
+    23
+    public void paint(Graphics g) { int total1; double total2; total1=square(7); total2=square(6.5); g.drawString("/*方法的重载*/",25,25); g.drawString("7 的平方是:"+total1,25,45); g.drawString("6.5 的平方是:"+total2,25,65); } public int square(int x) { return x*x; } public double square(double y) { return y*y; } }
+    4.3
+    对象
+    我们已经说过类是创建对象的模板. 当使用一个类创建了一个对象时, 我们也说给出了 这个类的一个实例. 1.创建对象 创建一个对象包括对象的声明和为对象分配内存两个步骤. (1)对象的声明 一般格式为: 类名 对象名; 例如 People zhang; 这里 People 是类名,zhang 是声明的对象名. (2)为声明的对象分配内存. 使用 new 运算符和类的构造方法(构造方法是一种特殊的方法,用于对类的对象进行 初始化,这种方法的名必须与该类名相同,并且没有返回值类型)为对象分配内存. 例如 zhang=new People(); 以下是两个详细的例子.
+    24
+    例子 1(P33) 例子 2(P33) 2.使用对象 使用运算符".,对象可以实现对变量的访问和方法的调用. " 例子 3(P36)第四次作业
+    003(运行一遍,观察)
+    import java.applet.*; import java.awt.*; class student { float zongping; float f(float qizhong,float qimo) { zongping=qizhong*0.30f+qimo*0.70f; return zongping; } } public class Exp4_3 extends Applet { student s1,s2; public void init() { s1=new student(); s2=new student(); s1.zongping=s1.f(60.0f,80.0f); s2.zongping=s2.f(70.0f,90.0f); } public void paint(Graphics g) { g.drawString("s1.zongping = "+s1.zongping,20,20); g.drawString("s2.zongping = "+s2.zongping,20,40); } } 例子 4(P37)
+    4.4
+    访问控制符(访问权限)
+    25
+    访问控制符是限定类,属性,方法被程序里其他部分(指程序里这个类之外的其他类) 访问,调用的修饰符.一个类总能够访问和调用它自己的属性和方法. 1.类的公共访问控制符 public Java 中的类只有一个访问控制符 public ,public 类,即公共的类.public 类可以被 所有其他类访问,引用,程序的其他部分可以创建该类的对象,访问该类的 public 属性和 调用它的 public 方法.主类必须是 public . 类缺省访问控制符, 只能被同一个包中的类访问, 引用, 不可以被其他包中的类使用 (包 访问性.包,目前可以简单地理解为是定义在同一个程序中的所有类属于同一个包) . 2.成员访问控制符 类中所定义的变量和方法都是类的成员.常用的成员访问控制符有三个:public, private,protected . (1)公共访问控制符 public public 类的 public 属性可以被所有的其他类引用.public 类的 public 方法是类对外 的接口,程序的其他部分通过调用 public 方法达到与当前类交换信息的目的. (2)私有访问控制符 private(最高保护级) private 成员只能被该类自身访问和修改,不能被任何其他类访问和引用. (3)保护访问控制符 protected protected 成员可以被三种类引用:该类自身,同一个包中的其他类,其他包中的该类 的子类. 另外,类的成员缺省访问控制符具有包访问性. (p40)
+    4.5
+    子类对父类的属性和方法的继承性
+    1.创建子类 1.创建子类 继承关系是 extends 关键字实现(定义)的.子类继承父类的所有非 private 属性和方 法. 属性的继承是指子类继承父类非私有属性, 即父类的所有非私有属性是各子类属性的集 合; 方法的继承是指父类的非私有方法被子类继承, 即父类的所有非私有方法可以被子类直 接调用. 例子 6(P43)
+    import java.applet.*; import java.awt.*;
+    26
+    class Father { private int money; float weight,height; String head; String speak(String s) { return s; } } 子类 父类 class Son extends Father { String hand,foot; } 主类 public class Exp4_6 extends Applet { Son boy; public void init() { boy=new Son(); boy.weight=1.80f; boy.height=120f; boy.head="一个头,"; boy.hand="两只手,"; boy.foot="两只脚,"; } public void paint(Graphics g) { g.drawString(boy.speak("我是儿子."),5,20); g.drawString(boy.hand+boy.foot+boy.head+boy.weight+" "+boy.height,5,40); } }
+    2.属性的隐藏与方法的覆盖 2.属性的隐藏与方法的覆盖 子类对从父类继承来的属性重新定义(变量名相同,变量的类型和值可以不同) ,称为 属性的隐藏. 属性的隐藏 子类对从父类继承来的方法重新定义(方法头不变,方法体可以变) ,称为方法的覆盖 方法的覆盖. 方法的覆盖 子类对父类的属性隐藏及对父类的方法覆盖后, 要在子类中引用父类的成员, 必须使用
+    27
+    关键字 super 作前缀.格式: super.父类属性名; super.父类方法名; 覆盖(子类与父类之间) 多态技术是指同名的不同方法共存的现象. 多态技术 多态 重载(在类自身内) 例子 7(P44) import java.applet.*; import java.awt.*; class Chengji { float f(float x,float y) { return x*y; } } class Xiangjia extends Chengji { float f(float x,float y) //方法的覆盖 { return x+y; } } public class Exp4_7 extends Applet { Xiangjia sum; public void init() { sum=new Xiangjia(); } public void paint(Graphics g) { g.drawString("sum="+sum.f(4,6),5,20); } } 又例 import java.applet.*; import java.awt.*;
+    //对象调用覆盖的方法
+    28
+    class Chengji { float f(float x,float y) { return x*y; } } class Xiangjia extends Chengji { float f(float x,float y) { return x+y; } float ji=super.f(4.0f,6.0f); } public class Exp4_77 extends Applet { Xiangjia sum; public void init() { sum=new Xiangjia(); } public void paint(Graphics g) { g.drawString("chengji="+sum.ji,5,20); //对象访问变量,显示的结果是什么? } } //在子类中引用父类的方法
+    例子 8(P44)
+    第七章 Java Applet 基础
+    29
+    Java Applet 程序使用浏览器运行,因此它和 Java Application 有许多不同之处.下面通 过一个例子来说明一个 Java Applet 的全过程. 1.用记事本编写下列源文件 用记事本编写下列源文件 例子 1(P70) 一个 Java Applet 是由若干个类组成的,其中必须有一个类扩展了 Applet 类,即它是系 统类 Applet 类的子类,这个类就是 Java Applet 的主类,它必须是 public 的.保存源文件时, 主名必须与主类同名,扩展名是.java. 2.编译 编译 源文件编译成功后,会生成.class 文件(二进制字节码文件) ,如果源文件有多个类,那 么将生成多个.class 文件. 3. 运行 Java Applet 必须由浏览器运行,因此必须编写一个超文本文件(html 文件). html 文件 扩展名必须是.html.例如   超文本中的标记和指明浏览器将运行一个 JavaApplet, code= 后面是主类的字节码文件名. 一个 Java Applet 的执行过程称为这个 Java Applet 的生命周期.一个 Java Applet 的生命 周期内涉及如下五个方法,这些方法是一个完整的 Java Applet 所包含的,它们是:init(), start(),stop(),destroy(),paint(Graphics g)方法. 我们知道类是创建对象的模板,那么上述 Java Applet 的主类的对象是由谁创建的呢? 这些方法又是怎样被调用执行的呢? 当浏览器打开超文本文件.html 时,发现 applet 标记,将创建主类的一个对象,这个对 象就是浏览器中的灰色部分(如图 7.1) ,它的大小由超文本中的 width 和 height 来确定. 在一个 Java Applet 程序中,主类是 Applet 类的子类,Applet 类是 java.applet 包中的一 个类,同时它还是包 java.awt 中 Container(容器)类的间接子类,因此,主类的实例也是一个 容器.容器有相应的坐标系统,单位是像素,原点是容器的左上角.容器可以使用 add()方 法放置组件. (1)初始化:init() 这个对象首先自动调用 init()方法完成必要的初始化工作.初始化的主要任务是创建 需要的对象,设置初始状态,装载图像,设置参数等.init()方法格式如下: public void init() { … } init()方法只被调用执行一次. (2)启动:start() 初始化之后,紧接着自动调用 start()方法.在程序的执行过程中, start()方法将被自动 调用执行多次.除了进入执行过程时调用方法 start()外,当用户从 applet 所在的 Web 页面转 到其他页面,然后又返回时,start()将再次被调用.start()方法的格式如下: public void start()
+    30
+    { … } (3)停止:stop() 当浏览器离开 Java Applet 所在的页面转到其他页面时,stop()方法被调用.如果浏览器 又回到此页,则 start()又被调用来启动 Java Applet.在 Java Applet 的生命周期中,stop()方 法也可以被调用多次.stop()方法的格式为: public void stop() { … } (4)删除:destroy() 当浏览器结束浏览时,执行 destroy()方法,结束 applet 的生命周期. (5)描绘:paint(Graphics g) paint(Graphics g)方法可以使一个 applet 在屏幕上显示某些信息,如文字,色彩,背景或 图像等.在 applet 的生命周期内可以多次调用.例如,当 applet 被其他页面遮挡之后又重新 放到最前面,改变浏览器窗口的大小,以及 applet 本身需要显示信息时,paint()方法都会被 自动调用.与上述 4 种方法不同的是,paint()方法有一个形式参数 g ,浏览器产生一个 Graphics 类的实例,在调用 paint()方法时,传递给方法 paint()中的形式参数 g .
+    综上所述,一个 Java Applet 主类的一般格式为: public class myclassname extends java.applet.Applet { public void init() {
+    31
+    .. . } public void start() { .. . } public void stop() { … } public void destroy() { … } public void paint(Graphics g) { … } …… } 其中的 5 种方法可根据需要,或全部定义,或定义一部分. 下面看一个例子,上机观察一下各个方法被调用执行的次数. 例子 2 (P73)
+    第八章
+    文本框和文本区
+    第七章介绍了 Java Applet 的基本概念.我们已经知道,Java Applet 的主类的实例是一 个容器,因此 Java Applet 可以添加交互组件,如文本框,文本区,按钮和滚动列表等.本
+    32
+    章介绍文本框和文本区.
+    8.1
+    文本框
+    文本框用来存放文本.Java.awt 包中的 TextField 类是专门用来建立文本框的,即 TextField 创建的一个对象就是一个文本框. TextField 类中有下列主要方法(都是 public 的) . TextField()构造方法 使用这个构造方法创建文本框对象,文本框的长度为一个字符 构造方法 长. TextField(int x)构造方法 使用这个构造方法创建文本框对象,文本框的长度为 x 个字 构造方法 符长. TextField(String s)构造方法 使用这个构造方法创建文本框对象, 文本框的初始字符串 构造方法 为 s. TextField(String s,int x)构造方法 使用这个构造方法创建文本框对象,文本框的初始 , 构造方法 字符串为 s,文本框的长为 x. setText(String s) 在文本框中设置文本. getText() 获取文本框中的文本. setEchoChar(char c) 设置文本框的回显字符. setEditable(boolean) 指定文本框的可编辑性,默认为可编辑. addActionListener(ActionListener) 向文本框增加动作监视器(将监视器注册到文本 框). removeActionListener(ActionListener) 移去文本框的监视器. 例子 1(P75)
+    8.2
+    处理文本框事件
+    当用户单击按钮,键入文本,使用鼠标或进行其他与界面相关的行动时,都发生界面事 件.Java 的 java.awt.event 包中含有许多用来处理事件的类和接口. 程序有时需要对发生的事件作出反应, 例如在文本框输入某些字符或按下按钮时, 希望 得到某种信息,这时程序就需要对事件作出响应. 在事件的处理过程中涉及几个重要的概念:事件源,监视器,处理事件的接口. 事件源 能够产生事件的对象是事件源,例如文本框,按钮,键盘,鼠标等. 监视器负责获取事件源发生事件的信息, 并调用相应的方 监视器 监视器是一个对象, 法处理事件.事件源通过调用一个方法指定某个对象作为自己的监视器. 文本框为自己指定监视器的方法是: addActionListener(监视器) 处理事件的接口 Java 规定:为使监视器(对象)能对事件源发生的事件做出处理,创 建该监视器的类必须声明实现相应的接口,即必须在类体中给出该接口中所有方法的方法 体,当事件源发生事件时,监视器就自动调用被类实现的某个接口方法处理事件. 对于文本框,这个接口的名字是 ActionListener,这个接口中只有一个方法: public void actionPerformed(ActionEvent e) 处理文本框事件的过程如下:
+    33
+    ①文本框通过调用方法 addActionListener(监视器),为自己指定监视器; ②创建监视器的类必须实现接口 ActionListener(该类应 implements 接口)中的方法 public void actionPerformed(ActionEvent e) ③当在文本框中输入字符并回车时,Java 的 java.awt.envent 包(所以程序的开始我们要 引 用 这 个 包 ) 中 的 ActionEvent 类 自 动 创 建 一 个 对 象 , 并 将 它 传 递 给 方 法 actionPerformed(ActionEvent e)中的参数 e ; ④监视器将自动调用方法 actionPerformed(ActionEvent e) 对发生的事件作出处理.
+    例子 2 (P77) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Example8_2 extends Applet implements ActionLsitener //事件源 textl 将主类 Example8_2 的对象 做为监视器,因此 类 Example8_2 必须 引用并实现接口 { TextField text1,text2,text3; public void init() { textl=new TextField(10); text2=new TextField(10); text3=new TextField(10); add(textl);add(text2);add(text3); textl.addActionListener(this); // 事件源 textl 为自己指定监视器. this 关键字的意义 关键字的意义: 语句 textl.addActionListener(this); 在 init()方法中,this 指代调用 init()方法的类的对象.主类的 对象自动调用 init()方法,因此 this 就指代主类的对象 } public void actionPerformed(ActionEvent e) // 类 Example8_2 实现接口中的方法 actionPerformed(ActionEvent e) , 即写出该方法的方法体 { if((e.getSource()= =textl)&&(textl.getText().equals("boy"))) {
+    34
+    text3.setText("男孩"); } else if((e.getSource()= =textl)&&(textl.getText().equals("girl"))) { text3.setText("女孩"); } else if((e.getSource()= =textl)&&(textl.getText().equals("sun"))) { text3.setText("太阳"); } else { text3.setText("没有该单词"); } } } *下面我们再看一个例子,这里我们不使用小程序本身来做监视器,而使用另外一个对 象来监视 textl. 例子 2(补充) (P78)
+    8.4
+    文本区
+    (1)文本区是一个存放文本的区域,比文本框要大.Java.awt 包中的类 TextArca 类是专 门用来建立文本区的,即 TextArea 创建的一个对象就是一个文本区. (2)TextArca 类中有下列主要方法(都是 public 的): TextArea()构造方法 使用这个构造方法创建文本区对象,则文本区的列数和行数取 构造方法
+    35
+    默认值. TextArea(String s)构造方法 使用这个构造方法创建文本区对象, 则文本区显示初始 构造方法 字符串 s. TextArea(String s,int x,int y)构造方法 使用这个构造方法创建文本区对象,则文 , , 构造方法 本区显示初始字符串 s,文本区行数为 x, 列数为 y. TextArea(int x,int y)构造方法 使用这个构造方法创建文本区行数是 x,列数为 y. , 构造方法 TextArea(String s,int x,int y,int scrollbar)构造方法 使用这个构造方法创建文本 , , , 构造方法 区初始字符串是 s,文本区的行数是 x,列数是 y. scrollbar 值决定文本区滚动条的显示状态(其他构 造方法创建的文本区都自带滚动条) : TextArea.SCROLLBARS_ BOTH, TextArca.SCROLLBARS _VERTICAL_ ONLY TextArea. SCROLLBARS_HORIZONTAL_ ONLY TextArea.SCROLLBARS_ NONE
+    setText(String s) 在文本区中设置文本,同时清除文本区中原有的文本. getText() 获取文本区中的文本. addTextListener(TextListener) 向文本区添加 TextEvent 事件监视器. removeTextListener(TextListener) 移去文本区的监视器. 例子 4 (P81) Exp8_4.java
+    8.5 处理文本区事件
+    文本区是事件源. 文本区获得监视器的方法是 addTextListener(). 处理文本区事件的接口是 TextListener . 接口中的方法是 textValueChanged(TextEvent e).
+    36
+    当文本区的内容改变,如键入字符,删除字符等,文本区事件就发生,java.awt.envent 包中的 TextEvent 类将自动创建一个事件对象,监视器以该事件对象为实参自动调用方法 textValueChanged(TextEvent e) 对发生的事件作出处理. 例子 5(P82) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Exp8_5 extends Applet implements TextListener { TextArea text1,text2; TextField text3; public void init() { text1=new TextArea("",8,10); text2=new TextArea("",8,10); text3=new TextField(10); add(text1); add(text2); add(text3); text1.addTextListener(this); } public void textValueChanged(TextEvent e) { if(e.getSource()==text1) { text2.setText(text1.getText()); text3.setText("我改变内容了."); } else { } } } 例子 6(P82)
+    第九章 按
+    9.1 按钮
+    37
+    钮
+    Java.awt 包中的 Button 类是专门用来建立按钮的.即 Button 类创建的一个对象就是一 个按钮. Button 类中有下列主要方法(都是 public 的): Button()构造方法 使用这个构造方法创建没有名称的按钮对象. 构造方法 Button(String s)构造方法 使用这个构造方法创建以字符串 s 为名称的按钮对象. 构造方法 setLabel(String s) 设置按钮的名称. getLabel() 获取按钮的名称. addActionListener(ActionListener) 向按钮增加动作监视器. removeActionListener(ActionListener) 移去按钮的监视器.
+    9.2
+    处理按钮事件
+    按钮是事件源,当用户单击按钮时就发生了一个事件(单击) . 这个事件源获得监视器的方法是 addActionListener(). 处理该事件的接口是 ActionListener . 接口中的方法是 actionPerformer(ActinEvent e). 单击按钮事件的类型是 ActionEvent 类型,即当用户单击按钮后,java.awt.envent 包 中的类 ActionEvent 自动创建一个事件对象,监视器以该事件对象为实参自动调用方法 actionPerformer(ActinEvent e) 对发生的事件作出处理. 例子 2(P87) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Exp9_2 extends Applet implements ActionListener { TextField text1, text2, text3; Button button1, button2, button3, button4; public void init() { text1=new TextField(10); text2=new TextField(10); text3=new TextField(10); add(text1);add(text2);add(text3); button1=new Button("加"); button2=new Button("减"); button3=new Button("乘"); button4=new Button("除"); add(button1);add(button2);add(button3);add(button4); button1.addActionListener(this); button2.addActionListener(this); button3.addActionListener(this); button4.addActionListener(this); }
+    38
+    public void paint(Graphics g) { g.setColor(Color.red); g.drawString("在左边第一,二文本框输入数字,再单击相应的按钮",10,100); g.drawString("第三个文本框显示运算结果",10,120); } public void actionPerformed(ActionEvent e) { double n; if(e.getSource()==button1) { double n1, n2; n1=Double.valueOf(text1.getText()).doubleValue(); n2=Double.valueOf(text2.getText()).doubleValue(); n=n1+n2; text3.setText(String.valueOf(n)); } else if(e.getSource()==button2) { double n1, n2; n1=Double.valueOf(text1.getText()).doubleValue(); n2=Double.valueOf(text2.getText()).doubleValue(); n=n1-n2; text3.setText(String.valueOf(n)); } else if(e.getSource()==button3) { double n1, n2; n1=Double.valueOf(text1.getText()).doubleValue(); n2=Double.valueOf(text2.getText()).doubleValue(); n=n1*n2; text3.setText(String.valueOf(n)); }
+    else if(e.getSource()==button4) { double n1, n2; n1=Double.valueOf(text1.getText()).doubleValue(); n2=Double.valueOf(text2.getText()).doubleValue(); n=n1/n2;
+    39
+    text3.setText(String.valueOf(n)); } } }
+    例子 3(作业) 例子 4(作业)
+    第十章 标
+    10.1 标签
+    签
+    标签的功能是显示文本,不能动态地编辑文本.Label 类的实例就是一个标签. Label 类的主要方法有: Label()构造方法 创建一个无显示文本的标签. 构造方法 Label(String s)构造方法 创建标签,并显示文本 s. 构造方法 Label(String s,int a)构造方法 创建显示文本 s 的标签,并设置标签中文本的对 , 构造方法 齐方式(由第二个参数确定),第二个参数可以是 Label.LEFT,Label.CENTER 或 Label.RIGHT. setText(String s) 设置标签显示的文本. getText() 获取标签的文本. setBackground(Color c) 设置标签的颜色,标签的默认颜色是背景容器的颜色. setForeground(Color c) 设置标签上显示的字的颜色,默认颜色是黑色.
+    例子 1(P92)
+    例子 2(P93) import java.applet.*; import java.awt.*; public class Exp10_2 extends Applet { TextField text1,text2;
+    40
+    Label label1,label2; public void init() { text1=new TextField(10); text2=new TextField(10); label1=new Label("输入姓名"); label2=new Label("输入性别"); label1.setBackground(Color.red); label1.setForeground(Color.blue); label2.setBackground(Color.blue); label2.setForeground(Color.green); add(label1); add(text1); add(label2); add(text2);
+    } } 例子 3(P93) import java.awt.*; import java.awt.event.*; import java.applet.*; class MyLabel extends Label implements ActionListener { TextField text1; TextArea text2; int k=0; MyLabel(String s) { super(s); text1=new TextField(10); text2=new TextArea(10,10); text1.addActionListener(this); } public void actionPerformed(ActionEvent e) { double n=0; text2.setText(null); try
+    41
+    { n=Double.valueOf(text1.getText()).doubleValue(); for(int i=1;i<=n;i++) { if(n%i==0) text2.append("\n"+i); } } catch(NumberFormatException e1) { text1.setText("请输入数字字符"); } if(n%2==0) { this.setBackground(Color.green); } else { this.setBackground(Color.yellow); } } }
+    public class Exp10_3 extends Applet { MyLabel lab; public void init() { lab=new MyLabel("输入一个数后击回车键"); add(lab); add(lab.text1); add(lab.text2); } }
+    第十一章
+    面板和画布
+    42
+    11.1
+    面板
+    1.Panel 类 . java.awt 包的 Panel 类是用来建立 面板的.Panel 类是 Container(容器)类 的子类,因此 Panel 类及其子类的实例 也是一个容器(容器同时也是一个组 件) .在一个容器里添加若干个组件后, 再放到另一个容器里, 叫做容器的嵌套. 例子 1 中,有 3 个面板,每个面板 里添加 3 个按钮,再把 3 个面板添加到 小程序中. 例子 1 (P96) 运行结果如图 import java.applet.*; import java.awt.*; class Myp extends Panel { Button button1,button2,button3; Myp() { button1=new Button("确定"); button2=new Button("取消"); button3=new Button("保存"); add(button1); add(button2); add(button3); } }
+    public class Exp11_1 extends Applet { Myp panel1,panel2,panel3; Button button; public void init() { panel1=new Myp(); panel1.setBackground(Color.red); panel2=new Myp(); panel2.setBackground(Color.green); panel3=new Myp(); panel3.setBackground(Color.blue);
+    43
+    button=new Button("我不在那些面板里"); add(panel1); add(panel2); add(panel3); add(button); } }
+    2.ScrollPane 类 . java.awt 包的 ScrollPane 类也是 Container 类的子类,因此该类的对象也是一个容器, 称为滚动窗口. ScrollPane 类创建的容器与 Panel 类创建的容器有两点不同: ① ScrollPane 类创建的容器带有滚动条; ② 滚动窗口内只能添加—个组件,所以,经常将一些组件添加到一个面板中,然后再 把这个面板添加到滚动窗口中. ScrollPane 有两个构造方法: ScrollPane()构造方法 创建滚动窗口,滚动条初始不可见,当添加的组件的可见 构造方法 范围大于滚动窗口时,滚动条自动出现. ScrollPane(int a)构造方法 创建滚动窗口,参数 a 指定滚动条的初始状态. 构造方法 a 取下列 3 个值之一: ScrollPane.SCROLLBARS_ALWAYS ScrollPane.SCROLLBARS_AS_NEEDED ScrollPane.SCROLLBARS_NEVER 例子 2(P97) import java.awt.*; import java.applet.*; public class Exp11_2 extends Applet { Panel p1; Panel p2; ScrollPane scrollpane; public void init() { p1=new Panel(); p2=new Panel(); scrollpane=new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS); // scrollpane=new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED); // scrollpane=new ScrollPane(ScrollPane.SCROLLBARS_NEVER); p1.add(new Button("one")); p1.add(new Button("two")); p1.setBackground(Color.red);
+    44
+    p2.add(new Button("three")); p2.add(new Button("four")); p2.setBackground(Color.blue); scrollpane.add(p2); scrollpane.add(p1); add (scrollpane); } }
+    //只能向滚动窗口添加一个组件
+    11.2
+    画布
+    画布不是容器,它是一个可以在上面绘画的组件.java.awt 包中的 Canvas 类用来创建 画布. 创建画布对象常用的做法是用 Canvas 的子类来创建画布对象,并在子类中重写父类的 paint 方法,在创建画布的类的构造方法中给出画布的尺寸(单位是像素) . 例子 3(P98) import java.applet.*; import java.awt.*; class Mycanvas extends Canvas //扩展 Canvas 类 { Mycanvas() // Mycanvas 类的构造方法 { getSize(); //自动调用方法 getPreferredSize() } public void paint(Graphics g) { g.setColor(Color.green); g.drawString("我在画布上写字呢",6,30); g.drawString("我还能画更多图形呢",6,50); } public Dimension getPreferredSize() //Dimension(尺寸)类类型 { return new Dimension(160,100);//创建一个 Dimension 类(在 java.awt 包 //中)的对象,Dimension(160,100)是 } // Dimension 类的构造方法 } public class Exp11_3 extends Applet { Mycanvas mycanvas;
+    45
+    public void init() { mycanvas=new Mycanvas(); mycanvas.setBackground(Color.red); add(mycanvas); } }
+    第十二章
+    布 局 设 计
+    把组件添加到容器中,控制组件在容器中的位置,这就是布局设计. java.awt 包中定义了 5 种布局类,每个布局类的实例对应一种布局策略,这 5 个布局 类分别是:FlowLayout,BorderLayout,CardLayout,GridLayout,GridBagLayout.
+    12.1 FlowLayout 布局
+    FlowLayout 是 Panel 型容器和 Applet 型容器默认使用的布局.如果不专门为 Panel 和 Applet 指定布局,则它们就使用 FlowLayout 布局. 对于使用 FlowLayout 布局的容器,加入组件使用 add(组件名)命令. 对于一个原来不使用 FlowLayout 布局的容器, 若需要将其布局改为 FlowLayout ,可以使 用语句: setLayout(new FlowLayout()); (注:setLayout()方法是所有容器的父类 Container 的方法,用于为容器设定布局. ) 注
+    12.2 BorderLayout 布局
+    BorderLayout 布局把容器内的空间划分为东,西,南,北,中 5 个区域.加入组件时要 指明把这个组件加在哪个区域中. BorderLayout 只能指定 5 个区域,如果容器中需要加入超过 5 个组件,就必须使用容器 的嵌套或改用其他的布局策略(组件可以少于 5 个).
+    例子 1(P102) import java.applet.*; import java.awt.*;
+    46
+    public class Exp12_1 extends Applet { Button button1,button2; Label label1,label2; TextArea text; public void init() { setLayout(new BorderLayout()); text=new TextArea(" ",5,5); button1=new Button("右东"); button2=new Button("左西"); label1=new Label("上北",Label.CENTER); label2=new Label("下南",Label.CENTER); add("North",label1); add("South",label2); add("East",button1); add("West",button2); add("Center",text); } }
+    12.4 GridLayout 布局
+    GridLayout 布局是把容器划分成若干行乘若干列的网格区域, 组件就位于这些划分出来 的小格中.使用 GridLayout 布局的步骤如下: (1)创建 GridLayout 对象作为布局, 指定划分网格的行数和列数, 并使用容器的 setLayout() 方法为容器设置布局: setLayout(new GridLayout(行数,列数)) (2)调用容器的方法 add()将组件加入容器,组件从左到右排满第一行之后再排第二行, 每个网格中都必须填入组件,如果希望某个网格为空白,可以为它加入一个空的标签: add(new Label()) 例子 3 (P104)
+    第十三章
+    13.1 选择框
+    选
+    择
+    框
+    47
+    选择框提供了一种简单的设置"on/off "的方法,它提供两种状态,一种是选中,另 一种是未选中.Java.awt 包中的 Checkbox 类是专门用来建立选择框的,即 Checkbox 类创 建的一个对象就是一个选择框. Checkbox 类中有下列主要方法(都是 public 的). Checkbox()构造方法 构造无标题的选择框. 构造方法 Checkbox(String s)构造方法 构造选择框,标题是 s. 构造方法 Checkbox(String s,boolean b)构造方法 构造选择框,标题是 s;参数 b 设置 , 构造方法 初始状态是否被选中. Checkbox(String s,boolean b,CheckboxGroup g)构造方法 构造选择框,标题 , , 构造方法 是 s;b 设置初始状态;g 指定选择框所在的选择框组. addltemListener(ItemListener) 向选择框增加监视器. getState() 返回选择框的布尔状态. setState(boolean b) 设置选择框的状态. getLabel() 获取选择框的标题. setLabel(String s) 将选择框的标题设置为指定的字符串. removeItemListener(ItemListener) 移去选择框的监视器. 注: 如果在一个容器中添加多个选择框,而没有使用 CheckboxGroup 将它们归组,则 可以选择多个选择框 (即多项选择);使用 CheckboxGroup 将它们归为一组,那么在这一组 中,一个时刻只能选择一个选择框(单项选择). 例子 1 (效果如图 13.1 所示) (P114) 例子 2 (效果如图 13.2 所示) (P115)
+    13.2
+    处理选择框事件
+    选择框是事件源,当选择框从未选中状态变成选中状态或从选中状态变成未选中状态 时,就发生选择框事件. 选择框事件源获得监视器的方法是 addItemListener(). 处理该事件的接口是 ItemListener. 接口中的方法是 itemStateChanged(ItemEvent e). 选择框事件的类型是 ItemEvent 类型,即当从未选中到选中或从选中到未选中后, java.awt.event 包中的 ItemEvent 类自动创建一个事件对象. ItemEvent 类中有一个重要的方法:getItemSelectable() ,它返回触发选择状态事件的事 件源.
+    例子 3(P116) import java.applet.*; import java.awt.*; import java.awt.event.*; class Tompanel1 extends Panel
+    48
+    { Checkbox box1,box2,box3; CheckboxGroup one; Tompanel1() { setLayout(new GridLayout(1,3)); one=new CheckboxGroup(); box1=new Checkbox("北京牌电视",false,one); box2=new Checkbox("上海牌电视",false,one); box3=new Checkbox("大连牌电视",false,one); add(box1);add(box2);add(box3); } } class Tompanel2 extends Panel { Button button1,button2,button3; Tompanel2() { setLayout(new GridLayout(1,3)); button1=new Button("购买 1 台"); button2=new Button("购买 2 台"); button3=new Button("购买 3 台"); add(button1);add(button2);add(button3); } } public class Exp13_3 extends Applet implements ItemListener,ActionListener { Tompanel1 panel1;Tompanel2 panel2; Label label1,label2; TextArea text1,text2; GridLayout net; public void init() { net=new GridLayout(3,2); setLayout(net); panel1=new Tompanel1();panel2=new Tompanel2(); label1=new Label("产品介绍",Label.CENTER); label2=new Label("产品价格",Label.CENTER); text1=new TextArea();text2=new TextArea(); add(label1);add(label2); add(panel1);add(panel2); add(text1);add(text2); panel1.box1.addItemListener(this); panel1.box2.addItemListener(this);
+    49
+    panel1.box3.addItemListener(this); panel2.button1.addActionListener(this); panel2.button2.addActionListener(this); panel2.button3.addActionListener(this); } public void itemStateChanged(ItemEvent e) { if(e.getItemSelectable()==panel1.box1) { text1.setText("北京生产的"); } else if(e.getItemSelectable()==panel1.box2) { text1.setText("上海生产的"); } else if(e.getItemSelectable()==panel1.box3) { text1.setText("大连生产的"); } } public void actionPerformed(ActionEvent e) { if(e.getSource()==panel2.button1) { text2.setText("北京:1000 元.上海:1200 元.大连:1100 元"); } else if(e.getSource()==panel2.button2) { text2.setText("北京:900 元/台.上海:1100 元/台.大连:1100 元/台"); } if(e.getSource()==panel2.button3) { text2.setText("北京:800 元/台.上海:1000 元/台.大连:1000 元/台"); } } }
+    第十四章
+    14.1 选择控件
+    选择控件和滚动列表
+    选择控件(Choice)是下拉列表框.列表框显示选择控件的第一个选项和它旁边的箭头按 钮,单击箭头按钮时,选项列表打开,如图 14.1(P124)所示.
+    50
+    java. 包中的 Choice 类是专门用来建立选择控件的, Choice 创建的一个对象就是 awt 即 一个选择控件. Choice 类中有下列主要方法(都是 public 的). Choice()构造方法 构造选择控件. 构造方法 add(Sthug) 向选择控件增加一个选项. addltemListener(1temLlstener) 增加监视器. getSelectedlndex() 返回当前选项的索引. getSelectedltem() 返回当前选项的字符串代表. insert(String int) 将选项插入这个选择控件的指定位置. remove(int) 从选择控件的选项菜单中删除指定的选项. removeAll() 删除选择控件中的全部选项. removeItemListener(ItemListener) 移去选择控件的监视器. 例子 1(P124)
+    14.2 处理选择控件上的事件
+    选择控件这个事件源, 当选择控件的选择情况变化时, 就发生了一个选择控件上的事件. 事件源获得监视器的方法是 addltemListener(). 处理该事件的接口是 ItemListener . 接口中的方法是 itemStateChanged(ItemEvent e). 当在选择控件选中选项时, java.awt.envent 包中的 ItemEvent 类自动创建一个事件 对象. ItemEvent 类中有一个重要的方法:getItemSelectable() ,它返回触发选中状态变化事件 的事件源. 例子 2 (P125)(效果如图 14.2 所示)
+    14.3
+    滚动列表
+    滚动列表(List)可以使用滚动条查看列表中的选项. Java.awt 包中的 List 类是专门用来建立滚动列表的,即 List 类创建的一个对象就是 一个滚动列表. List 类中有下列主要方法(都是 public 的).
+    51
+    List()构造方法 构造一个滚动列表,使用默认可见行. 构造方法 List(int n)构造方法 构造一个滚动列表,参数 n 设置可见行数. 构造方法 List(int n,boolean b)构造方法 构造一个滚动列表,参数 n 设置可见行数; , 构造方法 b 设置是否允许多项选择. add(String s) 向滚动列表的末尾增加一个选项. add(String s,int n) 向滚动列表的指定位置增加一个选项. , addActionListener(ActionListener) 增加监视器,监视滚动列表的行动事件. addItemListener(ItemListener) 增加监视器,监视滚动列表上的选择事件. getSelectedIndex() 返回当前选项的索引. getSelectedItem() 返回当前选项的字符串代表. remove(int n) 删除滚动列表中的指定的选项. removeAll() 删除滚动列表中的全部选项.
+    例子 3 (P127)
+    14.4
+    处理滚动列表上的事件
+    滚动列表是事件源,该事件源有两种事件:一是鼠标单击某个选项事件;二是鼠标双击 某个选项事件. (1) 鼠标单击某个选项事件 鼠标单击事件事件源获得监视器的方法是 addItemListener(). 处理该事件的接口是 ItemListener,接口中的方法是 itemStateChanged(ItemEvent e). 当单击列表中某个选项时, java.awt.envent 包中的 ItemEvent 类自动创建一个事件 对象. ItemEvent 类中有一个获得事件源的方法 getItemSelectable(). (2) 鼠标双击某个选项事件 鼠标双击事件事件源获得监视器的方法是 addActionListener(). 处理该事件的接口是 ActionListener,接口中的方法是 actionPerformed(ActionEvent e). 当双击列表中某个选项时, java.awt.envent 包中的 ActionEvent 类自动创建一个事件 对象. ActionEvent 类中有一个获得事件源的方法 getSource().
+    例子 4 (P128) (效果如图 14.4 所示) (按照书上要求重写) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Exp14_4 extends Applet implements ItemListener,ActionListener //处理滚动 //列表单击事件的接口是 ItemListener ,双击事件的接口是 ActionListener
+    52
+    { List lst1,lst2; TextArea txt1,txt2; public void init() { setLayout(new GridLayout(2,2)); lst1=new List(6,false); lst2=new List(5,false); Panel p1=new Panel(); p1.add(lst1); Panel p2=new Panel(); p2.add(lst2); txt1=new TextArea(8,10); txt2=new TextArea(8,10); lst1.add("计算 1+2+3+……"); lst1.add("计算 1*1+2*2+3*3+……"); lst1.add("计算 1*1*1+2*2*2+3*3*3+……"); lst1.add(" "); lst1.add(" "); lst1.add(" "); lst1.add(" "); for(int i=1;i<=100;i++) { lst2.add("前"+i+"项和"); } add(p1); add(p2); add(txt1); add(txt2); lst1.addItemListener(this); //单击事件源获得监视器的方法是 addItemListener() lst2.addItemListener(this); //单击事件源获得监视器的方法是 addItemListener() lst2.addActionListener(this); //双击事件源获得监视器的方法是 addActionListener() }
+    public void itemStateChanged(ItemEvent e) {
+    // 单 击 事 件 接 口 中 的 方 法 是 //itemStateChanged(ItemEvent e)
+    if(e.getItemSelectable()==lst1)//ItemEvent 类中的获得事件源的方法 getItemSelectable() { if(lst1.getSelectedIndex()==0)
+    53
+    { txt1.setText(lst1.getSelectedItem()); } else if(lst1.getSelectedIndex()==1) { txt1.setText("计算 1*1+2*2+3*3+……"); } else if(lst1.getSelectedIndex()==2) { txt1.setText("计算 1*1*1+2*2*2+3*3*3+……"); } } if(e.getItemSelectable()==lst2)//ItemEvent 类中的获得事件源的方法 getItemSelectable() { String s=lst2.getSelectedItem(); txt2.setText(s); } } public { if(e.getSource()==lst2) // ActionEvent 类中的获得事件源的方法 getSource() { if(lst1.getSelectedIndex()==0) { //String s=lst2.getSelectedItem(); int n=lst2.getSelectedIndex(); long sum=0; for(long i=1;i<=n+1;i++) { sum=sum+i; } txt2.setText("结果:"+sum); } void actionPerformed(ActionEvent e) // 双 击 事 件 接 口 中 的 方 法 是 //actionPerformed(ActionEvent e)
+    else if(lst1.getSelectedIndex()==1) { //String s=lst2.getSelectedItem(); int n=lst2.getSelectedIndex(); long sum=0; for(long i=1;i<=n+1;i++)
+    54
+    { sum=sum+i*i; } txt2.setText("结果:"+sum); } else if(lst1.getSelectedIndex()==2) { //String s=lst2.getSelectedItem(); int n=lst2.getSelectedIndex(); long sum=0; for(long i=1;i<=n+1;i++) { sum=sum+i*i*i; } txt2.setText("结果:"+sum); } } } }
+    14.5
+    组件类常用的方法
+    (P130)
+    第十五章
+    15.1 Java 窗口
+    建立窗口和菜单
+    55
+    Java 的 java. 包中的 Frame 类或子类所创建的一个对象就是一个窗口(它也是一个容 awt 器,默认布局是 BorderLayout 布局). Frame 类的构造方法: Frame() 创建无标题窗口. Frame(String s) 创建标题是字符串 s 的窗口. Frame 类中有几个重要的 public 方法,它们可被子类继承.Frame 类的实例方法 (P40) : setBounds(int a,int b,int width,int height) 窗口在屏幕出现的初始位置是(a,b), 窗口的宽是 width, 高是 height. 参 数的单位都是像素. setSize(int a,int b) 设置窗口的大小,参数 a,b 设置窗口的宽度,单位是像素. setBaekground(Color c) 根据参数 c 设置窗口的底色. setVisible(boolean b) 根据参数 b 设置窗口是可见还是不可见. pack() 用紧凑方式显示窗口.如果使用该方法,窗口初始出现时可能看不到窗口 中的组件,调整窗口的大小时才能看到这些组件. setTitle(String name) 设置窗口的标题(也可使用方法 super(String s)调用父类的构 造方法设置窗口的标题) . getTitle() 获取窗口的标题. setResizable(boolean b) 设置当前窗口是否可调整大小(窗口默认是可调整大小).
+    例 1(P140) import java.applet.*; import java.awt.*; class Mywindow extends Frame { Mywindow(String s) { //使用方法 super(String s)调用父类的构造方法设置窗口的标题 super(s); setLayout(new GridLayout(1,1)); setSize(280,200); setBackground(Color.white); setVisible(true); setTitle("我的窗口"); //设置窗口的标题 //pack(); } } public class Exp15_1 extends Applet { Mywindow window; public void init() { window=new Mywindow("Mywindow");
+    56
+    } }
+    15.2
+    向窗口增加菜单
+    菜单(Menu) 菜单项(MenuItem)
+    菜单条(MenuBar)
+    菜单条 java.awt 包中的 MenuBar 类是创建菜单条的,即 MenuBar 的一个实例就是 一个菜单条.在窗口中增加菜单条,必须使用 Frame 类中的方法:setMenuBar(MenuBar). 菜单 Menu 类是创建菜单的,即 Menu 的一个实例就是一个菜单.Menu 类的主要方 法如下: Menu() 建立一个空标题的菜单. Menu(String s) 建立一个以参数 s 为标题的菜单. add(MenuItem item) 向菜单增加由参数 item 指定的菜单项对象. add(String s) 向菜单增加菜单项. getItem(int n) 得到指定索引处的选项. getItemCount() 得到菜单项的数目. insert(MenuItem item,int n) 在菜单的指定位置插入菜单项. , insert(String s,int n) 在菜单指定位置插入菜单项. , remove(int n) 删除菜单的指定位置的菜单项. removeAll() 删除菜单的所有菜单项. 菜单项 MenuItem 类是负责创建菜单项的,即 MenuItem 的一个实例就是一个菜单项. MenuItem 类的主要方法如下: MenuItem() 构造无标题菜单项. MenuItem(String s) 构造有标题的菜单项. setEnabled(boolean b) 设置当前菜单项是否可被选择(即是否有效). getLabel() 得到菜单项的名字. AddActionListene(ActionListene) 向菜单项增加监视器.
+    15.3 处理菜单项事件
+    菜单项是事件源,用鼠标单击某个菜单项,触发菜单项事件. 事件源获得监视器的方法是 aadActionListener(). 处理该事件的接口是 AcdonListener. 接口中的方法是 actionPerformed(ActionEvent e).
+    57
+    事件的类型是 ActionEvent, 即当单击某菜单项时, java. awt. envent 包中的 ActionEvent 类自动创建一个事件对象. ActionEvent 类中有一个获得事件源的方法 getSource(). 例子 5 (P147) import java.applet.*; import java.awt.*; import java.awt.event.*; class Mywindow extends Frame implements ActionListener { MenuBar menubar; Menu menu1,menu2; MenuItem item1,item2,item3,item4,item5,item6; TextArea text; Mywindow(String s) { super(s); menubar=new MenuBar(); menu1=new Menu("文件"); menu2=new Menu("编辑"); item1=new MenuItem("新建"); item2=new MenuItem("打开"); item3=new MenuItem("保存"); item4=new MenuItem("复制"); item5=new MenuItem("剪切"); item6=new MenuItem("粘贴"); text=new TextArea(); setLayout(new GridLayout(1,1)); setSize(280,200); setBackground(Color.white); setVisible(false); setTitle("我的窗口"); //pack(); menu1.add(item1);menu1.add(item2);menu1.add(item3); menu1.addSeparator(); menu1.add("退出"); menu2.add(item4);menu2.add(item5);menu2.add(item6); menubar.add(menu1);menubar.add(menu2); setMenuBar(menubar); add(text); item1.addActionListener(this);
+    58
+    item2.addActionListener(this); item3.addActionListener(this); item4.addActionListener(this); item5.addActionListener(this); item6.addActionListener(this); } public void actionPerformed(ActionEvent e) { if(e.getSource()==item1) { text.setText(item1.getLabel()); } else if(e.getSource()==item2) { text.setText(item2.getLabel()); } else if(e.getSource()==item3) { text.setText(item3.getLabel()); } else if(e.getSource()==item4) { text.setText(item4.getLabel()); } else if(e.getSource()==item5) { text.setText(item5.getLabel()); } else if(e.getSource()==item6) { text.setText(item6.getLabel()); } } }
+    public class Exp15_5 extends Applet implements ActionListener { Mywindow window; Button button1,button2; public void init()
+    59
+    { button1=new Button("打开窗口"); button2=new Button("关闭窗口"); window=new Mywindow("Mywindow"); button1.addActionListener(this); button2.addActionListener(this); add(button1); add(button2); } public void actionPerformed(ActionEvent e) { if(e.getSource()==button1) { window.setVisible(true); } else if(e.getSource()==button2) { window.setVisible(false); } } }
+    第十六章
+    16.1 Dialog 类
+    建立对话框
+    Dialod 类是 java.awt 中的一个类,是一个容器. 程序中通过扩展 Dialog 类来定义一个对话框,即通过创建 Dialog 类的子类的对象来建
+    60
+    立一个对话框. . 对话框可以接受用户的输入,实现与用户的交互. 对话框依赖于窗口, 即对话框的动作依赖于它所在的窗口的动作, 例如, 窗口最小化时, 对话框也消失,窗口还原时,对话框又会自动恢复. 对话框分为有模式和无模式两种: ①有模式对话框只允许程序响应对话框内部的事件,对话框以外的事件程序不响应; ②无模式对话框允许程序响应对话框以外的事件. Dialog 类的主要方法如下: Dialog(Frame f,String s) 构造一个具有标题 s 的,初始不可见的对话框.参数 f 设置 对话框所依赖的窗口,s 设置标题. Dialog(Frame f,String s,boolean b) 构造一个具有标题 s 的,初始不可见的对话框. 参数 f 设置对话框所依赖的窗口,s 设置标题,参数 b 设置对话框有模式/无模式. getTitle() 获取对话框的标题. setTitle(String s) 设置对话框的标题. setModal(boolean b) 设置对话框的模式. setSize(int a,int b) 设置对话框的大小. setVisible(Boolean b) 显示或隐藏对话框. 建立对话框有以下几点注意: ①对话框必须依赖于一个窗口,要建立对话框,首先要建立一个创建窗口(对象)的窗 口类(扩展 Frame 类) ; ②在创建对话框时必须要有对话框大小的设置; ③在扩展类的构造方法中要使用 super()方法调用父类的相应构造方法. 例子 1(P168) import java.applet.*; import java.awt.*; class Mypa extends Panel { Button button1,button2; Mypa() { button1=new Button("打开"); button2=new Button("关闭"); setBackground(Color.red); add(button1); add(button2); setVisible(true); } } class Dwindow extends Frame { Mypa mypa; Dwindow(String s) { super(s);
+    61
+    setSize(280,260); setVisible(true); mypa=new Mypa(); add(mypa); setVisible(true); } } class Mydialog extends Dialog //建立对话框类. { Button button1,button2; Mydialog(Frame F,String s) //构造方法. { super(F,s); //调用父类的 Dialog(Frame,String)方法,对话 框将依赖于窗口 F button1=new Button("open"); button2=new Button("close"); setLayout(new FlowLayout()); setSize(180,190); setVisible(true); setModal(false); add(button1); add(button2); } } public class Exp16_1 extends Applet { Dwindow window; Mydialog dialog; Button button; public void init() { window=new Dwindow("带对话框的窗口"); //创建窗口. dialog=new Mydialog(window,"对话框"); //创建依赖于窗口 window 的 对话框. button=new Button("ok"); add(button); } }
+    16.2 FileDialog 类
+    FileDialog 类是 Dialog 类的子类,它创建的对象称为文件对话框.文件对话框是一个打 开文件和保存文件的对话框窗口.文件对话框也必须依附一个窗口(Frame)对象. FileDialog 类的主要方法如下: FileDialog(Frame f,String s,int mode)构造方法 参数 f 是对话框所依赖的窗口对象;s
+    62
+    是对话框的标题;mode 的取值为 FileDialog.LOAD 或 FileDialog.SAVE,决定对话框是打开 文件模式或保存文件模式,如图 16.2 所示. public String getDirectory() 获取当前文件对话框中显示的文件所属目录. public String getFile() 获取当前文件对话框中显示的文件的字符串表示, 如果不存在就 得到 null. (P172) 例子 3 中,一个窗口带有两个对话框:保存文件对话框和打开文件对话框.窗 口还有一个菜单,选择菜单中的"打开文件"选项时,出现打开文件对话框;选择菜单中的 "保存文件"选项时,出现保存文件对话框. 需要说明的是,上例中的文件对话框只是一个界面,并不能真正提供对于文件的操作, 真正实现对文件的操作要在学习了文件的输入输出流之后.
+    第十七章
+    17.1 Java 的坐标系统
+    x
+    Java 与图形
+    如图 17.1 所示是浏览器创建的 Java Applet 的一 个实例. 它的大小是由超文本文件中的 width 和 height 指定的,原点在左上角,坐标的单位是像素. java.awt 包中的 Graphics 类有很多处理图形的方 法,供该类创建的对象使用,以下介绍主要的方法.
+    y
+    17.2 显示字符串与字符数组
+    drawString(String S,int x,int y)方法 在屏幕上显示字符串对象.在参数 x 和 y 所指定 的位置上显示字符串. 例子 1 (P178) drawChars(char data[],int offset,int length,int x,int y)方法 在屏幕上显示字符数组. 其中参数 char data[]指定字符数组;int offset 指定要显示的字符的下标;int length 指定要显 示的字符数组的长度;参数 x 和 y 指定显示的位置. 例子 2 (P179) import java.applet.*; import java.awt.*; public class Exp17_2 extends Applet { char a[];
+    63
+    public void init() { a=new char[10]; a[0]='谁'; a[1]='?'; a[2]='是'; a[3]='我'; a[4]='老'; a[5]='八'; a[6]='路'; a[7]='李'; a[8]='向'; a[9]='阳'; } public void paint(Graphics g) {
+    // Java Applet 中的 paint(Graphics g)方法,参数 //是 Graphics 类的对象,运行 Java Applet 时, //浏览器创建一个 Graphics 的实例传递给参数 g g.drawString("显示字符数组",25,20); //g 调用 Graphics 类的 drawString 方法 g.drawChars(a,0,a.length,25,45); //g 调用 Graphics 类的 drawChars 方法 g.drawChars(a,0,2,25,65); g.drawChars(a,2,2,25,85); g.drawChars(a,4,6,25,105);
+    } }
+    17.3
+    画直线
+    画直线,使用 Graphics 类的 drawLine 方法. drawLine(int x1,int y1,int x2,int y2); 例子 3 (P180)
+    17.4
+    画矩形
+    1.画矩形
+    画矩形,使用 drawRect 方法. drawRect (int x,int y,int width,int height);
+    64
+    例子 4 (P180)
+    2.画圆角矩形
+    画圆角矩形,使用 drawRoundRect 方法. drawRoundRect (int x,int y,int width,int height,int arcWidth,int arcHeight); 例子 5 (P181)
+    17.5
+    画圆
+    画圆,也可以使用 drawRoundRect 方法. 例子 6 (P181)
+    17.6
+    画带颜色的图形
+    Graphics 类的 setColor 方法改变当前颜色,getColor 方法获得当前颜色. 例子 7 (P182)
+    1.使用预定义颜色(P182) 2.画填色的矩形(P182)
+    例子 8(P182)
+    3.建立新颜色(P183)
+    java.awt 包中的 Color 类的 Color 构造器创建新颜色.格式如下: Color(int r,int g,int b); Color(float r,float g,float b); 例子 9(P183)
+    4.改变 Java Applet 背景色(P184)
+    例子 10(P184)
+    5.画填色的圆角矩形(P184)
+    例子 11(P184)
+    17.7
+    画椭圆
+    65
+    1.画椭圆
+    画椭圆,使用 drawOval 方法. drawOval (int x,int y,int width,int height); 例子 12 (P185)
+    2.用 drawOval 方法画圆
+    更好的画圆的方法是 drawOval 方法. 例子 13 (P185)
+    17.8
+    画弧
+    画弧,使用 Graphics 类的 drawArc 方法. drawArc (int x,int y,int width,int height,int starAngle,int arcAngle); 例子 15 (P186)
+    17.10
+    画多边形
+    多边形是由多条线段相互连接而成的封闭的平面图形. 画多边形,使用 Graphics 类的 drawPolygon 方法. drawPolygon (int xPoints[],int yPoints[],int nPoints); 其中,数组 int xPoints[]指定构成多边形的线段的 x 坐标;数组 int yPoints[]指定构成多 边形的线段的 y 坐标;int nPoints 指定数组 int xPoints[](数组 int yPoints[])的长度. 例子 17 (P187)
+    17.11
+    建立字体
+    使用 Font 类的构造器建立字体对象的名字,样式和磅值. Font(String name,int style,int size); 其中,参数 String name 指定字体名称;int style 指定字体的样式;int size 指定字体的磅 值. 例子 19(P188)
+    17.12
+    使用 clearRect 方法
+    clearRect(int x, y, width, height)方法用背景色填充指定矩形 int int int (相当于橡皮擦) . 例子 20(P189)
+    66
+    关于 repaint()方法,应该了解在 Java Applet 中调用 repaint()方法时,程序自动调用 update(Graphics g)方法(从父类 Applet 继承的)清除 paint()方法以前所画的内容,然后再调用 paint()方法.如果不想清除 paint()方法以前所画的所有内容,可以重写 update(Graphics g)方 法. 例子 21(P190) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Exp17_21 extends Applet { int i=0; public void init() { setBackground(Color.yellow); } public void paint(Graphics g) { i=i+10; if(i>150)i=0; g.setColor(Color.red); g.fillRect(i,0,20,20); g.drawString("我很好!",100,100); try { Thread.sleep(500); //程序暂停 0.5 秒,再执行 repaint()方法 } catch(InterruptedException e) {} repaint(); } public void update(Graphics g) { g.clearRect(i,0,20,20); paint(g); } }
+    第十八章 Java 中的鼠标事件和键盘事件
+    发生鼠标事件的事件源往往是一个容器, 当鼠标指针进入容器, 离开容器或者在容器中 单击鼠标,拖动鼠标时都会引发鼠标事件.
+    18.1
+    使用 MouseLiStener 接口处理鼠标事件
+    67
+    1.事件源发生的鼠标事件有 5 种:按下鼠标键,释放鼠标键,点击鼠标键,鼠标进入 和鼠标退出. 鼠标事件的类型是 MouseEvent,即当发生鼠标事件时,MouseEvent 类自动创建一个事 件对象. MouseEvent 类中有下列几个重要的方法: getX(),getY() 获取鼠标的坐标位置. getModifiers() 获取鼠标的左键或右键. getClickCount() 获取鼠标被点击的次数. getSource() 获取发生鼠标事件的事件源. 2.事件源获得监视器的方法是 addMouseListener(监视器);移去监视器的方法是 removeMonseListener(监视器). 3.处理事件源发生的事件的接口是 MouseListener.接口中有如下方法: mousePressed(MouseEvent) 处理鼠标按下事件. mouseReleased(MouseEvent) 处理鼠标释放事件. mouseEntered(MouseEvent) 处理鼠标进入容器事件. mouseExited(MouseEvent) 处理鼠标离开容器事件. mouseClicked(MouseEvent) 处理点击鼠标事件. 例子 1(P204)
+    18.2
+    使用 MouseMotionListener 接口处理鼠标事件
+    1.使用 MouseMotionListener 接口处理事件源发生的鼠标事件有 2 种:拖动鼠标和移 动鼠标 (鼠标键不按下). 鼠标事件的类型是 MouseEvent,即当事件发生时,MouseEvent 类自动创建一个事件对 象. 2.事件源获得监视器的方法是 addMouseMotionListener(监视器). 3.处理事件源发生的事件的接口是 MouseMotionListener.接口中有如下方法: mouseDragged(MouseEvent) 处理拖动鼠标事件. mouseMoved(MouseEvent) 处理移动鼠标事件. 例子 6(P209)
+    注:任何组件上都可以发生鼠标事件,如:鼠标进入组件,退出组件,在组件上点 击鼠标,按下鼠标等. 例子 7(P209) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Exp18_7 extends Applet implements MouseListener
+    68
+    { TextArea text; Button button; public void init() { button=new Button("我上面也能发生鼠标事件"); button.addMouseListener(this); text=new TextArea(); text.addMouseListener(this); setLayout(new BorderLayout()); add(button,"North"); add(text,"Center"); } public void mousePressed(MouseEvent e) { if(e.getSource()==button) { button.setBackground(Color.red); text.setBackground(Color.white); text.setText("按钮发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在按钮上按下了鼠标键"+","+"("+e.getX()+","+e.getY()+")"); } else if(e.getSource()==text) { button.setBackground(Color.gray); text.setBackground(Color.red); text.setText("文本区发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在文本区按下了鼠标键,位置是"+e.getX()+","+e.getY()); } } public void mouseReleased(MouseEvent e) { if(e.getSource()==button) { button.setBackground(Color.red); text.setBackground(Color.white); text.setText("按钮发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在按钮上释放了鼠标键"+","+"("+e.getX()+","+e.getY()+")"); } else if(e.getSource()==text) { button.setBackground(Color.gray);
+    69
+    text.setBackground(Color.red); text.setText("文本区发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在文本区释放了鼠标键,位置是"+e.getX()+","+e.getY()); } } public void mouseEntered(MouseEvent e) { if(e.getSource()==button) { button.setBackground(Color.red); text.setBackground(Color.white); text.setText("按钮发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"鼠标进入了按钮"+","+"("+e.getX()+","+e.getY()+")"); } else if(e.getSource()==text) { button.setBackground(Color.gray); text.setBackground(Color.red); text.setText("文本区发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"鼠标进入了文本区,位置是"+e.getX()+","+e.getY()); } } public void mouseExited(MouseEvent e) { if(e.getSource()==button) { button.setBackground(Color.red); text.setBackground(Color.white); text.setText("按钮发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"鼠标移出了按钮"+","+"("+e.getX()+","+e.getY()+")"); } else if(e.getSource()==text) { button.setBackground(Color.gray); text.setBackground(Color.red); text.setText("文本区发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"鼠标移出了文本区,位置是"+e.getX()+","+e.getY()); } } public void mouseClicked(MouseEvent e) {
+    70
+    if(e.getClickCount()==2) { if(e.getSource()==button) { button.setBackground(Color.red); text.setBackground(Color.white); text.setText("按钮发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在按钮上双击鼠标"+","+"("+e.getX()+","+e.getY()+")"); } else if(e.getSource()==text) { button.setBackground(Color.gray); text.setBackground(Color.red); text.setText("文本区发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在文本区双击鼠标键,位置是"+e.getX()+","+e.getY()); } } else { if(e.getSource()==button) { button.setBackground(Color.red); text.setBackground(Color.white); text.setText("按钮发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在按钮上单击鼠标"+","+"("+e.getX()+","+e.getY()+")"); } else if(e.getSource()==text) { button.setBackground(Color.gray); text.setBackground(Color.red); text.setText("文本区发生鼠标事件"+","+"("+e.getX()+","+e.getY()+")"); text.append("\n"+"在文本区单击鼠标键,位置是"+e.getX()+","+e.getY()); } } } }
+    18.5
+    键盘事件
+    在 Java 1.2 的事件模式中,必须要有发生事件的事件源,当一个组件处于激活状态时, 它就可以成为发生键盘事件的事件源,按下,释放或敲击键盘上一个键时就发生键盘事件. 事件源使用 addKeyListener 方法获得监视器. 监视器是一个对象,创建该对象的类必须实现接口 KeyListener. 接口 KeyListener 中有三个方法:
+    71
+    public void keyPressed(KeyEvent e) (处理按下键盘上某个键事件,调用该方法) public void keyTyped(KeyEvent e) (处理击键盘上某个键事件,调用该方法) public void KeyReleased(KeyEvent e) (处理释放键盘上某个键事件, 调用该方法) KeyEvent 类的方法:public int getKeyCode() ,用来判断哪个键发生了键盘事件. 例子 11 (P214) P215 的"键码表"应该记背.
+    例子 12 (P216)
+    第十九章
+    Java 多线程机制
+    此前所作的程序大多是单线程的,即一个程序只有一条从头至尾的执行线索. Java 语言内置对多线程的支持, 多线程是指同时存在几个执行体, 按几条不同的执行线 索共同工作的机制. 执行多线程并不是同时发生几个事件, 计算机在任何时刻只能执行多线 程中的一个,Java 需要快速地把控制从一个线程切换到另一个线程.
+    72
+    19.1 Java 中的线程
+    1.程序,进程与线程 .程序, 程序 是一段静态的代码,它是应用软件执行的蓝本. 进程 是程序的一次动态执行过程, 它对应了从代码加载, 执行至执行完毕的一个完整 过程,这个过程也是进程本身从产生,发展至消亡的过程. 线程 是比进程更小的执行单位.一个进程在其执行过程中,可以产生多个线程,形成 多条执行线索,每条线索,即每个线程也有它自身的产生,存在和消亡的过程,也是一个动 态的概念.线程间可以共享相同的内存单元(包括代码与数据),并利用这些共享单元来实现 数据交换, 实时通信与必要的同步操作. 多线程的程序能更好地表达和解决现实世界的具体 问题,是计算机应用开发和程序设计的一个必然发展趋势. 2.线程的状态与生命周期 . 每个 Java 程序都有一个默认的主线程.对于 Java Application 程序的主线程是 main()方 法执行的线索.对于 Java Applet 程序的主线程是浏览器加载并执行 Applet. 要想实现多线程,必须在主线程中创建新的线程对象.Java 语言使用 Thread 类及其子 类的对象来表示线程.新建的线程在它的一个完整的生命周期中通常要经历如下的五种状 态: (1)新建 当一个 Thread 类或其子类的对象被声明并创建时,新生成的线程对象处于新建状态. 此时它已经有了相应的内存空间和其他资源. (2)就绪 处于新建状态的线程被启动后,将进入线程队列排队等待 CPU 服务,此时它已经具备 了运行的条件,一旦轮到它来享用 CPU 资源时,就可以脱离创建它的主线程独立开始自己 的生命周期了. (3)运行 当就绪状态的线程被调度并获得处理器资源时,便进入运行状态.每一个 Thread 类及 其子类的对象都有一个重要的 run()方法,run()方法定义了这个线程的操作和功能.当线程 对象被调度执行时,它将自动调用本对象的 run()方法,从第一句开始顺次执行. (4)阻塞 一个正在执行的线程如果在某些特殊情况下 (如被人为挂起或需要执行费时的输入输出 操作时) 将让出 CPU 并暂时中止自己的执行, , 进入阻塞状态. 阻塞时它不能进入排队队列, 只有当引起阻塞的原因被消除时, 线程才可以转入就绪状态, 重新进到线程队列中排队等待 CPU 资源,以便从原来终止处开始继续运行. (5)死亡 处于死亡状态的线程不具有继续运行的能力. 线程死亡的原因有二, 一个是正常运行的 线程完成了它的全部工作,即执行完了 run()方法的最后一个语句并退出;另一个是线程被 提前强制性地终止. 3.优先级与线程调度 . 处于就绪状态的线程首先进入就绪队列排队等候处理器资源, 同一时刻在就绪队列中的 线程可能有多个, 多线程系统会给每个线程自动分配一个线程的优先级, 任务较紧急的重要 线程,其优先级就较高,相反则较低. 在线程排队时,优先级高的线程可以排在较前的位置,能优先享用到处理器资源,而优 先级较低的线程则要等到排在它前面的优先级较高的线程执行完毕之后才能获得处理器资
+    73
+    源.对于优先级相同的线程,则遵循队列的"先进先出"的原则,即先进入就绪状态排队的 线程被优先分配到处理器资源,然后才为后进入队列的线程服务. 当一个在就绪队列中排队的线程被分配到处理器资源而进入运行状态之后, 这个线程就 称为是被"调度"或被线程调度管理器选中了.线程调度管理器负责管理线程排队和处理器 在线程间的分配,线程调度管理器一般都配有线程调度算法,在 Java 系统中,线程调度依 据优先级基础上的"先到先服务"原则.
+    19.2 Java 的线程类与 Runnable 接口
+    Java 中编程实现多线程应用有两种途径: 一种是创建用户自己的线程子类; 另一种是在 用户自己的类中实现 Runnable 接口. 无论哪种途径, 都需要使用到 Java 基础类库中的 Thread 类及其方法. ①创建用户自己的线程子类: class A {} class thread extends Thread //创建用户自己的线程子类 { run() {} } thread t1; ②在用户自己的类中实现 Runnable 接口: class A extends Applet implements Runnable { Thread t1=new Thread(this) run() {} }
+    //在用户的类中实现 Runnable 接口
+    1.Thread 类 . Thread 类封装了一个线程需要的属性和方法,主要有: (1)构造函数 Thread 类的构造函数有多个,其对应的操作有以下两种: public Thread() 创建一个线程对象. public Thread(Runnable target) 创建线程对象,参数 target 称为被创建线程的目标 对象(指定哪一个类应该实现接口).创建目标对象
+    74
+    target 的类负责实现 Runnable 接口, 给出该接口中 run()方法的方法体, 在方法体中给出该线程的操作 和功能. 利用构造函数创建新线程对象之后, 这个对象中的有关数据被初始化, 从而进入线程的 生命周期的第一个状态——新建状态. (2)线程优先级 一个新建线程将继承它的父线程的优先级, 所谓父线程是指执行创建新线程对象语句的 线程,它可能是程序的主线程(一般情况下,主线程具有普通优先级) ,也可能是某一个用 户自定义的线程. 可以调用 Thread 类的 setPriority(int a)方法修改系统自动设定的线程优先级,a 取值是: MIN_ PRIORITY,最小优先级,数值为 1; MAX_PRIORITY,最高优先级,数值为 10; NORM_PRIORITY.普通优先级,缺省数值为 5. (3)其他主要方法 启动线程的 start()方法 start()方法将启动线程对象, 使之从新建状态转入就绪状态并进 入就绪队列排队. 定义线程操作的 run()方法 Thread 类的 run()方法与 Runnable 接口中的 run()方法的功 能和作用相同, 都是用来定义线程对象被调度之后所执行的操作, 都是系统自动调用的方法 (用户程序不能引用) .Thread 类中的 run()方法没有具体内容,程序需要创建 Thread 类的 子类,并重写 run()方法来覆盖原来的 run()方法. 使线程暂时休眠的 sleep()方法 线程的调度执行是按照其优先级的高低顺序进行的, 优 先级高的线程未死亡时,优先级低的线程没有机会获得处理器.有时,需要优先级高的线程 暂时让出处理器,可以在优先级高的线程的 run()方法中调用 sleep()方法使自己放弃处理器 资源,休眠一段时间.休眠时间的长短由 sleep()方法的参数决定: sleep(int millsecond) millsecond 是毫秒为单位的休眠时间. sleep(int millsecond,int nanosecond) nanosecond 是以纳秒为单位的休眠时间. Thread 类还有一个静态方法:currentThread(),判断当前正在占有 CPU 的线程. 2.Runnable 接口 . Runnable 接口只有一个方法 run(),引用 Runnable 接口的类必须实现 run()方法,即写出 它的方法体. Runnable 接口中的 run()方法是一个比较特殊的方法,它能够被系统自动识别和执行, 当线程被调度并转入运行状态时,它所执行的就是 run()方法中规定的操作,即主线程之外 的新线程的操作.
+    19.3
+    如何在程序中实现多线程
+    在程序中实现多线程有两个途径: 一是创建 Thread 类的子类; 二是引用 Runnable 接口. 无论是哪种途径,我们可以控制的操作有两个: (1) 建立线程实例; (2) 定义线程的操作,即定义线程的 run()方法. 并且,无论哪种途径,都需要使用到 Java 基础类库中的 Thread 类及其方法.
+    75
+    1.用 Thread 类的子类创建线程 . 类的子类创建线程 (1) 创建 Thread 类的子类(Tbread 在 java.lang 包中),当程序需要建立新的线程时,只 要创建一个 Thread 类的子类的实例就可以了; (2) 在 Thread 类的子类中重新定义 run()方法,使 run()方法包含线程的操作,创建的线 程调用 start()方法开始运行时,run()方法将被自动执行. 例子 1 (P234) public class Exp19_1 { static Lefthand left; static Righthand right; public static void main(String args[]) { left=new Lefthand(); right=new Righthand(); left.start(); right.start(); } } class Lefthand extends Thread //创建用户的线程子类 { public void run() { for(int i=0;i<=5;i++) { System.out.println("i am a student"); try{sleep(500);} catch(InterruptedException e) {} } } }
+    class Righthand extends Thread //创建用户的线程子类 { public void run() { for(int i=0;i<=5;i++) { System.out.println("i am ok");
+    76
+    try{sleep(300);} catch(InterruptedException e) {} } } }
+    2.引用 Runnable 接口 . 例子 2 中,在 Applet 这个主线程中用构造方法 Thread(this)创建了一个新的线程,this 指代 Applet 的主类的对象作为这个新的线程的目标对象,因此 Applet 的主类必须引用 Runnable 接口,并实现 Runnable 接口中的 run()方法,即在 run()方法的方法体中给出该线程 的操作.
+    例子 2 import java.applet.*;import java.awt.*; public class Exp19_2 extends Applet implements Runnable //引入并实现 Runnable 接口 { Thread circleThread; //声明线程 circleThread public void init() { setFont(new Font("楷体",Font.BOLD,36)); } public void start() { if(circleThread==null) //如果线程置空 { circleThread=new Thread(this); //构造线程 circleThread //调用线程类的 start()方法来启动该线程, circleThread.start();
+    77
+    }
+    线程被启动以后,自动调用 run ()方法
+    } //实现 Runnable 接口中的 run()方法 public void run() { while(circleThread!=null) //如果线程不空 { repaint(); try { circleThread.sleep(1000); } catch(InterruptedException e) { } } } public void paint(Graphics g) { double i=Math.random(); if(i<0.8) g.setColor(Color.red); else g.setColor(Color.green); g.fillOval(100,100,(int)(100*i),(int)(100*i)); //画着色圆(P185) g.setColor(Color.blue); g.drawString("多线程机制",20,60); } public void stop() { circleThread.yield(); //交出 circleThread=null; //线程置空 } }
+    19.4 Thread 类的静态方法 sIeep()
+    Thread 类的 sleep()方法是静态方法, 因此它可以被类名直接调用, 当需要推延程序的执 行时可以使用下面的语句: Thread. sleep(int times); 例子 8 (P242) 单击按钮后,每隔半秒程序发出一次"嘟"声.
+    78
+    19.5
+    线程同步
+    所谓线程同步,是指在实现多线程的程序中,当两个或多个线程同时访问同一个变量, 并且一个线程需要修改这个变量时,应该对这样的问题做出处理,避免发生混乱. 处 理 线 程 同 步 的 办 法 是 用 关 键 字 synchronized 修 饰 修 改 数 据 的 方 法 ( 用 关 键 字 synchronized 修饰的方法叫同步方法),当一个线程 A 使用这个方法时,其他线程想使用这 个方法时就必须等待,直到线程 A 使用完这个方法. 例子 9(P243) import java.applet.*; import java.awt.*; import java.awt.event.*; public class Exp19_9 extends Applet implements Runnable { int money=100;TextArea text1,text2; Thread 会计,出纳; public void init() { 会计=new Thread(this);出纳=new Thread(this);//创建两个线程:会计,出纳 text1=new TextArea("会计",20,8);text2=new TextArea("出纳",20,8); add(text1);add(text2); } public void start() { 会计.start();出纳.start(); //启动线程 } public synchronized void 存取(int number) //存取方法(synchronized 修饰的方法叫 同步方法) { if(Thread.currentThread()==会计) //判断当前正在占有 CPU 的线程 { for(int i=1;i<=3;i++) //会计使用存取方法存入 90 元,存入 30 元,稍歇一下 { money=money+number; //这时出纳仍不能使用存取方法 try{Thread.sleep(1000);} //因为会计还没使用完存取方法 catch(InterruptedException e){} text1.append("\n"+money); } } else if(Thread.currentThread()==出纳) { for(int i=1;i<=2;i++) {
+    79
+    money=money-number/2; try{Thread.sleep(1000);} catch(InterruptedException e){} text2.append("\n"+money); } } } public void run() { if(Thread.currentThread()==会计||Thread.currentThread()==出纳) { for(int i=1;i<=3;i++) //从周一到周三会计和出纳都要使用账本 { 存取(30); } } } }
+    19.6 在同步方法中使用 wait(),notify()和 notifyAll()方法
+    当一个线程正在使用一个同步方法时, 其他线程就不能使用这个同步方法. 对于同步方 法,有时出现特殊情况,当一个线程使用的同步方法中用到某个变量,而此变量又需要其他 线程修改后才能符合本线程的需要, 那么可以在同步方法中使用 wait()方法, 使本线程等待, 并允许其他线程使用这个同步方法. 其他线程如果在使用这个同步方法时不需要等待, 那么
+    80
+    它使用完这个同步方法的同时,用 notifyAll()方法通知所有的由于使用这个同步方法而处于 等待的线程结束等待,再次使用这个同步方法(如果使用 notify()方法,那么只是通知第一个 处于等待的线程结束等待). 例子 10(P246)
+    19.7
+    线程的 interrupt()方法
+    一个线程在执行完 run()方法后就自动消灭了,如果想在 run()方法执行完之前就消灭该 线程,可以调用 interrupt()方法,这时该线程会捕获 InterruptedException 异常,在处理该异 常的语句里通知线程结束 run()方法的执行, 例如使用 return 语句, 方法体中一旦执行了 return 语句,则该方法立刻结束执行. 例子 11(P247)
+    第二十章
+    输入输出流
+    I/O 流提供一条通道程序,可以使用这条通道把源中的字节序列送到目的地. 输入流的指向称做源, 程序从指向源的输入流中读取源中的数据; 输出流的指向是字节 的目的地(或用户),程序通过向输出流中写入数据把信息传递到目的地. I/O 流经常与磁盘文件存取有关,程序的源和目的地也可以是键盘,鼠标,内存或显示 器窗口. Java 的 I/O 流库提供大量的流类(在包 java. 中). io 其中, 所有输入流类都是 InputStream (输入流)抽象类或抽象类 Reader 的子类,所有输出流都是 OutputStream(输出流)抽象类或抽 象类 Writer 的子类.
+    20.1 FileInputStream 类
+    如果用户的文件读取需求比较简单,那么用户可以使用 FileInputStream 类,该类是从 InputStream 类中派生出来的简单输入类,该类的所有方法都是从 InputStream 类继承来的. FileInputStream 类还有两个构造方法: FileInputStream(String name) 用给定的文件名 name 创建一个 FilelnputStream 对象. FileInputStream(File file) 用 File 对象创建 FileInputStream 对象. 1.使用文件输入流读取文件 . 为了读取文件,使用文件输入流构造方法打开一个指向该文件的输入流(源就是这个文 件,输入流指向这个文件),文件输入流的格式如下: FileInputStream(String name); 例如,为了读取一个名为 myfile. 的文件,建立一个文件输入流对象如下: dat FileInputStream istream=new FileInputStream("myfile. dat"); 文件输入流构造方法的另一种格式是使用文件对象来指定要打开哪个文件: FileInputStream(File file); 例如,下面这段代码使用文件输入流构造方法建立一个文件输入流,以检索文件: File f=new File("myfile. dat");
+    81
+    FileInputStream istream=new FileInputStream(f); File 类有两个常用的构造方法. File(Sting s) s 确定文件的名字(应确保该文件和应用程序在同一目录下) . File(String directory,String s) directory 确定文件的目录,s 确定文件的名字. 2.处理 I/O 异常 . 使用文件输入流构造方法建立通往文件的输入流时,可能会出现错误(异常),例如,要 打开的文件不存在. 当出现 I/O 异常时,Java 生成一个 IOException 的对象来表示这个出错信号,程序必须 使用一个 catch 块检测并处理这个异常. 为了把一个文件输入流对象与一个文件关联起来,使用下面的代码:
+    try { FileInputStream ins=new FileInputStream("myfile.dat"); //读取输入流 } catch(IOException e) //捕捉文件 I/O 异常 { system. println("File read error: out. "+e); } 其他的流类构造方法和方法产生的 I/O 异常也按上述程序段处理. 3.从输入流中读取字节 . 程序通过输入流读取数据,read()方法是读取数据的基本方法. read()方法的格式: int read(); read()方法从输入流中读取单个字节的数据,方法返回字节值(0～255 之间的一个整 数),如果该方法读到输入流的末尾,则返回-1. read()方法还有其他格式: int read(byte b[]); int read(byte b[],int off,int len); 以上两格式能把多个字节读到一个字节数组中.其中,参数 off 指定数据存放在字节数 组 b 中的位置;参数 len 指定该方法将读取的最大字节数.这两个 read()方法都返回被读取 的字节个数,如果到达输入流的末尾,则返回-1. 4.关闭流 . 虽然 Java 在程序结束时自动关闭所有打开的流, 但是当我们使用完流后, 通过调用 close() 方法,显式地关闭所有打开的流是一个良好的习惯. 例子 1(P258)程序从磁盘上读取它自己的源代码并将代码显示在屏幕上. import java.io.*; class Exp20_1
+    82
+    { public static void main(String args[]) { int b; byte buffer[]=new byte[2500]; try { FileInputStream readfile=new FileInputStream("Exp20_1.java"); //创建流对象 readfile //读取自己的源代码 b=readfile.read(buffer,0,2500); //流的对象 readfile 调用 read 方法将多个字节读到字 //节数组 buffer[]中,返回读取的字节个数 try { String str=new String(buffer,0,b,"Default"); //使用 String 类的构造方法创建字符 //串 str(P259 第 1 行) System.out.println(str); //在屏幕上显示 str } catch(UnsupportedEncodingException e) { System.out.println("the encoding was not found:"+e); } } catch(IOException e) { System.out.println("File read Error"); } } }
+    例子 2 (P259)将指定文件的内容显示在文本区里. import java.io.*;
+    83
+    import java.awt.*; import java.awt.event.*; class Exp20_2 { static Frame f; public static void main(String args[]) { int b, j=10; TextArea text; byte tom[]=new byte[2500]; //创建字节型数组 tom[],数组的长度是 2500 f=new Frame(); f.setSize(100,100); text=new TextArea(30,80); f.setVisible(true); f.add(text); f.pack(); //窗口增加适配器(始) f.addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) { f.setVisible(false);System.exit(0); } //窗口增加适配器(止) }); try { File f=new File("D:\\YuHong\\Java2 实用教程\\java2 程序","Exp20_1.java"); //使用 File 类的构造方法创建文件输入流要读取的文件对象 f(P257 第 3 行) FileInputStream readfile=new FileInputStream(f); //使用文件输入流类的构造方法创建一个文件输入流的对象 readfile while((b=readfile.read(tom,0,j))!=-1)//文件输入流的对象 readfile 调用 read(tom,0,j) //方法读取 readfile 中的数据并存入 tom[] , { //当 tom[]的长度不等于-1(P258 第 6 行) String s=new String(tom,0,j); //使用 String 类的构造方法创建字符串 s System.out.println(s); text.append(s); } readfile.close(); } catch(IOException e) { System.out.println("File read Error"); } }
+    84
+    }
+    20.2 FileOutputStream 类
+    与 FileInputStream 类相对应的类是 FileOutputStream 类. FileOutputStream 提供了基本的 文件写入能力.除了从 OutputStream 类继承来的方法以外,FileOutputStream 类还有 3 个构 造方法: FileOutputStream(String name) 用给定的文件名 name 创建一个 FileOutputStream 对 象. FileOutputStream(File file) 使用 File 对象创建 FileOutputStream 对象. FileOutputStream(FileDescriptor fdobj) 使用 FileDescriptor 对象创建 FileOutputStream 对象. write 方法把字节发送给输出流,write 方法的格式: public void write(byte b[]) 写 b. 1ength 个字节到输出流. 格式: public void write(byte b[],int off,int len) 从给定字节数组中起始于偏移量 off 处写 len 个字节到输出流,参数 b 是数据,off 是数据的 起始偏移量,len 是要输出的字节数. 例子 3(P260)在 DOS 环境下输入一行文本,回车后存入磁盘文件. import java.io.*; class Exp20_3 { public static void main(String args[]) { int b; byte buffer[]=new byte[100]; //创建字节型数组 buffer[],数组的长度是 100 try {
+    85
+    System.out.println("输入一行文本,并存入磁盘:"); b=System.in.read(buffer);// read(buffer)方法将键盘输入的文本读入 buffer 数组 FileOutputStream whritefile=new FileOutputStream("line.txt");//使用构造方法 // FileOutputStream("line.txt")创建文件 //输出流对象 whritefile(指向 line.txt) whritefile.write(buffer,0,b); //文件输出流对象 whritefile 调用 write(buffer,0,b) //方法将字节数组中的数据写入 line.txt } catch(IOException e) { System.out.println("Error"); } } }
+    20.3 FileReader 类和 FileWriter 类
+    FileReader 类和 FileWriter 类是与 FileInputStream 类和 FileOutputStream 类等价的读取器, 它们分别是 Reader 类和 Writer 的子类,它们的构造方法分别是: FileReader(String filename) 用给定的文件名创建一个 FileReader 对象. FileWriter(String filename) 用给定的文件名创建一个 FileWriter 对象. 使用这两个类时需要处理 FileNotFoundException 异常. FileReader 类没有提供每次读取一行的方法,Java 另有 BufferedReader 类,其构造方法 是: BufferedReader(Reader in) BufferedReader 类的 readLine()方法能够读取文本行,
+    例子 4(P261)流的读出 import java.applet.*; import java.io.*; import java.awt.*;
+    86
+    import java.awt.event.*; class EWindow extends Frame implements ActionListener { TextArea text; BufferedReader in; Button button; FileReader file; EWindow() { super("流的读出"); text=new TextArea(25,80); text.setBackground(Color.cyan); try { File f=new File("D:\\YuHong\\","Cai.txt"); //创建 File 的对象 f(P257) file=new FileReader(f); //使用(对象)f 创建读取文件的对象 file in=new BufferedReader(file); //使用(对象)file 创建对象 in } catch(FileNotFoundException e){} catch(IOException e){} button=new Button("读出"); button.addActionListener(this); setLayout(new BorderLayout()); setSize(40,40); setVisible(true); add(text,"Center"); add("South", button); addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) { setVisible(false); System.exit(0); } }); } public void actionPerformed(ActionEvent e) { String s; if(e.getSource()==button) try { while((s=in.readLine())!=null) // BufferedReader 类的对象 in 调用 readLine()方法 text.append(s);
+    87
+    } catch(IOException exp){} } } public class Exp20_4 { public static void main(String args[]) { EWindow w=new EWindow(); w.pack(); } }
+    例子 5(263)流的写入 import java.applet.*; import java.io.*; import java.awt.*; import java.awt.event.*; class EWindow5 extends Frame implements ActionListener { TextArea text; BufferedWriter out; Button button; FileWriter tofile; EWindow5() { super("流的写入"); text=new TextArea(25,80); text.setBackground(Color.cyan); try { tofile=new FileWriter("hello.txt"); //用文件名"hello.txt"创建写入文件的对象 tofile out=new BufferedWriter(tofile); //用对象 tofile 创建 BufferedWriter 的对象 out } catch(FileNotFoundException e){} catch(IOException e){} button=new Button("写入"); button.addActionListener(this); setLayout(new BorderLayout()); setSize(40,40);
+    88
+    setVisible(true); add(text,"Center"); add("South", button); addWindowListener(new WindowAdapter() //窗口适配器 { public void windowClosing(WindowEvent e) { setVisible(false); System.exit(0); } }); } public void actionPerformed(ActionEvent e) { String s; if(e.getSource()==button) try { out.write(text.getText(),0,(text.getText()).length()); //BufferedWriter 的对象 out 调用 // write 方法将字符串写入缓存区 //(P263 第 1 行) out.flush(); //将缓存区的字符串写入文件"hello.txt" } catch(IOException exp) { System.out.println("have problem"); } } } public class Exp20_5 { public static void main(String args[]) { EWindow5 w=new EWindow5(); w.pack(); } }
+    89
+    20.4 使用文件对话框打开和保存文件
+    在第十六章我们学过文件对话框,但那时没有真正实现对文件的读写操作.在学习了 上述流之后,我们可以使用文件对话框来打开和保存文件了. 例子 7(P267) import java.awt.*;import java.io.*; import java.awt.event.*; public class Exp20_7 { public static void main(String args[]) { Frame_FileDialog7 f7=new Frame_FileDialog7();} } class Frame_FileDialog7 extends Frame implements ActionListener { FileDialog filedialog_save7, filedialog_load7; //声明 2 个文件对话框 MenuBar menubar;Menu menu;MenuItem item1,item2;TextArea text; BufferedReader in7; FileReader file_reader7; BufferedWriter out7; FileWriter tofile7; Frame_FileDialog7() { super("带文件对话框的窗口"); setSize(500,380); setVisible(true); menubar=new MenuBar(); menu=new Menu("文件"); item1=new MenuItem("打开"); item2=new MenuItem("保存"); item1.addActionListener(this); item2.addActionListener(this); menu.add(item1); menu.add(item2); menubar.add(menu); setMenuBar(menubar); //下面创建 1 个依赖于该窗口的保存文件对话框 filedialog_save7=new FileDialog(this,"保存文件", FileDialog.SAVE); filedialog_save7.setVisible(false); //下面创建 1 个依赖于该窗口的打开文件对话框 filedialog_load7=new FileDialog(this,"打开文件", FileDialog.LOAD); filedialog_load7.setVisible(false);
+    90
+    filedialog_save7.addWindowListener(new WindowAdapter()//对话框增加适配器 {public void windowClosing(WindowEvent e) { filedialog_save7.setVisible(false);} }); filedialog_load7.addWindowListener(new WindowAdapter()//对话框增加适配器 {public void windowClosing(WindowEvent e) { filedialog_load7.setVisible(false);} }); addWindowListener(new WindowAdapter() //窗口增加适配器 {public void windowClosing(WindowEvent e) {setVisible(false);System.exit(0);} }); text=new TextArea(25,80); text.setBackground(Color.cyan); add(text,"Center"); } public void actionPerformed(ActionEvent e) //实现接口中的方法 {if(e.getSource()==item1) { filedialog_load7.setVisible(true); String s7; try{ File file7=new File(filedialog_load7.getDirectory(), filedialog_load7.getFile()); file_reader7=new FileReader(file7);//使用(对象)file7 创建读取文件的对象 in7=new BufferedReader(file_reader7);//使用(对象)file_reader7 创建对象 in7 while((s7=in7.readLine())!=null) //BufferedReader 的对象 in7 调用 readLine()方法 text.append(s7+'\n'); } catch(FileNotFoundException e1){} catch(IOException e2){} try{in7.close(); file_reader7.close(); } catch(IOException exp){} } else if(e.getSource()==item2) { filedialog_save7.setVisible(true); try{ File file7=new File(filedialog_save7.getDirectory(),filedialog_save7.getFile()); tofile7=new FileWriter(file7); out7=new BufferedWriter(tofile7); out7.write(text.getText(),0,(text.getText()).length()); out7.flush(); }
+    91
+    catch(FileNotFoundException e1){} catch(IOException e2){} try{out7.close(); tofile7.close(); } catch(IOException exp){} } } }
+
+					</Td>					
+				</Tr>
+		</Center>
+	</Form>
+       </Body>
+</Html>

@@ -1,0 +1,362 @@
+#define Vector struct Vector
+double Math_sin(double w)
+{
+	return w;
+}
+double Math_cos(double w)
+{
+	return w;
+}
+double Math_tan(double w)
+{
+	return w;
+}
+double Math_atan(double w)
+{
+	return w;
+}
+Vector
+{
+	double x;
+	double y;
+	double z;
+};
+Vector* newVector(double x,double y,double z)
+{
+	Vector* vector=(Vector*)malloc(sizeof(Vector));
+	vector->x=x;
+	vector->y=y;
+	vector->z=z;
+	return vector;
+}
+double Abs(double x)
+{
+	return (x<0?-x:x);
+}
+Vector* cross(Vector* v0,Vector* v1)
+{
+	double x=v0->y*v1->z-v1->y*v0->z;
+	double y=v0->z*v1->x-v1->z*v0->x;
+	double z=v0->x*v1->y-v1->x*v0->y;
+	return newVector(x,y,z);
+}
+Vector* oppositeVector(Vector* v)
+{
+	return newVector(-v->x,-v->y,-v->z);
+}
+Vector* reflectedVector(Vector* incidenceVector,Vector* normalVector)
+{
+	Vector* incidence=newVector(incidenceVector->x,incidenceVector->y,incidenceVector->z);
+	Vector* normal=newVector(normalVector->x,normalVector->y,normalVector->z);
+	double rotY=Math_atan(normal->z/normal->x);
+	transform(incidence,0,rotY,0);
+	transform(normal,0,rotY,0);
+	double rotZ=Math_atan(normal->x/normal->y);
+	transform(incidence,0,0,rotZ);
+	transform(normal,0,0,rotZ);
+	incidence->x=-incidence->x;
+	incidence->z=-incidence->z;
+	transform(incidence,0,0,-rotZ);
+	transform(incidence,0,-rotY,0);
+	incidence=oppositeVector(incidence);
+	return incidence;
+}
+double cos(Vector* v0,Vector* v1)
+{
+	return (v0->x*v1->x+v0->y*v1->y+v0->z*v1->z)/(Math->sqrt(v0->x*v0->x+v0->y*v0->y+v0->z*v0->z)*Math->sqrt(v1->x*v1->x+v1->y*v1->y+v1->z*v1->z));
+}
+void transform(Vector* vector,double rotX,double rotY,double rotZ)
+{
+	double X,Y,Z;
+	double x=vector->x;
+	double y=vector->y;
+	double z=vector->z;
+	Y=y*Math_cos(rotX)-z*Math_sin(rotX);
+	Z=y*Math_sin(rotX)+z*Math_cos(rotX);
+	y=Y;z=Z;
+	Z=z*Math_cos(rotY)-x*Math_sin(rotY);
+	X=z*Math_sin(rotY)+x*Math_cos(rotY);
+	z=Z;x=X;
+	X=x*Math_cos(rotZ)-y*Math_sin(rotZ);
+	Y=x*Math_sin(rotZ)+y*Math_cos(rotZ);
+	vector->x=X;
+	vector->y=Y;
+	vector->z=Z;
+}
+
+
+#define Point3D struct Point3D
+
+Point3D
+{
+	double x;
+	double y;
+	double z;
+};
+Point3D* newPoint3D(double x,double y,double z)
+{
+	Point3D* point3D=(Point3D*)malloc(sizeof(Point3D));
+	point3D->x=x;
+	point3D->y=y;
+	point3D->z=z;
+	return point3D;
+}
+void translate(Point3D point,double dX,double dY,double dZ)
+{
+	point->x+=dX;
+	point->y+=dY;
+	point->z+=dZ;
+}
+void rotate(Point3D point,double rotX,double rotY,double rotZ)
+{
+	double X,Y,Z;
+	double x=point->x;
+	double y=point->y;
+	double z=point->z;	
+	Y=y*Math.cos(rotX)-z*Math.sin(rotX);
+	Z=y*Math.sin(rotX)+z*Math.cos(rotX);
+	y=Y;z=Z;
+	Z=z*Math.cos(rotY)-x*Math.sin(rotY);
+	X=z*Math.sin(rotY)+x*Math.cos(rotY);
+	z=Z;x=X;
+	X=x*Math.cos(rotZ)-y*Math.sin(rotZ);
+	Y=x*Math.sin(rotZ)+y*Math.cos(rotZ);
+	point->x=X;
+	point->y=Y;
+	point->z=Z;
+}
+#define DirectionalLight struct DirectionalLight
+DirectionalLight
+{
+	Vector* direction;
+	Color* color;
+
+}
+DirectionalLight* newDirectionalLight(Color* color,Vector* direction)
+{
+	DirectionalLight* DirectionalLight=(DirectionalLight*)malloc(sizeof(DirectionalLight));
+	directionalLight->direction=direction;
+	directionalLight->color=color;
+	return directionalLight;
+}
+
+Node
+{
+	int integer;
+	Node* next;
+};
+Node* first;
+Node* last;
+int listLength=0;
+Node* newNode(int integer)
+{
+	Node* node=(Node*)malloc(sizeof(Node));
+	node->integer=integer;
+	node->next=NULL;
+	return node;
+}
+void addIntegerIntoList(int integer)
+{
+	Node* node=newNode(integer);
+	if(first==NULL)
+	{
+		first=node;
+		last=node;
+	}
+	else
+	{
+		last->next=node;
+		last=node;
+	}
+	listLength++;
+}
+int deleteIntegerFromList(int integer)
+{
+	int i;
+	Node* n=first;
+	Node* t=n;
+	if(first->integer==integer)
+	{
+		first=first->next;
+		free(n);
+		listLength--;
+		return 0;
+	}
+	for(i=0;i<listLength;i++,t=n,n=n->next)
+	{
+		if(n->integer==integer)
+		{
+			t->next=n->next;
+			if(n==last)last=t;
+			free(n);
+			listLength--;
+			return i;
+		}
+		
+	}
+	return -1;
+}
+int removeIntegerFromList(int index)
+{
+	if(index<0||index>=listLength)return 0;
+	int i;
+	Node* n=first;
+	Node* t=n;
+	if(index==0)first=first->next;
+	else
+	{
+		for(i=0;i<index;i++,t=n,n=n->next);
+		t->next=n->next;
+		if(n==last)last=t;
+	}
+	int integer=n->integer;
+	free(n);
+	listLength--;
+	return integer;
+}
+int existInList(int integer)
+{
+	int i;
+	Node* n=first;
+	Node* t=n;
+	for(i=0;i<listLength;i++,t=n,n=n->next)
+	{
+		if(n->integer==integer)return 1;
+	}
+	return 0;
+}
+void printList()
+{
+	int i;
+	Node* n=first;
+	for(i=0;i<listLength;i++,n=n->next)
+	{
+		printf("integer[%d]=%d\n",i,n->integer);
+	}
+}
+int main()
+{
+	int i,l=10;
+	for(i=0;i<l;i++)addIntegerIntoList(i*2);
+	printList();
+	int integer=18,index=8;
+	printf("delete integer[%d]=%d\n",deleteIntegerFromList(integer),integer);
+	printList();
+	printf("remove integer[%d]=%d\n",index,removeIntegerFromList(index));
+	printList();
+	integer=30;
+	printf("add integer(%d)\n",integer);
+	addIntegerIntoList(integer);
+	printList();
+	integer=-1;
+	printf("existInList(%d)=%d\n",integer,existInList(integer));
+	return 0;
+}
+class Vector
+{
+	public double x;
+	public double y;
+	public double z;
+	public Vector()
+	{
+		this.x=0;
+		this.y=0;
+		this.z=0;
+	}
+	public Vector(double x,double y,double z)
+	{
+		this.x=x;
+		this.y=y;
+		this.z=z;
+	}
+	private double Abs(double x)
+	{
+		return (x<0?-x:x);
+	}
+	public void cross(Vector v0,Vector v1)
+	{
+		this.x=v0.y*v1.z-v1.y*v0.z;
+		this.y=v0.z*v1.x-v1.z*v0.x;
+		this.z=v0.x*v1.y-v1.x*v0.y;
+	}
+	public Vector oppositeVector()
+	{
+		return new Vector(-x,-y,-z);
+	}
+	public Vector reflectedVector(Vector normalVector)
+	{
+		Vector incidence=new Vector(x,y,z);
+		Vector normal=new Vector(normalVector.x,normalVector.y,normalVector.z);
+		double rotY=Math.atan(normal.z/normal.x);
+		incidence.transform(0,rotY,0);
+		normal.transform(0,rotY,0);
+		double rotZ=Math.atan(normal.x/normal.y);
+		incidence.transform(0,0,rotZ);
+		normal.transform(0,0,rotZ);
+		incidence.x=-incidence.x;
+		incidence.z=-incidence.z;
+		incidence.transform(0,0,-rotZ);
+		incidence.transform(0,-rotY,0);
+		incidence=incidence.oppositeVector();
+		return incidence;
+	}
+	public double cos(Vector v0,Vector v1)
+	{
+		return (v0.x*v1.x+v0.y*v1.y+v0.z*v1.z)/(Math.sqrt(v0.x*v0.x+v0.y*v0.y+v0.z*v0.z)*Math.sqrt(v1.x*v1.x+v1.y*v1.y+v1.z*v1.z));
+	}
+	public void transform(double rotX,double rotY,double rotZ)
+	{
+		double X,Y,Z;
+		Y=y*Math.cos(rotX)-z*Math.sin(rotX);
+		Z=y*Math.sin(rotX)+z*Math.cos(rotX);
+		y=Y;z=Z;
+		Z=z*Math.cos(rotY)-x*Math.sin(rotY);
+		X=z*Math.sin(rotY)+x*Math.cos(rotY);
+		z=Z;x=X;
+		X=x*Math.cos(rotZ)-y*Math.sin(rotZ);
+		Y=x*Math.sin(rotZ)+y*Math.cos(rotZ);
+		x=X;y=Y;
+	}
+}
+
+class Point3D
+{
+	public double x;
+	public double y;
+	public double z;
+	public Point3D(double x,double y,double z)
+	{
+		this.x=x;
+		this.y=y;
+		this.z=z;
+	}
+	public void translate(double dX,double dY,double dZ)
+	{
+		x+=dX;
+		y+=dY;
+		z+=dZ;
+	}
+	public void rotate(double rotX,double rotY,double rotZ)
+	{
+		double X,Y,Z;
+		Y=y*Math.cos(rotX)-z*Math.sin(rotX);
+		Z=y*Math.sin(rotX)+z*Math.cos(rotX);
+		y=Y;z=Z;
+		Z=z*Math.cos(rotY)-x*Math.sin(rotY);
+		X=z*Math.sin(rotY)+x*Math.cos(rotY);
+		z=Z;x=X;
+		X=x*Math.cos(rotZ)-y*Math.sin(rotZ);
+		Y=x*Math.sin(rotZ)+y*Math.cos(rotZ);
+		x=X;y=Y;
+	}
+}
+class DirectionalLight
+{
+	public Vector direction;
+	public Color color;
+	public DirectionalLight(Color color,Vector direction)
+	{
+		this.color=color;
+		this.direction=direction;
+	}
+}

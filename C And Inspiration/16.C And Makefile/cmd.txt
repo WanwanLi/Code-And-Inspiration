@@ -1,0 +1,10 @@
+# download cygwin @ https://cygwin.com/install.html
+# install package please select 'make' utility
+# run cygwin terminal and input:
+# ctrl+l "to cls"
+cd D:
+cd "Code And Inspiration"/"C And Inspiration"/"18.C And Makefile"
+make
+printf "\ec" # clear the screen
+./main
+scanf "as"

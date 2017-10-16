@@ -1,0 +1,2 @@
+javac -cp "%CLASSPATH%;jogamp-all-platforms/jar/*" JavaAndGLQuad.java 
+java -cp "$CLASSPATH;jogamp-all-platforms/jar/*" -Djava.library.path="jogamp-all-platforms/lib/windows-i586" JavaAndGLQuad

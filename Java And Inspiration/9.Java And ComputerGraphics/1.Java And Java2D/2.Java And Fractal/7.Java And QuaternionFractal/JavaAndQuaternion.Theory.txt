@@ -1,0 +1,31 @@
+			Quaternion Theory
+！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+			         ___________________	                __
+	Q=t+xi+yj+zk	|Q|=〔 t*t+x*x+y*y+z*z		Q=t-xi-yj-zk
+
+
+	     | u	v |	|    a+bi	     c+di	|
+	Q=| __	__|     =  	|		|
+	     |-v	u |	|   -(c-di)	     a-bi	|
+
+	Q=[t,x,y,z]
+
+	Q=tU+xI+yJ+zK
+
+
+	     | 1	0 |	|  i        0	|	     | 0	1 |	|  0       i	|
+	U=| 	   |     I =  	|	|     	J= | 	   |     K=  	|	|
+	     | 0	1 |	|  0       -i	|	     | -1	0 |	|  i        0	|
+
+
+	I*I=J*J=K*K=-U
+！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
+		        Julia
+
+	 	Q=xi+yj+zk+t
+		C=pi+qj+sk+w
+	      	Qn+1=Qn*Qn+C
+
+Qn*Qn=(x*x-y*y-z*z-w*w)i+(x*y+x*y+z*t-t*z)j+(x*z+z*x-y*t+t*y)k+(x*t+t*x+y*z-z*y)
+

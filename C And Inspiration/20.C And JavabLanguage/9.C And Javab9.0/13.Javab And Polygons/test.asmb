@@ -1,0 +1,356 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=10
+integerNumber=184
+integerTableLength=73
+integerTable[0]=2
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=5
+integerTable[5]=1
+integerTable[6]=0
+integerTable[7]=1
+integerTable[8]=5
+integerTable[9]=6
+integerTable[10]=2
+integerTable[11]=0
+integerTable[12]=2
+integerTable[13]=7
+integerTable[14]=8
+integerTable[15]=3
+integerTable[16]=0
+integerTable[17]=3
+integerTable[18]=9
+integerTable[19]=4
+integerTable[20]=1
+integerTable[21]=1
+integerTable[22]=4
+integerTable[23]=10
+integerTable[24]=11
+integerTable[25]=5
+integerTable[26]=2
+integerTable[27]=6
+integerTable[28]=12
+integerTable[29]=13
+integerTable[30]=7
+integerTable[31]=3
+integerTable[32]=8
+integerTable[33]=14
+integerTable[34]=15
+integerTable[35]=9
+integerTable[36]=5
+integerTable[37]=11
+integerTable[38]=16
+integerTable[39]=12
+integerTable[40]=6
+integerTable[41]=7
+integerTable[42]=13
+integerTable[43]=18
+integerTable[44]=14
+integerTable[45]=8
+integerTable[46]=9
+integerTable[47]=15
+integerTable[48]=17
+integerTable[49]=10
+integerTable[50]=4
+integerTable[51]=19
+integerTable[52]=16
+integerTable[53]=11
+integerTable[54]=10
+integerTable[55]=17
+integerTable[56]=19
+integerTable[57]=17
+integerTable[58]=15
+integerTable[59]=14
+integerTable[60]=18
+integerTable[61]=19
+integerTable[62]=18
+integerTable[63]=13
+integerTable[64]=12
+integerTable[65]=16
+integerTable[66]=12
+integerTable[67]=0
+integerTable[68]=12
+integerTable[69]=5
+integerTable[70]=0
+integerTable[71]=1
+integerTable[72]=0
+doubleNumber=133
+doubleTableLength=14
+doubleTable[0]=0.200000
+doubleTable[1]=0.500000
+doubleTable[2]=0.000000
+doubleTable[3]=0.000000
+doubleTable[4]=0.000000
+doubleTable[5]=0.000000
+doubleTable[6]=0.000000
+doubleTable[7]=0.000000
+doubleTable[8]=0.000000
+doubleTable[9]=0.000000
+doubleTable[10]=0.000000
+doubleTable[11]=0.000000
+doubleTable[12]=0.000000
+doubleTable[13]=0.000000
+stringNumber=0
+stringTableLength=0
+vectorNumber=20
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=252
+0: MOV #14,@1
+1: MOV #15,@2
+2: NEG @73,@3
+3: MOV #16,@73
+4: LIGHT @0,~14
+5: MOV %2, 17
+6: MOV #17,#0
+7: MOV %3, 18
+8: SQRT #20,@4
+9: ADD #21,#20,+@5
+10: MUL #19,#1,*#21
+11: MOV #18,#19
+12: MOV %4, 74
+13: MOV @74, 20
+14: MOV #22,^2
+15: MOV #23,^2
+16: MOV #24,^2
+17: MOV \0,~22
+18: MOV @75, 0
+19: MOV #25,#2
+20: MUL #28,^2,/^3
+21: MOV #26,#28
+22: MUL #29,^2,*^3
+23: MOV #27,#29
+24: MOV \1,~25
+25: MOV @76, 1
+26: MUL #33,^2,*^3
+27: MOV #30,#33
+28: MOV #31,#3
+29: MUL #34,^2,/^3
+30: MOV #32,#34
+31: MOV \2,~30
+32: MOV @77, 2
+33: MUL #38,^2,/^3
+34: MOV #35,#38
+35: MUL #39,^2,*^3
+36: MOV #36,#39
+37: MOV #37,#4
+38: MOV \3,~35
+39: MOV @78, 3
+40: NEG #43,^2
+41: MOV #40,#43
+42: MOV #41,^2
+43: MOV #42,^2
+44: MOV \4,~40
+45: MOV @79, 4
+46: MOV #44,#5
+47: NEG #47,^2
+48: MUL #48,#47,/^3
+49: MOV #45,#48
+50: MUL #49,^2,*^3
+51: MOV #46,#49
+52: MOV \5,~44
+53: MOV @80, 5
+54: MOV #50,^2
+55: NEG #53,^2
+56: MOV #51,#53
+57: MOV #52,^2
+58: MOV \6,~50
+59: MOV @81, 6
+60: MUL #57,^2,*^3
+61: MOV #54,#57
+62: MOV #55,#6
+63: NEG #58,^2
+64: MUL #59,#58,/^3
+65: MOV #56,#59
+66: MOV \7,~54
+67: MOV @82, 7
+68: MOV #60,^2
+69: MOV #61,^2
+70: NEG #63,^2
+71: MOV #62,#63
+72: MOV \8,~60
+73: MOV @83, 8
+74: NEG #67,^2
+75: MUL #68,#67,/^3
+76: MOV #64,#68
+77: MUL #69,^2,*^3
+78: MOV #65,#69
+79: MOV #66,#7
+80: MOV \9,~64
+81: MOV @84, 9
+82: NEG #73,^2
+83: MUL #74,#73,*^3
+84: MOV #70,#74
+85: MOV #71,#8
+86: MUL #75,^2,/^3
+87: MOV #72,#75
+88: MOV \10,~70
+89: MOV @85, 10
+90: NEG #79,^2
+91: MOV #76,#79
+92: NEG #80,^2
+93: MOV #77,#80
+94: MOV #78,^2
+95: MOV \11,~76
+96: MOV @86, 11
+97: MUL #84,^2,/^3
+98: MOV #81,#84
+99: NEG #85,^2
+100: MUL #86,#85,*^3
+101: MOV #82,#86
+102: MOV #83,#9
+103: MOV \12,~81
+104: MOV @87, 12
+105: MOV #87,^2
+106: NEG #90,^2
+107: MOV #88,#90
+108: NEG #91,^2
+109: MOV #89,#91
+110: MOV \13,~87
+111: MOV @88, 13
+112: MOV #92,#10
+113: MUL #95,^2,/^3
+114: MOV #93,#95
+115: NEG #96,^2
+116: MUL #97,#96,*^3
+117: MOV #94,#97
+118: MOV \14,~92
+119: MOV @89, 14
+120: NEG #101,^2
+121: MOV #98,#101
+122: MOV #99,^2
+123: NEG #102,^2
+124: MOV #100,#102
+125: MOV \15,~98
+126: MOV @90, 15
+127: NEG #106,^2
+128: MUL #107,#106,/^3
+129: MOV #103,#107
+130: NEG #108,^2
+131: MUL #109,#108,*^3
+132: MOV #104,#109
+133: MOV #105,#11
+134: MOV \16,~103
+135: MOV @91, 16
+136: NEG #113,^2
+137: MUL #114,#113,*^3
+138: MOV #110,#114
+139: MOV #111,#12
+140: NEG #115,^2
+141: MUL #116,#115,/^3
+142: MOV #112,#116
+143: MOV \17,~110
+144: MOV @92, 17
+145: MOV #117,#13
+146: NEG #120,^2
+147: MUL #121,#120,/^3
+148: MOV #118,#121
+149: NEG #122,^2
+150: MUL #123,#122,*^3
+151: MOV #119,#123
+152: MOV \18,~117
+153: MOV @93, 18
+154: NEG #127,^2
+155: MOV #124,#127
+156: NEG #128,^2
+157: MOV #125,#128
+158: NEG #129,^2
+159: MOV #126,#129
+160: MOV \19,~124
+161: MOV @94, 19
+162: MOV %5, 95
+163: MOV @95, 60
+164: MOV @96, 6
+165: MOV @97, 7
+166: MOV @98, 8
+167: MOV @99, 9
+168: MOV @100, 10
+169: MOV @101, 11
+170: MOV @102, 12
+171: MOV @103, 13
+172: MOV @104, 14
+173: MOV @105, 15
+174: MOV @106, 16
+175: MOV @107, 17
+176: MOV @108, 18
+177: MOV @109, 19
+178: MOV @110, 20
+179: MOV @111, 21
+180: MOV @112, 22
+181: MOV @113, 23
+182: MOV @114, 24
+183: MOV @115, 25
+184: MOV @116, 26
+185: MOV @117, 27
+186: MOV @118, 28
+187: MOV @119, 29
+188: MOV @120, 30
+189: MOV @121, 31
+190: MOV @122, 32
+191: MOV @123, 33
+192: MOV @124, 34
+193: MOV @125, 35
+194: MOV @126, 36
+195: MOV @127, 37
+196: MOV @128, 38
+197: MOV @129, 39
+198: MOV @130, 40
+199: MOV @131, 41
+200: MOV @132, 42
+201: MOV @133, 43
+202: MOV @134, 44
+203: MOV @135, 45
+204: MOV @136, 46
+205: MOV @137, 47
+206: MOV @138, 48
+207: MOV @139, 49
+208: MOV @140, 50
+209: MOV @141, 51
+210: MOV @142, 52
+211: MOV @143, 53
+212: MOV @144, 54
+213: MOV @145, 55
+214: MOV @146, 56
+215: MOV @147, 57
+216: MOV @148, 58
+217: MOV @149, 59
+218: MOV @150, 60
+219: MOV @151, 61
+220: MOV @152, 62
+221: MOV @153, 63
+222: MOV @154, 64
+223: MOV @155, 65
+224: MOV %6, 156
+225: MOV @156, 12
+226: MOV @157, 169
+227: MOV @158, 170
+228: MOV @159, 171
+229: MOV @160, 172
+230: MOV @161, 173
+231: MOV @162, 174
+232: MOV @163, 175
+233: MOV @164, 176
+234: MOV @165, 177
+235: MOV @166, 178
+236: MOV @167, 179
+237: MOV @168, 180
+238: MOV %7, 181
+239: MOV @181,@67
+240: LT @182,&7,@68
+241: JZ @182,246
+242: ADD @183, 157,+&7
+243: MOV :183,@69
+244: INC &7
+245: JMP 240
+246: MOV #130,@70
+247: MOV #131,@71
+248: MOV #132,@72
+249: COLOR ~130
+250: POLYGONS 4,5,6
+251: EXIT

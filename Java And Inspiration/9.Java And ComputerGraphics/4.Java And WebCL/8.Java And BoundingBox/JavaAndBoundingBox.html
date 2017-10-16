@@ -1,0 +1,608 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And RayTracing</title>
+		<style>
+			body{ background-color:black;}
+		</style>
+		<script src="webcl-matrix.js"></script>
+		<script src="webcl-molecule.js"></script>
+		<script src="webcl-object.js"></script>
+		<script id="webcl-kernel" type="x-kernel">
+			inline float viewCoord(uint coord,uint size,float scale)
+			{
+				return ((coord+0.0)/(size-1.0)-0.5)*2.0*scale;
+			}
+			inline float3 getViewDirection(float16 viewInfo,uint row,uint col,uint2 imageSize)
+			{
+				float3 eyePosition=viewInfo.s012;
+				float3 viewDirection=viewInfo.s345;
+				float3 viewUpDirection=viewInfo.s678;
+				float3 viewRightDirection=viewInfo.s9ab;
+				float viewHeight=viewInfo.sc,viewWidth=viewInfo.sd;
+				float viewDistance=viewInfo.se,viewFocus=viewInfo.sf;
+				uint imageHeight=imageSize.s0,imageWidth=imageSize.s1;
+				float upDistance=viewCoord(row,imageHeight,viewHeight);
+				float rightDistance=viewCoord(col,imageWidth,viewWidth);
+				float3 direction=viewDistance*viewFocus*viewDirection;
+				direction+=upDistance*viewUpDirection;
+				direction+=rightDistance*viewRightDirection;
+				return normalize(direction);
+			}
+			__constant float MaxError=0.001,MaxDistance=10000.0;
+			__constant float3 directionalLightColor=(float3)(1.0,1.0,1.0);
+			__constant float3 objectColor=(float3)(1.0,0.0,0.0);
+			inline float Abs(float x){return x>0?x:-x;}
+			inline float4 intersectTriangle(float3 v0,float3 v1,float3 v2,float3 origin,float3 direction)
+			{
+				float4 noIntersection=(float4)(MaxDistance,0,0,0);
+				float3 d=direction,p=origin;
+				float3 e1=v1-v0,e2=v2-v0;
+				float3 h=cross(d,e2);
+				float a=dot(e1,h);
+				if(Abs(a)<MaxError)return noIntersection;
+				float f=1.0/a;
+				float3 s=p-v0;
+				float u=f*dot(s,h);
+				if (u < 0.0 || u > 1.0)return noIntersection;
+				float3 q=cross(s,e1);
+				float v=f*dot(d,q);
+				if (v < 0.0 || u + v > 1.0)return noIntersection;
+				float t=f*dot(e2,q);
+				if(t>MaxError)return (float4)(t,1.0-u-v,u,v);
+				else return noIntersection;
+			}
+			inline float3 reflect(float3 L,float3 N)
+			{
+				return L-2.0*dot(L,N)*N;
+			}
+			inline float3 lightColor(float3 lightDirection,float3 normalDirection,float3 viewDirection,float3 color)
+			{
+				float shininess=20.0;
+				float3 L=lightDirection,N=normalDirection;
+				float3 R=reflect(-L,N),V=viewDirection;
+				float L_N=dot(L,N),R_V=max(dot(R,-V),0.0);
+				float reflectance=0.8*pow(R_V,shininess);
+				return clamp(L_N*color+reflectance*directionalLightColor,0.0,1.0);
+			}
+			inline float3 vertexCoordinate(__global float* vertices,uint index)
+			{
+				return (float3)(vertices[index*6+0],vertices[index*6+1],vertices[index*6+2]);
+			}
+			inline float3 vertexNormal(__global float* vertices,uint index)
+			{
+				return (float3)(vertices[index*6+3],vertices[index*6+4],vertices[index*6+5]);
+			}
+			inline float3 interpolateVector(float3 t,float3 v0,float3 v1,float3 v2)
+			{
+				return v0*t.s0+v1*t.s1+v2*t.s2;
+			}
+			inline float16 intersectObject(__global uint* indices,__global float* vertices,uint triangleNum,float3 origin,float3 direction)
+			{
+				float3 position,normal,color=(float3)(0.0);
+				float minDistance=MaxDistance,intersection=0.0;
+				for(int i=0;i<triangleNum;i++)
+				{
+					uint index0=indices[i*3+0];
+					uint index1=indices[i*3+1];
+					uint index2=indices[i*3+2];
+					float3 v0=vertexCoordinate(vertices,index0);
+					float3 v1=vertexCoordinate(vertices,index1);
+					float3 v2=vertexCoordinate(vertices,index2);
+					float4 intersectInfo=intersectTriangle(v0,v1,v2,origin,direction);
+					float distance=intersectInfo.s0;
+					if(distance<minDistance)
+					{
+						intersection=1.0;
+						position=origin+distance*direction;
+						float3 t=intersectInfo.s123;
+						float3 n0=vertexNormal(vertices,index0);
+						float3 n1=vertexNormal(vertices,index1);
+						float3 n2=vertexNormal(vertices,index2);
+						normal=normalize(interpolateVector(t,n0,n1,n2));
+						color=objectColor;
+						minDistance=distance;
+					}
+				}
+				return (float16)(intersection,position,normal,color,minDistance,0,0,0,0,0);
+			}
+			inline float intersectSphere(float3 center,float radius,float3 origin,float3 direction)
+			{
+				float3 connection=center-origin;
+				float b=dot(connection,direction);
+				float c=dot(connection,connection);
+				float delta=b*b-c+radius*radius;
+				if(delta<0.0)return MaxDistance;
+				float distance=b-sqrt(delta);
+				if(distance<=MaxError)return MaxDistance;
+				return distance;
+			}
+			float intersectCube(float8 cubeMinMax,float3 origin,float3 direction)
+			{
+				float3 cubeMin=cubeMinMax.s012;
+				float3 cubeMax=cubeMinMax.s345;
+				float3 tMin=(cubeMin-origin)/direction;
+				float3 tMax=(cubeMax-origin)/direction;
+				float3 t1=min(tMin,tMax),t2=max(tMin,tMax);
+				float tNear=max(max(t1.x,t1.y),t1.z);
+				float tFar=min(min(t2.x,t2.y),t2.z);
+				if(tNear>tFar)return MaxDistance;
+				if(tNear<MaxError)return MaxDistance;
+				else return tNear;
+			}
+			inline float16 intersectMolecule(float depth,__global float* moleculeData,uint atomNum,float3 origin,float3 direction)
+			{
+				float3 position,normal,color=(float3)(0);
+				float minDistance=depth,intersection=0.0;
+				for(int i=0;i<atomNum;i++)
+				{
+					float3 sphereCenter=(float3)(moleculeData[i*7+0],moleculeData[i*7+1],moleculeData[i*7+2]);
+					float3 sphereColor=(float3)(moleculeData[i*7+3],moleculeData[i*7+4],moleculeData[i*7+5]);
+					float sphereRadius=moleculeData[i*7+6];
+					float distance=intersectSphere(sphereCenter,sphereRadius,origin,direction);
+					if(distance<minDistance)
+					{
+						intersection=1.0;
+						position=origin+distance*direction;
+						normal=normalize(position-sphereCenter);
+						color=sphereColor;
+						minDistance=distance;
+					}
+				}
+				return (float16)(intersection,position,normal,color,minDistance,0,0,0,0,0);
+			}
+			inline uchar4 pixelColor(float3 color)
+			{
+				uint r=(uint)(255.0*color.s0);
+				uint g=(uint)(color.s1*255);
+				uint b=(uint)(color.s2*255);
+				return (uchar4)(r,g,b,255);
+			}
+			inline float3 colorPixel(uchar4 pixel)
+			{
+				float r=pixel.s0/255.0;
+				float g=pixel.s1/255.0;
+				float b=pixel.s2/255.0;
+				return (float3)(r,g,b);
+			}
+			__kernel void main(uint isObject,float8 boundingBox,__global uchar4* pixels,__global float* depths,float16 viewInfo,float8 lightInfo,__global uint* indices,__global float* vertices,uint triangleNum,__global float* moleculeData,uint atomNum,uint2 imageSize)
+			{
+				uint height=imageSize.s0,width=imageSize.s1;
+				uint row=get_global_id(0),col=get_global_id(1);
+				if(row>=height||col>=width)return;
+				float depth=depths[(height-1-row)*width+col];
+				float3 eyePosition=viewInfo.s012;
+				float3 viewDirection=getViewDirection(viewInfo,row,col,imageSize);
+				float distance=intersectCube(boundingBox,eyePosition,viewDirection);
+				if(distance==MaxDistance)
+				{
+					if(isObject)
+					{
+						pixels[(height-1-row)*width+col]=(uchar4)(0,0,0,255);
+						depths[(height-1-row)*width+col]=MaxDistance;
+					}
+					return;
+				}
+				float3 lightDirection=lightInfo.s012,normal,color;float16 intersection;
+				float3 viewColor=isObject?(float3)(0.0):colorPixel(pixels[(height-1-row)*width+col]);
+				if(isObject)intersection=intersectObject(indices,vertices,triangleNum,eyePosition,viewDirection);
+				else intersection=intersectMolecule(depth,moleculeData,atomNum,eyePosition,viewDirection);
+				if(intersection.s0)
+				{
+					normal=intersection.s456;
+					color=intersection.s789;
+					viewColor=lightColor(lightDirection,normal,viewDirection,color);
+				}
+				pixels[(height-1-row)*width+col]=pixelColor(viewColor);
+				depths[(height-1-row)*width+col]=intersection.sa;
+			}
+		</script>
+		<script>
+			var cl=null,g=null;
+			var kernel_id="webcl-kernel";
+			var canvas_id="webcl-canvas";
+			function main()
+			{
+				clInitDevices(true);
+				clCreateKernels([kernel_id]);
+				clCreateObject("object","Teapot");
+				clCreateMolecule("molecule","DNA");
+				clCreateCanvas(canvas_id,200,150);
+				clAddEventListener();
+				clUpdateViewInfo();
+				clDisplayFunc();
+			}
+			function clInitDevices(useGPU)
+			{
+				if(typeof(webcl)=="undefined")alert("Webcl is undefined");
+				if(webcl===null){alert("No webcl object available");return;}
+				cl=webcl.createContext();cl.canvas=[];
+				cl.platforms=webcl.getPlatforms();
+				if(cl.platforms.length==0){alert("No platforms available");return;}
+				if(useGPU)cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_GPU);
+				else cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_CPU);
+			}
+			function clCreateKernels(ids)
+			{
+				if(cl.devices.length==0){alert("No devices available");return;}
+				var device=cl.devices[0];cl.kernels=[];
+				for(var i=0;i<ids.length;i++)
+				{
+					var id=ids[i],kernelSource=clGetKernelSource(id);
+					var program=cl.createProgram(kernelSource);
+					program.build([device]);
+					cl.kernels[id]=program.createKernel("main");
+					cl.kernels[id].commandQueue=cl.createCommandQueue(device,null);
+				}
+			}
+			function clCreateCanvas(id,width,height)
+			{
+				var canvas=document.getElementById(id);
+				canvas.width=width;canvas.height=height;
+				canvas.element=document.createElement('canvas');
+				canvas.element.setAttribute("id",id);
+				canvas.element.setAttribute("width",width);
+				canvas.element.setAttribute("height",height);
+				canvas.appendChild(canvas.element);
+				canvas.context=canvas.element.getContext("2d");
+				canvas.image=canvas.context.createImageData(width,height);
+				canvas.pixelBuffer=cl.createBuffer(webcl.MEM_WRITE_ONLY,height*width*4);
+				canvas.depthBuffer=cl.createBuffer(webcl.MEM_READ_WRITE,height*width*Float32Array.BYTES_PER_ELEMENT);
+				canvas.depthBuffer.length=height*width*Float32Array.BYTES_PER_ELEMENT;
+				canvas.sizeArray=new Uint32Array([height,width]);
+				canvas.pixelBuffer.length=height*width*4;
+				canvas.viewSize=[1,width/height];
+				cl.canvas[id]=canvas;
+			}
+			var objectVerticesArray,objectVerticesBuffer;
+			var objectIndicesArray,objectIndicesBuffer;
+			var triangleNumArray,objectBoundingBox;
+			function clCreateObject(objectDir,objectName)
+			{
+				var scale=0.1;
+				var translate=[0,0,0];
+				var objectID=objectDir+"/"+objectName;
+				var objectData=getObjectData(objectID);
+				var indicesLength=objectData.indices.length,k=0;
+				var verticesLength=objectData.coordinates.length;
+				var Uint32Size=Uint32Array.BYTES_PER_ELEMENT;
+				var Float32Size=Float32Array.BYTES_PER_ELEMENT;
+				objectIndicesArray=new Uint32Array(Uint32Size*indicesLength);
+				objectVerticesArray=new Float32Array(Float32Size*verticesLength*2);
+				objectIndicesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,Uint32Size*indicesLength);
+				objectVerticesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,Float32Size*verticesLength*2);
+				for(var i=0;i<indicesLength;i++)objectIndicesArray[i]=objectData.indices[i];
+				clCreateBoundingBox(objectID);
+				for(var i=0;i<verticesLength;i+=3)
+				{
+					objectVerticesArray[k++]=objectData.coordinates[i+0]*scale+translate[0];
+					objectVerticesArray[k++]=objectData.coordinates[i+1]*scale+translate[1];
+					objectVerticesArray[k++]=objectData.coordinates[i+2]*scale+translate[2];
+					objectVerticesArray[k++]=objectData.normals[i+0];
+					objectVerticesArray[k++]=objectData.normals[i+1];
+					objectVerticesArray[k++]=objectData.normals[i+2];
+					clUpdateBoundingBox(objectID,objectVerticesArray,k-6);
+				}
+				clWriteKernelBuffer(kernel_id,objectIndicesArray,objectIndicesBuffer,Uint32Size*indicesLength);
+				clWriteKernelBuffer(kernel_id,objectVerticesArray,objectVerticesBuffer,Float32Size*verticesLength*2);
+				triangleNumArray=new Uint32Array([indicesLength/3]);
+				objectBoundingBox=clGetBoundingBox(objectID);
+			}
+			var translate=[0,0,0],scale=0.08;
+			var moleculeDataBuffer,moleculeDataArray,atomNumArray,moleculeBoundingBox;
+			function clCreateMolecule(moleculeDir,moleculeName)
+			{
+				var moleculeID=moleculeDir+"/"+moleculeName;
+				var moleculeData=getMoleculeData(moleculeID);
+				var atomNum=moleculeData.indexData.length,k=0;
+				var bufferSize=Float32Array.BYTES_PER_ELEMENT*atomNum*7;
+				moleculeDataBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,bufferSize);
+				moleculeDataArray=new Float32Array(atomNum*7);
+				clCreateBoundingBox(moleculeID);
+				for(var i=0;i<atomNum;i++)
+				{
+					var index=moleculeData.indexData[i];
+					moleculeDataArray[k++]=moleculeData.centerData[i*3+0]*scale+translate[0];
+					moleculeDataArray[k++]=moleculeData.centerData[i*3+1]*scale+translate[1];
+					moleculeDataArray[k++]=moleculeData.centerData[i*3+2]*scale+translate[2];
+					moleculeDataArray[k++]=moleculeData.colorData[index*3+0];
+					moleculeDataArray[k++]=moleculeData.colorData[index*3+1];
+					moleculeDataArray[k++]=moleculeData.colorData[index*3+2];
+					moleculeDataArray[k++]=moleculeData.radiusData[index]*scale;
+					clUpdateBoundingBox(moleculeID,moleculeDataArray,i*7);
+				}
+				clWriteKernelBuffer(kernel_id,moleculeDataArray,moleculeDataBuffer,bufferSize);
+				moleculeBoundingBox=clGetBoundingBox(moleculeID);
+				atomNumArray=new Uint32Array([atomNum]);
+			}
+			var clBoundingBox=[],MAX=1e10,MIN=-MAX;
+			function clCreateBoundingBox(id)
+			{
+				clBoundingBox[id]=[];
+				clBoundingBox[id].min=new Vector3([MAX,MAX,MAX]);
+				clBoundingBox[id].max=new Vector3([MIN,MIN,MIN]);
+			}
+			function clUpdateBoundingBox(id,array,i)
+			{
+				var xyz=[array[i+0],array[i+1],array[i+2]];
+				clBoundingBox[id].min.minimize(xyz);
+				clBoundingBox[id].max.maximize(xyz);
+			}
+			function clGetBoundingBox(id)
+			{
+				var s0=clBoundingBox[id].min.elements[0];
+				var s1=clBoundingBox[id].min.elements[1];
+				var s2=clBoundingBox[id].min.elements[2];
+				var s3=clBoundingBox[id].max.elements[0];
+				var s4=clBoundingBox[id].max.elements[1];
+				var s5=clBoundingBox[id].max.elements[2];
+				return new Float32Array([s0,s1,s2,s3,s4,s5,0,0]);
+			}
+			var viewDistance=10.0,viewFocus=0.5;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var viewInfoArray=new Float32Array([0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0,0]);
+			var eyeX=0,eyeY=0,eyeZ=viewDistance,translateMouseX=0,translateMouseY=0;
+			var currentMouseX=0,currentMouseY=0,mouseIsDown=false;
+			function clUpdateViewDirection()
+			{
+				var k=0.5;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+			}
+			function clUpdateViewInfo()
+			{
+				var eyePositionInfo=[eyeX,eyeY,eyeZ];
+				var viewDirectionInfo=viewDirection.elements;
+				var viewUpDirectionInfo=viewUpDirection.elements;
+				var viewRightDirectionInfo=viewRightDirection.elements;
+				viewInfoArray[0]=eyePositionInfo[0];
+				viewInfoArray[1]=eyePositionInfo[1];
+				viewInfoArray[2]=eyePositionInfo[2];
+				viewInfoArray[3]=viewDirectionInfo[0];
+				viewInfoArray[4]=viewDirectionInfo[1];
+				viewInfoArray[5]=viewDirectionInfo[2];
+				viewInfoArray[6]=viewUpDirectionInfo[0];
+				viewInfoArray[7]=viewUpDirectionInfo[1];
+				viewInfoArray[8]=viewUpDirectionInfo[2];
+				viewInfoArray[9]=viewRightDirectionInfo[0];
+				viewInfoArray[10]=viewRightDirectionInfo[1];
+				viewInfoArray[11]=viewRightDirectionInfo[2];
+				viewInfoArray[12]=cl.canvas[canvas_id].viewSize[0];
+				viewInfoArray[13]=cl.canvas[canvas_id].viewSize[1];
+				viewInfoArray[14]=viewDistance;
+				viewInfoArray[15]=viewFocus;
+			}
+			var lightColor=new Vector3([1,1,1]);
+			var lightDirection=new Vector3([0,0,1]);
+			var lightUpDirection=new Vector3([0,1,0]);
+			var lightRightDirection=new Vector3([1,0,0]);
+			var lightInfoArray=new Float32Array([0,0,1, 1,1,1, 20.0, 0.5]);
+			var translateUpDown=0,translateRightLeft=0,translateMouseZ=0;
+			function clUpdateLightDirection()
+			{
+				var k=1.2;
+				var rotUp=k*translateRightLeft;
+				var rotRight=-k*translateUpDown;
+				lightDirection.rotate(lightUpDirection,rotUp);
+				lightRightDirection.rotate(lightUpDirection,rotUp);
+				lightDirection.rotate(lightRightDirection,rotRight);
+			}
+			function clUpdateLightInfo()
+			{
+				var lightDirectionInfo=lightDirection.elements;
+				lightInfoArray[0]=lightDirectionInfo[0];
+				lightInfoArray[1]=lightDirectionInfo[1];
+				lightInfoArray[2]=lightDirectionInfo[2];
+			}
+			function clDisplayFunc()
+			{
+				var canvas=cl.canvas[canvas_id];
+				var sizeArray=canvas.sizeArray;
+				var pixelBuffer=canvas.pixelBuffer;
+				var depthBuffer=canvas.depthBuffer;
+				var isObject=new Uint32Array([1]);
+				var args=[isObject,objectBoundingBox,pixelBuffer,depthBuffer,viewInfoArray,lightInfoArray,objectIndicesBuffer,objectVerticesBuffer,triangleNumArray,moleculeDataBuffer,atomNumArray,sizeArray];
+				clSetKernelArgs(kernel_id,args);
+				clExecuteKernelProgram(kernel_id);
+				isObject[0]=0;
+				args[1]=moleculeBoundingBox;
+				clSetKernelArgs(kernel_id,args);
+				clExecuteKernelProgram(kernel_id);
+				clReadKernelBuffer(kernel_id,canvas.image.data,pixelBuffer,pixelBuffer.length);
+				clResizeCanvas(canvas_id,4);
+			}
+			function clResizeCanvas(id,scale)
+			{
+				var canvas=cl.canvas[id],k=scale;
+				var width=canvas.width,height=canvas.height;
+				var width_k=width*k,height_k=height*k;
+				canvas.element.setAttribute("width",width_k);
+				canvas.element.setAttribute("height",height_k);
+				var image=canvas.resizedImage;
+				if(image==null)
+				{
+					image=canvas.context.createImageData(width_k,height_k);
+					canvas.resizedImage=image;
+				}
+				for(var i=0;i<height_k;i++)
+				{
+					for(var j=0;j<width_k;j++)
+					{
+						image.data[(i*width_k+j)*4+0]=clInterpolatePixel(canvas.image,width,i/k,j/k,0);
+						image.data[(i*width_k+j)*4+1]=clInterpolatePixel(canvas.image,width,i/k,j/k,1);
+						image.data[(i*width_k+j)*4+2]=clInterpolatePixel(canvas.image,width,i/k,j/k,2);
+						image.data[(i*width_k+j)*4+3]=clInterpolatePixel(canvas.image,width,i/k,j/k,3);
+					}
+				}
+				canvas.context.putImageData(image,0,0);
+			}
+			function clInterpolatePixel(image,width,i,j,k)
+			{
+				var i0=Math.floor(i),i1=i0+1,u=i-i0;
+				var j0=Math.floor(j),j1=j0+1,v=j-j0;
+				var p00=image.data[(i0*width+j0)*4+k];
+				var p01=image.data[(i0*width+j1)*4+k];
+				var p11=image.data[(i1*width+j1)*4+k];
+				var p10=image.data[(i1*width+j0)*4+k];
+				var p0V=(1.0-v)*p00+v*p01;
+				var p1V=(1.0-v)*p10+v*p11;
+				return (1.0-u)*p0V+u*p1V;
+			}
+			function clGetKernelSource(id)
+			{
+				var kernelSource=document.getElementById(id);
+				if(kernelSource===null)return null;
+				if(kernelSource.type!="x-kernel")return null;
+				return kernelSource.firstChild.textContent;
+			}
+			function clSetKernelArgs(id,args)
+			{
+				var kernel=cl.kernels[id];
+				kernel.args=args;
+				for(var i=0;i<args.length;i++)
+				{
+					kernel.setArg(i,args[i]);
+				}
+				kernel.workDim=args[args.length-1].length;
+				kernel.localWorkSize=clGetLocalWorkSize(id,kernel.workDim);
+				kernel.globalWorkSize=clGetGlobalWorkSize(id,kernel.localWorkSize);
+			}
+			function clExecuteKernelProgram(id)
+			{
+				var kernel=cl.kernels[id];
+				var queue=kernel.commandQueue;
+				var workDim=kernel.workDim,globalWorkOffset=kernel.globalWorkOffset;
+				var globalWorkSize=kernel.globalWorkSize,localWorkSize=kernel.localWorkSize;
+				queue.enqueueNDRangeKernel(kernel,workDim,globalWorkOffset,globalWorkSize,localWorkSize);
+			}
+			function clReadKernelBuffer(id,outputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueReadBuffer(kernelBuffer,true,0,length,outputData);
+			}
+			function clWriteKernelBuffer(id,inputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueWriteBuffer(kernelBuffer,true,0,length,inputData);
+			}
+			function clGetLocalWorkSize(id,workDim)
+			{	
+				var GROUP_SIZE=webcl.KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE;
+				var groupSize=cl.kernels[id].getWorkGroupInfo(cl.devices[0],GROUP_SIZE);
+				switch(workDim)
+				{
+					case 1: return [groupSize];
+					case 2: return dim2(groupSize);
+					case 3: return dim3(groupSize);
+				}
+			}
+			function clGetGlobalWorkSize(id,localWorkSize)
+			{
+				var globalWorkSize=[];
+				var args=cl.kernels[id].args;
+				var workSize=args[args.length-1];
+				for(var i=0;i<localWorkSize.length;i++)
+				{
+					var k=Math.ceil(workSize[i]/localWorkSize[i]);
+					globalWorkSize[i]=k*localWorkSize[i];
+				}
+				return globalWorkSize;
+			}
+			function dim2(size)
+			{
+				var xSize=pow2(Math.floor(Math.sqrt(size)));
+				return [xSize, Math.floor(size/xSize)];
+			}
+			function dim3(size)
+			{
+				var xSize=pow2(Math.floor(Math.pow(size,1/3)));
+				var ySize=pow2(Math.floor(Math.sqrt(size/xSize)));
+				return [xSize, ySize, Math.floor(size/(xSize*ySize))];
+			}
+			function pow2(x){return isPowerOfTwo(x)?x:nextHighestPowerOfTwo(x);}
+			function isPowerOfTwo(x){return (x&(x-1))==0;}
+			function nextHighestPowerOfTwo(x)
+			{
+				--x;
+				for(var i=1;i<32;i<<= 1)x=x|x>>i;
+				return x+1;
+			}
+			function clAddEventListener()
+			{
+				cl.canvas[canvas_id].onmousemove=mouseDragged;
+				cl.canvas[canvas_id].onmousedown=mouseDown;
+				cl.canvas[canvas_id].onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				clUpdateViewDirection();
+				clUpdateViewInfo();
+				clDisplayFunc();
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)
+				{
+					translateRightLeft=-1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_RIGHT)
+				{
+					translateRightLeft=1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_UP)
+				{
+					translateUpDown=1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					translateUpDown=-1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				translateRightLeft=0;
+				translateUpDown=0;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<center><div id="webcl-canvas"></div></center>
+	</body>
+</html>

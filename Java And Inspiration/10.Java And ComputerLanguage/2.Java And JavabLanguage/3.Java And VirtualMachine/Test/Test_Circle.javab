@@ -1,0 +1,16 @@
+public Test_Circle()
+{
+	int l=100;
+	double r=200.0;
+	double PI=3.1415926;
+	double w=2*PI/l;
+	this.setColor(255,0,0);
+	for(int i=0;i<l;i++)
+	{
+		double x0=r*this.cos(w*i)+300;
+		double y0=r*this.sin(w*i)+400;
+		double x1=r*this.cos(w*(i+1))+300;
+		double y1=r*this.sin(w*(i+1))+400;
+		this.drawLine(x0,y0,x1,y1);
+	}
+}

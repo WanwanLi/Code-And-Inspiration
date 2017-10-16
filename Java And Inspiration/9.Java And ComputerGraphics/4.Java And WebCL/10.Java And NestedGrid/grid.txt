@@ -1,0 +1,255 @@
+var ObjectNestedGrid=function(objectData,boundingBox,level,row,column)
+{
+	this.level=level;
+	this.row=row;
+	this.column=column;
+	this.minX=boundingBox[0];
+	this.minY=boundingBox[1];
+	this.minZ=boundingBox[2];
+	this.maxX=boundingBox[3];
+	this.maxY=boundingBox[4];
+	this.maxZ=boundingBox[5];
+	this.initTable();
+	this.getIntervals();
+	var indices=objectData.indices;
+	var coordinates=objectData.coordinates;
+	for(var i=0;i<indices.length;i+=3)
+	{
+		var p0=indices[i+0]*3,p1=indices[i+1]*3,p2=indices[i+2]*3;
+		var x0=coordinates[p0+0],y0=coordinates[p0+1],z0=coordinates[p0+2];
+		var x1=coordinates[p1+0],y1=coordinates[p1+1],z1=coordinates[p1+2];
+		var x2=coordinates[p2+0],y2=coordinates[p2+1],z2=coordinates[p2+2];
+		this.addCoordinateIndex(i,x0,y0,z0,x1,y1,z1,x2,y2,z2);
+	}
+	this.indices=indices;
+	this.coordinates=coordinates;
+	this.createIndexTables();
+};
+ObjectNestedGrid.prototype.initTable=function()
+{
+	this.table=[];
+	var l=this.level;
+	var r=this.row;
+	var c=this.column;
+	for(var k=0;k<l;k++)
+	{
+		for(var i=0;i<r;i++)
+		{
+			for(j=0;j<c;j++)
+			{
+				var p=k*r*c+i*c+j;
+				this.table[p]=[];
+			}
+		}
+	}
+	this.subTable=[];
+	this.stackTable=[];
+	this.stackTable.pointer=0;
+	this.subTable[0]=this.table;
+};
+ObjectNestedGrid.prototype.getIntervals=function(level,row,column)
+{
+	this.dX=(this.maxX-this.minX)/this.column;
+	this.dY=(this.maxY-this.minY)/this.level;
+	this.dZ=(this.maxZ-this.minZ)/this.row;
+};
+ObjectNestedGrid.prototype.addCoordinateIndex=function(index0,x0,y0,z0,x1,y1,z1,x2,y2,z2)
+{
+	var minX=this.min(x0,this.min(x1,x2));
+	var minY=this.min(y0,this.min(y1,y2));
+	var minZ=this.min(z0,this.min(z1,z2));
+	var maxX=this.max(x0,this.max(x1,x2));
+	var maxY=this.max(y0,this.max(y1,y2));
+	var maxZ=this.max(z0,this.max(z1,z2));
+	var j0=Math.floor((minX-this.minX)/this.dX);
+	var i0=Math.floor((minZ-this.minZ)/this.dZ);
+	var k0=Math.floor((minY-this.minY)/this.dY);
+	var j1=Math.floor((maxX-this.minX)/this.dX);
+	var i1=Math.floor((maxZ-this.minZ)/this.dZ);
+	var k1=Math.floor((maxY-this.minY)/this.dY);
+	var l=this.level,r=this.row,c=this.column;
+	k0=this.clamp(k0,0,l-1);k1=this.clamp(k1,0,l-1);
+	i0=this.clamp(i0,0,r-1);i1=this.clamp(i1,0,r-1);
+	j0=this.clamp(j0,0,c-1);j1=this.clamp(j1,0,c-1);
+	for(var k=k0;k<=k1;k++)
+	{
+		for(var i=i0;i<=i1;i++)
+		{
+			for(j=j0;j<=j1;j++)
+			{
+				var p=k*r*c+i*c+j;
+				this.table[p].push(index0);
+			}
+		}
+	}
+};
+ObjectNestedGrid.prototype.divideTable=function(u,i,j,k)
+{
+	var length=this.table[u].length;
+	if(length<this.column+this.row-1+this.level-1)return false;
+	var indices=this.indices,coordinates=this.coordinates;
+	var indicesTable=this.table[u];
+	this.pushAll();
+	this.table=[];
+	this.minX=j*dX
+	this.minY=k*dY
+	this.minZ=i*dZ;
+	this.maxX=(j+1)*dX
+	this.maxY=(k+1)*dY
+	this.maxZ=(i+1)*dZ;
+	this.dX/=this.column;
+	this.dY/=this.level;
+	this.dZ/=this.row;
+	for(var v=0;v<length;v++)
+	{
+		var i=indicesTable[v]*3;
+		var p0=indices[i+0]*3,p1=indices[i+1]*3,p2=indices[i+2]*3;
+		var x0=coordinates[p0+0],y0=coordinates[p0+1],z0=coordinates[p0+2];
+		var x1=coordinates[p1+0],y1=coordinates[p1+1],z1=coordinates[p1+2];
+		var x2=coordinates[p2+0],y2=coordinates[p2+1],z2=coordinates[p2+2];
+		this.addCoordinateIndex(i,x0,y0,z0,x1,y1,z1,x2,y2,z2);
+	}
+	this.popAll();
+	var subTableLength=this.subTable.length;
+	this.subTable[subTableLength]=this.table;
+	this.table=this.subTable[0];
+	return true;
+};
+ObjectNestedGrid.prototype.createIndexTables=function()
+{
+	var w=0;
+	var l=this.level;
+	var r=this.row;
+	var c=this.column;
+	this.primaryIndexTable=[];
+	this.secondaryIndexTable=[];
+	for(var k=0;k<l;k++)
+	{
+		for(var i=0;i<r;i++)
+		{
+			for(j=0;j<c;j++)
+			{
+				var u=k*r*c+i*c+j;
+				this.primaryIndexTable[u]=w;
+				var length=this.table[u].length;
+				if(this.divideTable(u,i,j,k))
+				{
+					this.secondaryIndexTable[w++]=-this.subTable.length;
+				}
+				else
+				{
+					this.secondaryIndexTable[w++]=length;
+					for(var v=0;v<length;v++)
+					{
+						this.secondaryIndexTable[w++]=this.table[u][v];
+					}
+				}
+			}
+		}
+	}
+	for(var i=1;i<this.subTable.length;i++)
+	{
+		w=this.createSubIndexTables(i,w,l,r,c);
+	}
+};
+ObjectNestedGrid.prototype.createSubIndexTables=function(index,w,l,r,c)
+{
+	var p=this.primaryIndexTable.length;
+	var table=this.subTable[index];
+	for(var k=0;k<l;k++)
+	{
+		for(var i=0;i<r;i++)
+		{
+			for(j=0;j<c;j++)
+			{
+				var u=k*r*c+i*c+j;
+				this.primaryIndexTable[p+u]=w;
+				var length=table[u].length;
+				this.secondaryIndexTable[w++]=length;
+				for(var v=0;v<length;v++)
+				{
+					this.secondaryIndexTable[w++]=table[u][v];
+				}
+			}
+		}
+	}
+	return w;
+};
+ObjectNestedGrid.prototype.getPrimaryIndicesArray=function()
+{
+	var Uint32Size=Uint32Array.BYTES_PER_ELEMENT;
+	var primaryIndicesArray=new Uint32Array(this.primaryIndexTable);
+	primaryIndicesArray.size=Uint32Size*this.primaryIndexTable.length;
+	return primaryIndicesArray;
+};
+ObjectNestedGrid.prototype.getSecondaryIndicesArray=function()
+{
+	var Uint32Size=Uint32Array.BYTES_PER_ELEMENT;
+	var secondaryIndicesArray=new Uint32Array(this.secondaryIndexTable);
+	secondaryIndicesArray.size=Uint32Size*this.secondaryIndexTable.length;
+	return secondaryIndicesArray;
+};
+ObjectNestedGrid.prototype.printIndexTables=function()
+{
+	var l=this.level;
+	var r=this.row;
+	var c=this.column;
+	var s="\nPrimaryIndexTable\n";
+	for(var k=0;k<l;k++)
+	{
+		for(var i=0;i<r;i++)
+		{
+			for(j=0;j<c;j++)
+			{
+				var p=k*r*c+i*c+j;
+				s+=this.primaryIndexTable[p]+"  ";
+			}
+			s+="\n";
+		}
+		s+="\n\n";
+	}
+	s+="\nSecondaryIndexTable\n";
+	for(var i=0;i<this.secondaryIndexTable.length;)
+	{
+		s+=i+":  "
+		var length=this.secondaryIndexTable[i++];
+		for(j=0;j<length;j++)
+		{
+			s+=this.secondaryIndexTable[i++]+"  ";
+		}
+		s+="\n";
+	}
+	console.log(s);
+};
+ObjectNestedGrid.prototype.pushAll=function()
+{
+	var i=0;
+	this.stackTable[i++]=this.minX;
+	this.stackTable[i++]=this.minY;
+	this.stackTable[i++]=this.minZ;
+	this.stackTable[i++]=this.maxX;
+	this.stackTable[i++]=this.maxY;
+	this.stackTable[i++]=this.maxZ;
+	this.stackTable[i++]=this.dX;
+	this.stackTable[i++]=this.dY;
+	this.stackTable[i++]=this.dZ;
+	this.stackTable.pointer=i;
+};
+ObjectNestedGrid.prototype.popAll=function()
+{
+	var i=this.stackTable.pointer;
+	this.dZ=this.stackTable[--i];
+	this.dY=this.stackTable[--i];
+	this.dX=this.stackTable[--i];
+	this.maxZ=this.stackTable[--i];
+	this.maxY=this.stackTable[--i];
+	this.maxX=this.stackTable[--i];
+	this.minZ=this.stackTable[--i];
+	this.minY=this.stackTable[--i];
+	this.minX=this.stackTable[--i];
+	this.stackTable.pointer=i;
+};
+ObjectNestedGrid.prototype.clamp=function(k,x,y){return k<x?x:k>y?y:k;};
+ObjectNestedGrid.prototype.min=function(x,y){return x<=y?x:y;};
+ObjectNestedGrid.prototype.max=function(x,y){return x>=y?x:y;};
+

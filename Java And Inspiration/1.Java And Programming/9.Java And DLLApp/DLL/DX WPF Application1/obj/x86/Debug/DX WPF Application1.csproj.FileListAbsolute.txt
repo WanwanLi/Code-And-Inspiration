@@ -1,0 +1,11 @@
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\bin\Debug\DX WPF Application1.exe
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\bin\Debug\DX WPF Application1.pdb
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\MainWindow.g.cs
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\App.g.cs
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\DX WPF Application1_MarkupCompile.cache
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\DX WPF Application1_MarkupCompile.lref
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\MainWindow.baml
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\DX WPF Application1.g.resources
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\DX WPF Application1.exe
+C:\Users\ASUS\java\Java And Inspiration\1.Java And Programming\9.Java And DLL\DLL\DX WPF Application1\obj\x86\Debug\DX WPF Application1.pdb

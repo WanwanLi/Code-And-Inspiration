@@ -1,0 +1,17 @@
+﻿生成启动时间为 2014/5/15 22:45:36。
+     1>项目“E:\C And OpenGL\CAndGLUT\CAndC3D.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug\CAndC3D.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         所有输出均为最新。
+       Link:
+         所有输出均为最新。
+         CAndC3D.vcxproj -> E:\C And OpenGL\CAndGLUT\Debug\CAndC3D.exe
+       FinalizeBuildStatus:
+         正在删除文件“Debug\CAndC3D.unsuccessfulbuild”。
+         正在对“Debug\CAndC3D.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\C And OpenGL\CAndGLUT\CAndC3D.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:02.89

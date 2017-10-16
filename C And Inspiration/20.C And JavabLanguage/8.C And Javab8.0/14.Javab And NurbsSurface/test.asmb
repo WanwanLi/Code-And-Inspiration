@@ -1,0 +1,258 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=10
+integerNumber=52
+integerTableLength=13
+integerTable[0]=1
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=0
+integerTable[5]=1
+integerTable[6]=0
+integerTable[7]=3
+integerTable[8]=6
+integerTable[9]=1
+integerTable[10]=2
+integerTable[11]=2
+integerTable[12]=2
+doubleNumber=161
+doubleTableLength=72
+doubleTable[0]=0.600000
+doubleTable[1]=0.100000
+doubleTable[2]=0.200000
+doubleTable[3]=0.400000
+doubleTable[4]=0.250000
+doubleTable[5]=0.300000
+doubleTable[6]=0.100000
+doubleTable[7]=0.250000
+doubleTable[8]=0.300000
+doubleTable[9]=0.300000
+doubleTable[10]=0.550000
+doubleTable[11]=0.200000
+doubleTable[12]=0.500000
+doubleTable[13]=0.420000
+doubleTable[14]=0.300000
+doubleTable[15]=0.650000
+doubleTable[16]=0.300000
+doubleTable[17]=0.200000
+doubleTable[18]=0.600000
+doubleTable[19]=0.100000
+doubleTable[20]=0.100000
+doubleTable[21]=0.400000
+doubleTable[22]=0.250000
+doubleTable[23]=0.100000
+doubleTable[24]=0.100000
+doubleTable[25]=0.250000
+doubleTable[26]=0.100000
+doubleTable[27]=0.300000
+doubleTable[28]=0.250000
+doubleTable[29]=0.100000
+doubleTable[30]=0.500000
+doubleTable[31]=0.200000
+doubleTable[32]=0.100000
+doubleTable[33]=0.650000
+doubleTable[34]=0.300000
+doubleTable[35]=0.100000
+doubleTable[36]=0.600000
+doubleTable[37]=0.100000
+doubleTable[38]=0.200000
+doubleTable[39]=0.400000
+doubleTable[40]=0.250000
+doubleTable[41]=0.300000
+doubleTable[42]=0.100000
+doubleTable[43]=0.250000
+doubleTable[44]=0.300000
+doubleTable[45]=0.300000
+doubleTable[46]=0.550000
+doubleTable[47]=0.200000
+doubleTable[48]=0.500000
+doubleTable[49]=0.420000
+doubleTable[50]=0.300000
+doubleTable[51]=0.650000
+doubleTable[52]=0.300000
+doubleTable[53]=0.200000
+doubleTable[54]=1.000000
+doubleTable[55]=1.000000
+doubleTable[56]=1.000000
+doubleTable[57]=1.000000
+doubleTable[58]=1.000000
+doubleTable[59]=1.000000
+doubleTable[60]=1.000000
+doubleTable[61]=1.000000
+doubleTable[62]=10.000000
+doubleTable[63]=1.000000
+doubleTable[64]=1.000000
+doubleTable[65]=1.000000
+doubleTable[66]=1.000000
+doubleTable[67]=1.000000
+doubleTable[68]=1.000000
+doubleTable[69]=1.000000
+doubleTable[70]=1.000000
+doubleTable[71]=1.000000
+stringNumber=0
+stringTableLength=0
+vectorNumber=18
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=156
+0: MOV #72,@1
+1: MOV #73,@2
+2: NEG @13,@3
+3: MOV #74,@13
+4: LIGHT @0,~72
+5: MOV #75,@4
+6: MOV #76,@5
+7: MOV #77,@6
+8: COLOR ~75
+9: MOV %3, 14
+10: MOV @14, 18
+11: NEG #81,#0
+12: MOV #78,#81
+13: NEG #82,#1
+14: MOV #79,#82
+15: NEG #83,#2
+16: MOV #80,#83
+17: MOV \0,~78
+18: MOV @15, 0
+19: NEG #87,#3
+20: MOV #84,#87
+21: NEG #88,#4
+22: MOV #85,#88
+23: NEG #89,#5
+24: MOV #86,#89
+25: MOV \1,~84
+26: MOV @16, 1
+27: NEG #93,#6
+28: MOV #90,#93
+29: NEG #94,#7
+30: MOV #91,#94
+31: NEG #95,#8
+32: MOV #92,#95
+33: MOV \2,~90
+34: MOV @17, 2
+35: MOV #96,#9
+36: NEG #99,#10
+37: MOV #97,#99
+38: NEG #100,#11
+39: MOV #98,#100
+40: MOV \3,~96
+41: MOV @18, 3
+42: MOV #101,#12
+43: NEG #104,#13
+44: MOV #102,#104
+45: NEG #105,#14
+46: MOV #103,#105
+47: MOV \4,~101
+48: MOV @19, 4
+49: MOV #106,#15
+50: NEG #109,#16
+51: MOV #107,#109
+52: NEG #110,#17
+53: MOV #108,#110
+54: MOV \5,~106
+55: MOV @20, 5
+56: NEG #114,#18
+57: MOV #111,#114
+58: MOV #112,#19
+59: MOV #113,#20
+60: MOV \6,~111
+61: MOV @21, 6
+62: NEG #118,#21
+63: MOV #115,#118
+64: MOV #116,#22
+65: MOV #117,#23
+66: MOV \7,~115
+67: MOV @22, 7
+68: NEG #122,#24
+69: MOV #119,#122
+70: MOV #120,#25
+71: MOV #121,#26
+72: MOV \8,~119
+73: MOV @23, 8
+74: MOV #123,#27
+75: NEG #126,#28
+76: MOV #124,#126
+77: MOV #125,#29
+78: MOV \9,~123
+79: MOV @24, 9
+80: MOV #127,#30
+81: NEG #130,#31
+82: MOV #128,#130
+83: MOV #129,#32
+84: MOV \10,~127
+85: MOV @25, 10
+86: MOV #131,#33
+87: MOV #132,#34
+88: MOV #133,#35
+89: MOV \11,~131
+90: MOV @26, 11
+91: NEG #137,#36
+92: MOV #134,#137
+93: NEG #138,#37
+94: MOV #135,#138
+95: MOV #136,#38
+96: MOV \12,~134
+97: MOV @27, 12
+98: NEG #142,#39
+99: MOV #139,#142
+100: NEG #143,#40
+101: MOV #140,#143
+102: MOV #141,#41
+103: MOV \13,~139
+104: MOV @28, 13
+105: NEG #147,#42
+106: MOV #144,#147
+107: NEG #148,#43
+108: MOV #145,#148
+109: MOV #146,#44
+110: MOV \14,~144
+111: MOV @29, 14
+112: MOV #149,#45
+113: NEG #152,#46
+114: MOV #150,#152
+115: MOV #151,#47
+116: MOV \15,~149
+117: MOV @30, 15
+118: MOV #153,#48
+119: NEG #156,#49
+120: MOV #154,#156
+121: MOV #155,#50
+122: MOV \16,~153
+123: MOV @31, 16
+124: MOV #157,#51
+125: NEG #160,#52
+126: MOV #158,#160
+127: MOV #159,#53
+128: MOV \17,~157
+129: MOV @32, 17
+130: MOV %4, 33
+131: MOV @33, 18
+132: MOV @34, 54
+133: MOV @35, 55
+134: MOV @36, 56
+135: MOV @37, 57
+136: MOV @38, 58
+137: MOV @39, 59
+138: MOV @40, 60
+139: MOV @41, 61
+140: MOV @42, 62
+141: MOV @43, 63
+142: MOV @44, 64
+143: MOV @45, 65
+144: MOV @46, 66
+145: MOV @47, 67
+146: MOV @48, 68
+147: MOV @49, 69
+148: MOV @50, 70
+149: MOV @51, 71
+150: CTRLCOUNT @7,@8,@9
+151: ORDER @10,@11,@12
+152: KNOTS 21,0,21,0,21,0
+153: WEIGHTS 4
+154: NURBS 3
+155: EXIT

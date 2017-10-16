@@ -1,0 +1,15 @@
+class Test1;
+public test()
+{
+	Test1 t1=new Test1(10),.show("Test1_1"),t2,t3=new Test1(30),.show("Test1_2"),.setString("Test1");
+	Test1.show("Test1_static");
+	new Test1(50);
+	Test1.show("Test1_dynamic");
+	t2=new Test1(20);
+	t1.show("t1");
+	t2.show("t2");
+	t3.show("t3");
+	print(Test1.getString());
+	print(t1.getDouble());
+	print(t2.getInt());
+}

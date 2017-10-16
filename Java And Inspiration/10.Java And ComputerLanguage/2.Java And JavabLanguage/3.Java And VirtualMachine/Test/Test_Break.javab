@@ -1,0 +1,22 @@
+public Test_Break()
+{
+	int k=0,p=0;
+	while(k<100)
+	{
+		this.println("k="+k);
+		if(k>7)
+		{
+			p=0;
+			while(p<5)
+			{
+				this.println("p="+p);
+				if(p>1){break;}
+				p++;
+			}
+		}
+		if(k>10){break;}
+		if(k>20){this.println("br");break;}
+		k++;
+	}
+	this.println("EXIT");
+}

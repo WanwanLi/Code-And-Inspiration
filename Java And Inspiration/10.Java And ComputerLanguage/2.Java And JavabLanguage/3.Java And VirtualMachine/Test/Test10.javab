@@ -1,0 +1,8 @@
+public Test10(int p1,double p2,String p3)
+{
+	this.println("Test10.javab : "+p1+" "+p2+" "+p3);
+}
+double func(double d1,double d2)
+{
+	return d1+d2;
+}

@@ -1,0 +1,30 @@
+methodNumber=1
+methodTable[0]=main
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=5
+integerNumber=4
+integerTableLength=2
+integerTable[0]=0
+integerTable[1]=100
+doubleNumber=0
+doubleTableLength=0
+stringNumber=1
+stringTableLength=1
+stringTable[0]=a.txt
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=10
+0: OPEN $0
+1: MOV %2, 2
+2: MOV @2,@0
+3: LT @3,&2,@1
+4: JZ @3,8
+5: WRITE &2
+6: INC &2
+7: JMP 3
+8: CLOSE
+9: EXIT

@@ -1,0 +1,280 @@
+{
+  "records" : 
+  {
+    "File" : 
+    {
+            "elapsedTime" : "Elapsed time: 681 seconds",
+            "outcome" : "pass",
+            "stationOS" : "2.036",
+            "stationPowerCycles" : "638",
+            "stationSN" : "UAA025",
+            "stationSSW" : "RT-APPS-1.007",
+            "timestamp" : "13-05-2014 11:00:04",
+            "type" : "Scheduled Self-Test",
+        "Asset" : 
+        {
+                        "elapsedTime" : "62.5",
+                        "name" : "SLOT0#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "N/A",
+                        "timestamp" : "13-05-2014 10:47:39"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "46.875",
+                        "name" : "SLOT0#01",
+                        "outcome" : "pass",
+                        "serialNumber" : "N/A",
+                        "timestamp" : "13-05-2014 10:47:39"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "6640.625",
+                        "name" : "DCPSLVA#07",
+                        "outcome" : "pass",
+                        "serialNumber" : "0548A01407",
+                        "timestamp" : "13-05-2014 10:50:32"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "6656.25",
+                        "name" : "DCPSLVB#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "1133A02297",
+                        "timestamp" : "13-05-2014 10:50:39"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "6656.25",
+                        "name" : "DCPSLVC#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "0649A00047",
+                        "timestamp" : "13-05-2014 10:50:46"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "6656.25",
+                        "name" : "DCPSLVC#01",
+                        "outcome" : "pass",
+                        "serialNumber" : "0347A00029",
+                        "timestamp" : "13-05-2014 10:50:52"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "78.125",
+                        "name" : "ACPSHV#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "0715A01266",
+                        "timestamp" : "13-05-2014 10:50:59"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "78.125",
+                        "name" : "ACPSHV#01",
+                        "outcome" : "pass",
+                        "serialNumber" : "0817A01013",
+                        "timestamp" : "13-05-2014 10:50:59"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "78.125",
+                        "name" : "ACPSHV#02",
+                        "outcome" : "pass",
+                        "serialNumber" : "0645A03856",
+                        "timestamp" : "13-05-2014 10:50:59"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "24468.75",
+                        "name" : "DTI#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "304E1FF",
+                        "timestamp" : "13-05-2014 10:50:59"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "20921.875",
+                        "name" : "DTI#01",
+                        "outcome" : "pass",
+                        "serialNumber" : "300956B",
+                        "timestamp" : "13-05-2014 10:51:24"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "20875",
+                        "name" : "DTI#02",
+                        "outcome" : "pass",
+                        "serialNumber" : "304EA0B",
+                        "timestamp" : "13-05-2014 10:51:45"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "20937.5",
+                        "name" : "DTI#03",
+                        "outcome" : "pass",
+                        "serialNumber" : "3025AAE",
+                        "timestamp" : "13-05-2014 10:52:06"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "20968.75",
+                        "name" : "DTI#04",
+                        "outcome" : "pass",
+                        "serialNumber" : "301C391",
+                        "timestamp" : "13-05-2014 10:52:27"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "21000",
+                        "name" : "DTI#05",
+                        "outcome" : "pass",
+                        "serialNumber" : "3004B7D",
+                        "timestamp" : "13-05-2014 10:52:47"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "20906.25",
+                        "name" : "DTI#06",
+                        "outcome" : "pass",
+                        "serialNumber" : "301C393",
+                        "timestamp" : "13-05-2014 10:53:08"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "20859.375",
+                        "name" : "DTI#07",
+                        "outcome" : "pass",
+                        "serialNumber" : "3029249",
+                        "timestamp" : "13-05-2014 10:53:29"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "76203.125",
+                        "name" : "ATI#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "3024B53 3022703",
+                        "timestamp" : "13-05-2014 10:53:50"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "77218.75",
+                        "name" : "ATI#01",
+                        "outcome" : "pass",
+                        "serialNumber" : "3058D45 305917B",
+                        "timestamp" : "13-05-2014 10:55:06"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "81531.25",
+                        "name" : "ATI#02",
+                        "outcome" : "pass",
+                        "serialNumber" : "301BB29 30147E2",
+                        "timestamp" : "13-05-2014 10:56:24"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "5203.125",
+                        "name" : "GPI#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "581316 584395",
+                        "timestamp" : "13-05-2014 10:57:45"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "4468.75",
+                        "name" : "GPI#01",
+                        "outcome" : "pass",
+                        "serialNumber" : "667336 651949 635442 561573",
+                        "timestamp" : "13-05-2014 10:57:51"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "14203.125",
+                        "name" : "GPI#02",
+                        "outcome" : "pass",
+                        "serialNumber" : "668658 662513 668665 662508 666658 662468",
+                        "timestamp" : "13-05-2014 10:57:55"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "93.75",
+                        "name" : "PPLDL#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "561573",
+                        "timestamp" : "13-05-2014 10:58:09"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "671.875",
+                        "name" : "WFRD#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "22075",
+                        "timestamp" : "13-05-2014 10:58:09"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "15140.625",
+                        "name" : "DMM#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "MY45000491",
+                        "timestamp" : "13-05-2014 10:58:10"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "62.5",
+                        "name" : "FTIC#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "05033296",
+                        "timestamp" : "13-05-2014 10:58:25"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "47953.125",
+                        "name" : "SGMA#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "36830",
+                        "timestamp" : "13-05-2014 10:58:25"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "78.125",
+                        "name" : "AWFG#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "0702809",
+                        "timestamp" : "13-05-2014 10:59:13"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "5937.5",
+                        "name" : "BTI#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "30132D6",
+                        "timestamp" : "13-05-2014 10:59:13"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "7187.5",
+                        "name" : "PGEN#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "DE42B00598",
+                        "timestamp" : "13-05-2014 10:59:19"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "1312.5",
+                        "name" : "ACPSPM#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "0117467",
+                        "timestamp" : "13-05-2014 10:59:26"
+        },
+        "Asset" : 
+        {
+                        "elapsedTime" : "36281.25",
+                        "name" : "SPECAN#00",
+                        "outcome" : "pass",
+                        "serialNumber" : "US46400178",
+                        "timestamp" : "13-05-2014 10:59:28"
+        }
+    }
+  }
+}

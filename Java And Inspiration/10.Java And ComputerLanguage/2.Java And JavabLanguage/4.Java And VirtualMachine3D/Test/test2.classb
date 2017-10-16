@@ -1,0 +1,16 @@
+0
+0
+7
+1
+1
+test2.javab
+0
+8
+FONT  1, 0
+COLOR  0, 255, 0
+SCALE  20, 50, 20
+INT &6
+ADD &6, 0,- 60
+TRANS &6, 0, 2
+TEXT $0
+EXIT

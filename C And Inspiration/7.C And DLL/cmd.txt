@@ -1,0 +1,59 @@
+Input command:
+
+3.C And DLL>gcc --share CAndDLLExport.c -o CAndDLLExport.dll
+
+3.C And DLL>gcc CAndDLLImport.c -o CAndDLLImport
+
+3.C And DLL>CAndDLLImport
+ADD:15
+SUB:5
+
+_______________________________________________________________________________________________________
+
+Expound the Principles:
+_______________________________________________________________________________________________________
+
+CAndDLLExport.c
+
+DLL Export is the open and public methods for several process to call;
+The "__declspec" is the declaration that these methods are in the DLL(Dynamic Link Lib);
+The (dllexport) means the type of this method is public and which can be called by the out processes;
+_______________________________________________________________________________________________________
+
+__declspec(dllexport) int add(int a,int b)
+{
+	return a+b;
+}
+__declspec(dllexport) int sub(int a,int b)
+{	
+	return a-b;
+}
+int main()
+{	
+	return 0;
+}
+_______________________________________________________________________________________________________
+
+
+CAndDLLImport.c
+
+LoadLibrary("CAndDLLExport.dll");
+can let the windows call the methods in the DLL.
+
+_______________________________________________________________________________________________________
+
+#include <windows.h>
+#include <stdio.h>
+int main()
+{	
+	HINSTANCE hinstance=LoadLibrary("CAndDLLExport.dll");
+	typedef int (*ADD)(int a,int b);
+	ADD add=(ADD)GetProcAddress(hinstance,"add");
+	typedef int (*SUB)(int a,int b);
+	SUB sub=(SUB)GetProcAddress(hinstance,"sub");
+	printf("ADD:%d\n",add(5,10));
+	printf("SUB:%d\n",sub(10,5));
+	return 0;
+}
+
+_______________________________________________________________________________________________________

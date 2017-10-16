@@ -1,0 +1,16 @@
+type=PDA;
+state=q,r;
+input=if,else,null;
+stack=if,else,Z;
+init=q;
+start=Z;
+final=r;
+transit=
+{
+	S(q,if,Z)=q/if.Z;
+	S(q,if,if)=q/if.if;
+	S(q,else,if)=q/null;
+	S(q,null,if)=r/if;
+	S(q,null,Z)=r/Z;
+}
+test=if,else,if,if,else,else,else;

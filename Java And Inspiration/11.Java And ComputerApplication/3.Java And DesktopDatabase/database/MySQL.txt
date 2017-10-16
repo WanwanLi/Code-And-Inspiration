@@ -1,0 +1,1 @@
+Create Table InformationTable (ID int primary key not null auto_increment ,NO int,Name text,Info1 text,Info2 text,Type1 text,Type2 text);

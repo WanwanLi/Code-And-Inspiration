@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Sphere</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 coordinate;
+			attribute vec4 color;
+			attribute vec4 normal;
+			attribute vec2 texCoord;
+			varying vec4 fragColor;
+			varying vec2 fragTexCoord;
+			uniform mat4 modelViewMatrix;
+			uniform vec3 lightColor;
+			uniform vec3 lightDirection;
+			void main(void)
+			{
+				gl_Position=modelViewMatrix*coordinate;
+				vec3 normalDirection=normalize(normal.xyz);
+				float nDotL=max(dot(lightDirection,normalDirection),0.0);
+				vec3 diffuseColor=lightColor*color.rgb*nDotL;
+				fragColor=vec4(lightColor*nDotL,color.a);
+				fragColor=vec4(diffuseColor,1.0);
+				fragTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			varying highp vec4 fragColor;
+			varying highp vec2 fragTexCoord;
+			uniform sampler2D fragSampler2D;
+			void main(void)
+			{
+				highp vec4 texColor=texture2D(fragSampler2D,fragTexCoord);
+				highp vec3 newTexColor=fragColor.rgb*texColor.rgb;
+				gl_FragColor=vec4(newTexColor,texColor.a);
+			}
+		</script>
+		<script>
+			var canvas=null;
+			var gl=null;
+			var glTexture=null;
+			var glProgram=null;
+			var glVertexShader=null;
+			var glFragmentShader=null;
+			function main()
+			{
+				canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					glInitShaders();
+					glCreateGeometryInfo();
+					glCreateTexture2D("moon.gif");
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				glVertexShader=glCreateShader(gl.VERTEX_SHADER);
+				glFragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				glProgram=gl.createProgram();
+				gl.attachShader(glProgram,glVertexShader);
+				gl.attachShader(glProgram,glFragmentShader);
+				gl.linkProgram(glProgram);
+				if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(glProgram);
+				glProgram.samplerUniform=gl.getUniformLocation(glProgram,"fragSampler2D");
+				gl.uniform1i(glProgram.samplerUniform,0);
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var coordinatesBuffer=null,colorsBuffer=null,normalsBuffer=null,texCoordsBuffer=null;
+			var indicesBuffer=null;	
+			function glCreateGeometryInfo()
+			{
+				var m=50,n=80,R=1.2;
+				var u0=0,u1=Math.PI,v0=0,v1=2*Math.PI;
+				var du=(u1-u0)/(m-1),dv=(v1-v0)/(n-1),d=0.0001;
+				var coordinates=new Float32Array(m*n*3);
+				var colors=new Float32Array(m*n*3);
+				var normals=new Float32Array(m*n*3);
+				var texCoords=new Float32Array(m*n*2);
+				for(var i=0;i<m;i++)
+				{
+					var u=u0+i*du;
+					for(var j=0;j<n;j++)
+					{
+						var v=v0+j*dv;
+						var x=R*Math.sin(u)*Math.cos(v);
+						var y=R*Math.cos(u);
+						var z=R*Math.sin(u)*Math.sin(v);
+
+						coordinates[(i*n+j)*3+0]=x;
+						coordinates[(i*n+j)*3+1]=y;
+						coordinates[(i*n+j)*3+2]=z;
+
+						colors[(i*n+j)*3+0]=x/R;
+						colors[(i*n+j)*3+1]=y/R;
+						colors[(i*n+j)*3+2]=z/R;
+
+						var dxu=R*Math.sin(u+d)*Math.cos(v)-x;
+						var dyu=R*Math.cos(u+d)-y;
+						var dzu=R*Math.sin(u+d)*Math.sin(v)-z;
+
+						var dxv=R*Math.sin(u)*Math.cos(v+d)-x;
+						var dyv=0;
+						var dzv=R*Math.sin(u)*Math.sin(v+d)-z;
+
+						var v1=new Vector3([dxu,dyu,dzu]);
+						var v2=new Vector3([dxv,dyv,dzv]);
+						var normal=new Vector3();
+						if(i==0)normal.set([0,1,0]);
+						else if(i==m-1)normal.set([0,-1,0]);
+						else normal.cross(v2,v1);
+
+						normals[(i*n+j)*3+0]=normal.x();
+						normals[(i*n+j)*3+1]=normal.y();
+						normals[(i*n+j)*3+2]=normal.z();
+
+						texCoords[(i*n+j)*2+0]=1.0*i/(m-1);
+						texCoords[(i*n+j)*2+1]=1.0*j/(n-1);
+					}
+				}
+				coordinatesBuffer=glCreateFloat32ArrayBuffer(coordinates,3);
+				glEnableVertexAttribute("coordinate",coordinatesBuffer);
+				colorsBuffer=glCreateFloat32ArrayBuffer(colors,3);
+				glEnableVertexAttribute("color",colorsBuffer);
+				normalsBuffer=glCreateFloat32ArrayBuffer(normals,3);
+				glEnableVertexAttribute("normal",normalsBuffer);
+				texCoordsBuffer=glCreateFloat32ArrayBuffer(texCoords,2);
+				glEnableVertexAttribute("texCoord",texCoordsBuffer);
+				var indices=new Uint16Array((m-1)*(n-1)*6),c=0;
+				for(var i=0;i<m-1;i++)
+				{
+					for(var j=0;j<n-1;j++)
+					{
+						indices[c++]=(i+0)*n+(j+0);
+						indices[c++]=(i+1)*n+(j+0);
+						indices[c++]=(i+1)*n+(j+1);
+
+						indices[c++]=(i+1)*n+(j+1);
+						indices[c++]=(i+0)*n+(j+1);
+						indices[c++]=(i+0)*n+(j+0);
+					}
+				}
+				indicesBuffer=glCreateUint16ArrayBuffer(indices);
+				indicesBuffer.numItems=indices.length;
+			}
+			function glDisplayFunc()
+			{
+				glLight();
+				glModelView();
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,1.0);
+				gl.viewport(0,0,canvas.width,canvas.height);
+				glAnimation();
+			}
+			function glAnimation()
+			{
+				requestAnimationFrame(glAnimation,canvas);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				gl.drawElements(gl.TRIANGLES,indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glLight()
+			{
+ 				var lightColor=gl.getUniformLocation(glProgram,'lightColor');
+				gl.uniform3f(lightColor,1.0,1.0,1.0);
+				var lightDirection=gl.getUniformLocation(glProgram,'lightDirection');
+				var newLightDirection=new Vector3([0.5,3.0,4.0]);
+				newLightDirection.normalize();
+				gl.uniform3fv(lightDirection, newLightDirection.elements);
+			}
+			function glModelView()
+			{
+				var modelViewMatrix=gl.getUniformLocation(glProgram,'modelViewMatrix');
+				var projectionMatrix=new Matrix4();
+				projectionMatrix.setPerspective(30,canvas.width/canvas.height,1,100);
+				projectionMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
+				gl.uniformMatrix4fv(modelViewMatrix,false,projectionMatrix.elements);
+			}
+			function glCreateTexture2D(imageName)
+			{
+				glTexture=gl.createTexture();
+				glTexture.image=new Image();
+				glTexture.image.onload=function(){glLoadTexture(glTexture);}
+				glTexture.image.src=imageName;
+			}
+			function glLoadTexture(texture)
+			{
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			}
+			function glEnableVertexAttribute(attributeName,verticesBuffer)
+			{
+				var vertexAttribute=gl.getAttribLocation(glProgram,attributeName);
+				gl.enableVertexAttribArray(vertexAttribute);
+				gl.bindBuffer(gl.ARRAY_BUFFER,verticesBuffer);
+				gl.vertexAttribPointer(vertexAttribute,verticesBuffer.itemSize,gl.FLOAT,false,0,0);
+			}
+			function glCreateFloat32ArrayBuffer(float32Array,itemSize)
+			{
+				var newBuffer=gl.createBuffer();
+				gl.bindBuffer(gl.ARRAY_BUFFER,newBuffer);
+				gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(float32Array),gl.STATIC_DRAW);
+				newBuffer.itemSize=itemSize;
+				return newBuffer;	
+			}
+			function glCreateUint16ArrayBuffer(uint16Array)
+			{
+				var newBuffer=gl.createBuffer();
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,newBuffer);
+				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(uint16Array),gl.STATIC_DRAW);
+				return newBuffer;	
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="750">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Matrix</title>
+		<style>
+			body{ background-color:black;}
+		</style>
+		<script id="matrix-kernel" type="x-kernel">
+			__kernel void main1(__global float* input1,__global float* input2,__global float* output,int2 size)
+			{
+				int i=get_global_id(0),j=get_global_id(1);
+				int row=size.s0,col=size.s1,k=i*col+j;
+				if(i<row&&j<col)output[k]=input1[k]+input2[k];
+			}
+		</script>
+		<script>
+			var cl=null;
+			var kernel_id="matrix-kernel";
+			function main()
+			{
+				clInitDevices(true);
+				clCreateKernels([kernel_id]);
+				clComputeFunc();
+			}
+			function clInitDevices(useGPU)
+			{
+				if(typeof(webcl)=="undefined")alert("Webcl is undefined");
+				if(webcl===null){alert("No webcl object available");return;}
+				cl=webcl.createContext();
+				cl.platforms=webcl.getPlatforms();
+				if(cl.platforms.length==0){alert("No platforms available");return;}
+				if(useGPU)cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_GPU);
+				else cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_CPU);
+			}
+			function clCreateKernels(ids)
+			{
+				if(cl.devices.length==0){alert("No devices available");return;}
+				var device=cl.devices[0];cl.kernels=[];
+				for(var i=0;i<ids.length;i++)
+				{
+					var id=ids[i],kernelSource=clGetKernelSource(id);
+					var program=cl.createProgram(kernelSource);
+					program.build([device]);
+					cl.kernels[id]=program.createKernel("main");
+					cl.kernels[id].commandQueue=cl.createCommandQueue(device,null);
+				}
+			}
+			function clComputeFunc()
+			{
+				var row=10,col=8,size=[row,col];
+				var sizeArray=new Uint32Array(size);
+				var inputData1=new Float32Array(row*col);
+				var inputData2=new Float32Array(row*col);
+				var outputData=new Float32Array(row*col);
+				for(var i=0;i<row;i++)
+				{
+					for(var j=0;j<col;j++)
+					{
+						inputData1[i*col+j]=i*col+j;
+						inputData2[i*col+j]=i*col+j+1;
+					}
+				}
+				var readOnlyBuffer1=clCreateKernelBuffer(true,row*col);
+				var readOnlyBuffer2=clCreateKernelBuffer(true,row*col);
+				var writeOnlyBuffer=clCreateKernelBuffer(false,row*col);
+				var args=[readOnlyBuffer1,readOnlyBuffer2,writeOnlyBuffer,sizeArray];
+				clSetKernelArgs(kernel_id,args);
+				clWriteKernelBuffer(kernel_id,inputData1,readOnlyBuffer1);
+				clWriteKernelBuffer(kernel_id,inputData2,readOnlyBuffer2);
+				clExecuteKernelProgram(kernel_id);
+				clReadKernelBuffer(kernel_id,outputData,writeOnlyBuffer);
+				var msg="Matrix1=\n"+clGetMatrixMsg(inputData1,size);
+				msg+="Matrix2=\n"+clGetMatrixMsg(inputData2,size);
+				msg+="Matrix1+Matrix2=\n"+clGetMatrixMsg(outputData,size);
+				document.getElementById("msg").firstChild.nodeValue=msg;
+			}
+			function clGetKernelSource(id)
+			{
+				var kernelSource=document.getElementById(id);
+				if(kernelSource===null)return null;
+				if(kernelSource.type!="x-kernel")return null;
+				return kernelSource.firstChild.textContent;
+			}
+			function clCreateKernelBuffer(isReadOnly,length)
+			{
+				var kernelBuffer=null;
+				if(isReadOnly)kernelBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,Float32Array.BYTES_PER_ELEMENT*length);
+				else kernelBuffer=cl.createBuffer(webcl.MEM_WRITE_ONLY,Float32Array.BYTES_PER_ELEMENT*length);
+				return kernelBuffer;
+			}
+			function clWriteKernelBuffer(id,inputData,kernelBuffer)
+			{
+				var queue=cl.kernels[id].commandQueue,length=inputData.length;
+				queue.enqueueWriteBuffer(kernelBuffer,true,0,Float32Array.BYTES_PER_ELEMENT*length,inputData);
+			}
+			function clSetKernelArgs(id,args)
+			{
+				var kernel=cl.kernels[id];
+				kernel.args=args;
+				for(var i=0;i<args.length;i++)
+				{
+					kernel.setArg(i,args[i]);
+				}
+				kernel.workDim=args[args.length-1].length;
+				kernel.localWorkSize=clGetLocalWorkSize(id,kernel.workDim);
+				kernel.globalWorkSize=clGetGlobalWorkSize(id,kernel.localWorkSize);
+			}
+			function clExecuteKernelProgram(id)
+			{
+				var kernel=cl.kernels[id];
+				var queue=kernel.commandQueue;
+				var workDim=kernel.workDim,globalWorkOffset=kernel.globalWorkOffset;
+				var globalWorkSize=kernel.globalWorkSize,localWorkSize=kernel.localWorkSize;
+				queue.enqueueNDRangeKernel(kernel,workDim,globalWorkOffset,globalWorkSize,localWorkSize);
+				queue.finish();
+			}
+			function clReadKernelBuffer(id,outputData,kernelBuffer)
+			{
+				var queue=cl.kernels[id].commandQueue,length=outputData.length;
+				queue.enqueueReadBuffer(kernelBuffer,true,0,Float32Array.BYTES_PER_ELEMENT*length,outputData);
+			}
+			function clGetLocalWorkSize(id,workDim)
+			{	
+				var GROUP_SIZE=webcl.KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE;
+				var groupSize=cl.kernels[id].getWorkGroupInfo(cl.devices[0],GROUP_SIZE);
+				switch(workDim)
+				{
+					case 1: return [groupSize];
+					case 2: return dim2(groupSize);
+					case 3: return dim3(groupSize);
+				}
+			}
+			function clGetGlobalWorkSize(id,localWorkSize)
+			{
+				var globalWorkSize=[];
+				var args=cl.kernels[id].args;
+				var workSize=args[args.length-1];
+				for(var i=0;i<localWorkSize.length;i++)
+				{
+					var k=Math.ceil(workSize[i]/localWorkSize[i]);
+					globalWorkSize[i]=k*localWorkSize[i];
+				}
+				return globalWorkSize;
+			}
+			function dim2(size)
+			{
+				var xSize=pow2(Math.floor(Math.sqrt(size)));
+				return [xSize, Math.floor(size/xSize)];
+			}
+			function dim3(size)
+			{
+				var xSize=pow2(Math.floor(Math.pow(size,1/3)));
+				var ySize=pow2(Math.floor(Math.sqrt(size/xSize)));
+				return [xSize, ySize, Math.floor(size/(xSize*ySize))];
+			}
+			function pow2(x){return isPowerOfTwo(x)?x:nextHighestPowerOfTwo(x);}
+			function isPowerOfTwo(x){return (x&(x-1))==0;}
+			function nextHighestPowerOfTwo(x)
+			{
+				--x;
+				for(var i=1;i<32;i<<= 1)x=x|x>>i;
+				return x+1;
+			}
+			function clGetMatrixMsg(data,s)
+			{
+				var msg="",tab="\t";
+				var row=s[0],col=s[1];
+				for(var i=0;i<row;i++)
+				{
+					for(var j=0;j<col;j++)msg+=tab+data[i*col+j];
+					msg+="\n";
+				}
+				return msg;
+			}
+		</script>
+		<style type="text/css">
+			.css_style
+			{
+				font-family: Arial;
+				font-weight: bold;
+				font-size: 14px;
+				text-align: right;
+				color: white;
+			}
+		</style>
+	</head>
+	<body onload="main()">
+		<div id="msg" class="css_style" style="position:absolute; left:60px; top:15px; width:258px;">ERROR: No Result</div>
+	</body>
+</html>

@@ -1,0 +1,11 @@
+int a;
+int b;
+public Test5(int c,int d)
+{
+	a=c;
+	b=d;
+}
+int add()
+{
+	return a+b;
+}

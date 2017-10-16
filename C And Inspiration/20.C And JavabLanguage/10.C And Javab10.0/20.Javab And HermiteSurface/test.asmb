@@ -1,0 +1,214 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=6
+integerNumber=30
+integerTableLength=10
+integerTable[0]=1
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=0
+integerTable[5]=1
+integerTable[6]=0
+integerTable[7]=3
+integerTable[8]=6
+integerTable[9]=1
+doubleNumber=143
+doubleTableLength=54
+doubleTable[0]=0.600000
+doubleTable[1]=0.100000
+doubleTable[2]=0.200000
+doubleTable[3]=0.400000
+doubleTable[4]=0.250000
+doubleTable[5]=0.300000
+doubleTable[6]=0.100000
+doubleTable[7]=0.250000
+doubleTable[8]=0.300000
+doubleTable[9]=0.300000
+doubleTable[10]=0.550000
+doubleTable[11]=0.200000
+doubleTable[12]=0.500000
+doubleTable[13]=0.420000
+doubleTable[14]=0.300000
+doubleTable[15]=0.650000
+doubleTable[16]=0.300000
+doubleTable[17]=0.200000
+doubleTable[18]=0.600000
+doubleTable[19]=0.100000
+doubleTable[20]=0.100000
+doubleTable[21]=0.400000
+doubleTable[22]=0.250000
+doubleTable[23]=0.100000
+doubleTable[24]=0.100000
+doubleTable[25]=0.250000
+doubleTable[26]=0.100000
+doubleTable[27]=0.300000
+doubleTable[28]=0.250000
+doubleTable[29]=0.100000
+doubleTable[30]=0.500000
+doubleTable[31]=0.200000
+doubleTable[32]=0.100000
+doubleTable[33]=0.650000
+doubleTable[34]=0.300000
+doubleTable[35]=0.100000
+doubleTable[36]=0.600000
+doubleTable[37]=0.100000
+doubleTable[38]=0.200000
+doubleTable[39]=0.400000
+doubleTable[40]=0.250000
+doubleTable[41]=0.300000
+doubleTable[42]=0.100000
+doubleTable[43]=0.250000
+doubleTable[44]=0.300000
+doubleTable[45]=0.300000
+doubleTable[46]=0.550000
+doubleTable[47]=0.200000
+doubleTable[48]=0.500000
+doubleTable[49]=0.420000
+doubleTable[50]=0.300000
+doubleTable[51]=0.650000
+doubleTable[52]=0.300000
+doubleTable[53]=0.200000
+stringNumber=0
+stringTableLength=0
+vectorNumber=18
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=133
+0: MOV #54,@1
+1: MOV #55,@2
+2: NEG @10,@3
+3: MOV #56,@10
+4: LIGHT @0,~54
+5: MOV #57,@4
+6: MOV #58,@5
+7: MOV #59,@6
+8: COLOR ~57
+9: MOV %3, 11
+10: MOV @11, 18
+11: NEG #63,#0
+12: MOV #60,#63
+13: NEG #64,#1
+14: MOV #61,#64
+15: NEG #65,#2
+16: MOV #62,#65
+17: MOV \0,~60
+18: MOV @12, 0
+19: NEG #69,#3
+20: MOV #66,#69
+21: NEG #70,#4
+22: MOV #67,#70
+23: NEG #71,#5
+24: MOV #68,#71
+25: MOV \1,~66
+26: MOV @13, 1
+27: NEG #75,#6
+28: MOV #72,#75
+29: NEG #76,#7
+30: MOV #73,#76
+31: NEG #77,#8
+32: MOV #74,#77
+33: MOV \2,~72
+34: MOV @14, 2
+35: MOV #78,#9
+36: NEG #81,#10
+37: MOV #79,#81
+38: NEG #82,#11
+39: MOV #80,#82
+40: MOV \3,~78
+41: MOV @15, 3
+42: MOV #83,#12
+43: NEG #86,#13
+44: MOV #84,#86
+45: NEG #87,#14
+46: MOV #85,#87
+47: MOV \4,~83
+48: MOV @16, 4
+49: MOV #88,#15
+50: NEG #91,#16
+51: MOV #89,#91
+52: NEG #92,#17
+53: MOV #90,#92
+54: MOV \5,~88
+55: MOV @17, 5
+56: NEG #96,#18
+57: MOV #93,#96
+58: MOV #94,#19
+59: MOV #95,#20
+60: MOV \6,~93
+61: MOV @18, 6
+62: NEG #100,#21
+63: MOV #97,#100
+64: MOV #98,#22
+65: MOV #99,#23
+66: MOV \7,~97
+67: MOV @19, 7
+68: NEG #104,#24
+69: MOV #101,#104
+70: MOV #102,#25
+71: MOV #103,#26
+72: MOV \8,~101
+73: MOV @20, 8
+74: MOV #105,#27
+75: NEG #108,#28
+76: MOV #106,#108
+77: MOV #107,#29
+78: MOV \9,~105
+79: MOV @21, 9
+80: MOV #109,#30
+81: NEG #112,#31
+82: MOV #110,#112
+83: MOV #111,#32
+84: MOV \10,~109
+85: MOV @22, 10
+86: MOV #113,#33
+87: MOV #114,#34
+88: MOV #115,#35
+89: MOV \11,~113
+90: MOV @23, 11
+91: NEG #119,#36
+92: MOV #116,#119
+93: NEG #120,#37
+94: MOV #117,#120
+95: MOV #118,#38
+96: MOV \12,~116
+97: MOV @24, 12
+98: NEG #124,#39
+99: MOV #121,#124
+100: NEG #125,#40
+101: MOV #122,#125
+102: MOV #123,#41
+103: MOV \13,~121
+104: MOV @25, 13
+105: NEG #129,#42
+106: MOV #126,#129
+107: NEG #130,#43
+108: MOV #127,#130
+109: MOV #128,#44
+110: MOV \14,~126
+111: MOV @26, 14
+112: MOV #131,#45
+113: NEG #134,#46
+114: MOV #132,#134
+115: MOV #133,#47
+116: MOV \15,~131
+117: MOV @27, 15
+118: MOV #135,#48
+119: NEG #138,#49
+120: MOV #136,#138
+121: MOV #137,#50
+122: MOV \16,~135
+123: MOV @28, 16
+124: MOV #139,#51
+125: NEG #142,#52
+126: MOV #140,#142
+127: MOV #141,#53
+128: MOV \17,~139
+129: MOV @29, 17
+130: CTRLCOUNT @7,@8,@9
+131: HERMITE 3
+132: EXIT

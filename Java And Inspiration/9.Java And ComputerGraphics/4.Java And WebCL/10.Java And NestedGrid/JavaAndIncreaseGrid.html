@@ -1,0 +1,833 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And RayTracing</title>
+		<style>
+			body{ background-color:black;}
+		</style>
+		<script src="webcl-grid.js"></script>
+		<script src="webcl-matrix.js"></script>
+		<script src="webcl-molecule.js"></script>
+		<script src="webcl-object.js"></script>
+		<script id="webcl-kernel" type="x-kernel">
+			inline float viewCoord(uint coord,uint size,float scale)
+			{
+				return ((coord+0.0)/(size-1.0)-0.5)*2.0*scale;
+			}
+			inline float3 getViewDirection(float16 viewInfo,uint row,uint col,uint2 imageSize)
+			{
+				float3 eyePosition=viewInfo.s012;
+				float3 viewDirection=viewInfo.s345;
+				float3 viewUpDirection=viewInfo.s678;
+				float3 viewRightDirection=viewInfo.s9ab;
+				float viewHeight=viewInfo.sc,viewWidth=viewInfo.sd;
+				float viewDistance=viewInfo.se,viewFocus=viewInfo.sf;
+				uint imageHeight=imageSize.s0,imageWidth=imageSize.s1;
+				float upDistance=viewCoord(row,imageHeight,viewHeight);
+				float rightDistance=viewCoord(col,imageWidth,viewWidth);
+				float3 direction=viewDistance*viewFocus*viewDirection;
+				direction+=upDistance*viewUpDirection;
+				direction+=rightDistance*viewRightDirection;
+				return normalize(direction);
+			}
+			__constant float MaxError=0.001,MaxDistance=10000.0;
+			__constant float3 directionalLightColor=(float3)(1.0,1.0,1.0);
+			__constant float3 objectColor=(float3)(1.0,0.0,0.0);
+			inline float Abs(float x){return x>0?x:-x;}
+			inline float4 intersectTriangle(float3 v0,float3 v1,float3 v2,float3 origin,float3 direction)
+			{
+				float4 noIntersection=(float4)(MaxDistance,0,0,0);
+				float3 d=direction,p=origin;
+				float3 e1=v1-v0,e2=v2-v0;
+				float3 h=cross(d,e2);
+				float a=dot(e1,h);
+				if(Abs(a)<MaxError)return noIntersection;
+				float f=1.0/a;
+				float3 s=p-v0;
+				float u=f*dot(s,h);
+				if (u < 0.0 || u > 1.0)return noIntersection;
+				float3 q=cross(s,e1);
+				float v=f*dot(d,q);
+				if (v < 0.0 || u + v > 1.0)return noIntersection;
+				float t=f*dot(e2,q);
+				if(t>MaxError)return (float4)(t,1.0-u-v,u,v);
+				else return noIntersection;
+			}
+			inline float intersectSphere(float3 center,float radius,float3 origin,float3 direction)
+			{
+				float3 connection=center-origin;
+				float b=dot(connection,direction);
+				float c=dot(connection,connection);
+				float delta=b*b-c+radius*radius;
+				if(delta<0.0)return MaxDistance;
+				float distance=b-sqrt(delta);
+				if(distance<=MaxError)return MaxDistance;
+				return distance;
+			}
+			float2 intersectCube(float8 cubeMinMax,float3 origin,float3 direction)
+			{
+				float3 cubeMin=cubeMinMax.s012;
+				float3 cubeMax=cubeMinMax.s345;
+				float3 tMin=(cubeMin-origin)/direction;
+				float3 tMax=(cubeMax-origin)/direction;
+				float2 ErrorDistance=(float2)(MaxDistance);
+				float3 t1=min(tMin,tMax),t2=max(tMin,tMax);
+				float tNear=max(max(t1.x,t1.y),t1.z);
+				float tFar=min(min(t2.x,t2.y),t2.z);
+				if(tNear>tFar)return ErrorDistance;
+				if(tNear<MaxError)return ErrorDistance;
+				else return (float2)(tNear,tFar);
+			}
+			inline float3 reflect(float3 L,float3 N)
+			{
+				return L-2.0*dot(L,N)*N;
+			}
+			inline float3 lightColor(float3 lightDirection,float3 normalDirection,float3 viewDirection,float3 color)
+			{
+				float shininess=20.0;
+				float3 L=lightDirection,N=normalDirection;
+				float3 R=reflect(-L,N),V=viewDirection;
+				float L_N=dot(L,N),R_V=max(dot(R,-V),0.0);
+				float reflectance=0.8*pow(R_V,shininess);
+				return clamp(L_N*color+reflectance*directionalLightColor,0.0,1.0);
+			}
+			inline float3 vertexCoordinate(__global float* vertices,uint index)
+			{
+				return (float3)(vertices[index*6+0],vertices[index*6+1],vertices[index*6+2]);
+			}
+			inline float3 vertexNormal(__global float* vertices,uint index)
+			{
+				return (float3)(vertices[index*6+3],vertices[index*6+4],vertices[index*6+5]);
+			}
+			inline float3 interpolateVector(float3 t,float3 v0,float3 v1,float3 v2)
+			{
+				return v0*t.s0+v1*t.s1+v2*t.s2;
+			}
+			inline float3 Float3(int3 x){return (float3)(x.s0,x.s1,x.s2);}
+			inline int3 Int3(float3 x){return (int3)(x.s0,x.s1,x.s2);}
+			inline bool between(float3 x,float3 l,float3 g)
+			{
+				bool b0=l.s0<=x.s0&&x.s0<=g.s0;
+				bool b1=l.s1<=x.s1&&x.s1<=g.s1;
+				bool b2=l.s2<=x.s2&&x.s2<=g.s2;
+				return b0&&b1&&b2;
+			}
+			inline float3 propagateRay(float3 origin,float3 direction,float3 distance)
+			{
+				return origin+(distance+MaxError)*direction;
+			}
+			inline int3 getGridCoord(float3 position,float3 gridMin,float3 gridIntervals)
+			{
+				return Int3((position-gridMin)/gridIntervals);
+			}
+			inline bool isInGrid(float3 position,float3 gridMin,float3 gridIntervals,int3 gridCoord)
+			{
+				float3 minPosition=gridMin+gridIntervals*Float3(gridCoord);
+				float3 maxPosition=minPosition+gridIntervals;
+				return between(position,minPosition,maxPosition);
+			}
+			inline float16 intersectObjectInGrid(__global uint* primaryIndices,__global uint* secondaryIndices,__global uint* indices,__global float* vertices,float3 gridMin,float3 gridIntervals,int3 gridCoord,int3 gridSize,float3 origin,float3 direction)
+			{
+				float3 position,normal,color=(float3)(0.0);
+				float minDistance=MaxDistance,intersection=0.0;
+				int j=gridCoord.s0,k=gridCoord.s1,i=gridCoord.s2;
+				int column=gridSize.s0,level=gridSize.s1,row=gridSize.s2;
+				uint p=primaryIndices[k*row*column+i*column+j];
+				uint length=secondaryIndices[p++];
+				for(i=0;i<length;i++)
+				{
+					uint s=secondaryIndices[p++];
+					uint index0=indices[s+0];
+					uint index1=indices[s+1];
+					uint index2=indices[s+2];
+					float3 v0=vertexCoordinate(vertices,index0);
+					float3 v1=vertexCoordinate(vertices,index1);
+					float3 v2=vertexCoordinate(vertices,index2);
+					float4 intersectInfo=intersectTriangle(v0,v1,v2,origin,direction);
+					float distance=intersectInfo.s0;
+					if(distance<minDistance)
+					{
+						position=origin+distance*direction;
+						if(isInGrid(position,gridMin,gridIntervals,gridCoord))
+						{
+							intersection=1.0;
+							float3 t=intersectInfo.s123;
+							float3 n0=vertexNormal(vertices,index0);
+							float3 n1=vertexNormal(vertices,index1);
+							float3 n2=vertexNormal(vertices,index2);
+							normal=normalize(interpolateVector(t,n0,n1,n2));
+						//	color=objectColor;
+							color=Float3(gridCoord)/Float3(gridSize)+(float3)(0.1);
+							minDistance=distance;
+						}
+					}
+				}
+				return (float16)(intersection,position,normal,color,minDistance,0,0,0,0,0);
+			}
+			inline float intersectGrid(float3 origin,float3 direction,float3 gridMin,float3 gridIntervals,int3 gridCoord)
+			{
+				float3 cubeMin=gridMin+gridIntervals*Float3(gridCoord);
+				float3 cubeMax=cubeMin+gridIntervals;
+				float8 cubeMinMax=(float8)(cubeMin,cubeMax,0,0);
+				float2 distance=intersectCube(cubeMinMax,origin,direction);
+				return distance.s1;
+			}
+			inline int sig(float x,int a,int b){return x<0?a:b;}
+			inline int3 sigFloat3(float3 xyz,int a,int b){return (int3)(sig(xyz.s0,a,b),sig(xyz.s1,a,b),sig(xyz.s2,a,b));}
+			inline float3 absFloat3(float3 xyz){return (float3)(Abs(xyz.s0),Abs(xyz.s1),Abs(xyz.s2));}
+			inline float minFloat3(float3 xyz){return min(xyz.s0,min(xyz.s1,xyz.s2));}
+			inline float3 distanceToGrid(float3 origin,float3 direction,float3 gridMin,float3 gridIntervals,int3 gridCoord)
+			{
+				float3 position=gridMin+gridIntervals*Float3(gridCoord+sigFloat3(direction,0,1));
+				return (position-origin)/direction;
+			}
+			inline float16 intersectObject(__global uint* primaryIndices,__global uint* secondaryIndices,__global uint* indices,__global float* vertices,float8 boundingBox,int3 gridSize,float3 origin,float3 direction,float distance,float maxDistance)
+			{
+				int3 zero=(int3)(0),one=(int3)(1);
+				float3 minXYZ=boundingBox.s012;
+				float3 maxXYZ=boundingBox.s345;
+				float3 dXYZ=(maxXYZ-minXYZ)/Float3(gridSize);
+				float3 position=origin+direction*distance;
+				int3 gridCoord=clamp(getGridCoord(position,minXYZ,dXYZ),zero,gridSize-one);
+				float16 intersection=intersectObjectInGrid(primaryIndices,secondaryIndices,indices,vertices,minXYZ,dXYZ,gridCoord,gridSize,origin,direction);
+				if(intersection.s0)return intersection;
+				int3 incCoord=sigFloat3(direction,-1,1);
+				float3 incDistance=dXYZ/absFloat3(direction);
+				float3 gridDistance=distanceToGrid(origin,direction,minXYZ,dXYZ,gridCoord);
+				distance=minFloat3(gridDistance);
+				while(distance<=maxDistance)
+				{
+					if(distance==gridDistance.s0)
+					{
+						gridCoord.s0+=incCoord.s0;
+						gridDistance.s0+=incDistance.s0;
+					}
+					else if(distance==gridDistance.s1)
+					{
+						gridCoord.s1+=incCoord.s1;
+						gridDistance.s1+=incDistance.s1;
+					}
+					else if(distance==gridDistance.s2)
+					{
+						gridCoord.s2+=incCoord.s2;
+						gridDistance.s2+=incDistance.s2;
+					}
+					gridCoord=clamp(gridCoord,zero,gridSize-one);
+					intersection=intersectObjectInGrid(primaryIndices,secondaryIndices,indices,vertices,minXYZ,dXYZ,gridCoord,gridSize,origin,direction);
+					if(intersection.s0)return intersection;
+					distance=minFloat3(gridDistance);
+				}
+				return intersection;
+			}
+			inline float16 intersectObject1(__global uint* primaryIndices,__global uint* secondaryIndices,__global uint* indices,__global float* vertices,float8 boundingBox,int3 gridSize,float3 origin,float3 direction,float distance,float maxDistance)
+			{
+				float16 intersection=(float16)(0.0);
+				float3 minXYZ=boundingBox.s012;
+				float3 maxXYZ=boundingBox.s345;
+				float3 dXYZ=(maxXYZ-minXYZ)/Float3(gridSize);
+				while(distance<maxDistance)
+				{
+					float3 position=propagateRay(origin,direction,distance);
+					int3 gridCoord=getGridCoord(position,minXYZ,dXYZ);
+					intersection=intersectObjectInGrid(primaryIndices,secondaryIndices,indices,vertices,minXYZ,dXYZ,gridCoord,gridSize,origin,direction);
+					if(intersection.s0)break;
+					distance=intersectGrid(origin,direction,minXYZ,dXYZ,gridCoord);
+				}
+				return intersection;
+			}
+			inline float16 intersectMoleculeInGrid(float depth,float3 color,__global uint* primaryIndices,__global uint* secondaryIndices,__global float* moleculeData,float3 gridMin,float3 gridIntervals,int3 gridCoord,int3 gridSize,float3 origin,float3 direction)
+			{
+				float3 position,normal;
+				float minDistance=depth,intersection=0.0;
+				int j=gridCoord.s0,k=gridCoord.s1,i=gridCoord.s2;
+				int column=gridSize.s0,level=gridSize.s1,row=gridSize.s2;
+				uint p=primaryIndices[k*row*column+i*column+j];
+				uint length=secondaryIndices[p++];
+				for(i=0;i<length;i++)
+				{
+					uint s=secondaryIndices[p++];
+					float3 sphereCenter=(float3)(moleculeData[s+0],moleculeData[s+1],moleculeData[s+2]);
+					float3 sphereColor=(float3)(moleculeData[s+3],moleculeData[s+4],moleculeData[s+5]);
+					float sphereRadius=moleculeData[s+6];
+					float distance=intersectSphere(sphereCenter,sphereRadius,origin,direction);
+					if(distance<minDistance)
+					{
+						position=origin+distance*direction;
+						if(isInGrid(position,gridMin,gridIntervals,gridCoord))
+						{
+							intersection=1.0;
+							normal=normalize(position-sphereCenter);
+						//	color=sphereColor;
+							color=(float3)(1.0)-(Float3(gridCoord)/Float3(gridSize)).s210;
+							minDistance=distance;
+						}
+					}
+				}
+				return (float16)(intersection,position,normal,color,minDistance,0,0,0,0,0);
+			}
+			inline float16 intersectMolecule(float depth,float3 color,__global uint* primaryIndices,__global uint* secondaryIndices,__global float* moleculeData,float8 boundingBox,int3 gridSize,float3 origin,float3 direction,float distance,float maxDistance)
+			{
+				int3 zero=(int3)(0),one=(int3)(1);
+				float3 minXYZ=boundingBox.s012;
+				float3 maxXYZ=boundingBox.s345;
+				float3 dXYZ=(maxXYZ-minXYZ)/Float3(gridSize);
+				float3 position=origin+direction*distance;
+				int3 gridCoord=clamp(getGridCoord(position,minXYZ,dXYZ),zero,gridSize-one);
+				float16 intersection=intersectMoleculeInGrid(depth,color,primaryIndices,secondaryIndices,moleculeData,minXYZ,dXYZ,gridCoord,gridSize,origin,direction);
+				if(intersection.s0)return intersection;
+				int3 incCoord=sigFloat3(direction,-1,1);
+				float3 incDistance=dXYZ/absFloat3(direction);
+				float3 gridDistance=distanceToGrid(origin,direction,minXYZ,dXYZ,gridCoord);
+				distance=minFloat3(gridDistance);
+				while(distance<=maxDistance)
+				{
+					if(distance==gridDistance.s0)
+					{
+						gridCoord.s0+=incCoord.s0;
+						gridDistance.s0+=incDistance.s0;
+					}
+					else if(distance==gridDistance.s1)
+					{
+						gridCoord.s1+=incCoord.s1;
+						gridDistance.s1+=incDistance.s1;
+					}
+					else if(distance==gridDistance.s2)
+					{
+						gridCoord.s2+=incCoord.s2;
+						gridDistance.s2+=incDistance.s2;
+					}
+					gridCoord=clamp(gridCoord,zero,gridSize-one);
+					intersection=intersectMoleculeInGrid(depth,color,primaryIndices,secondaryIndices,moleculeData,minXYZ,dXYZ,gridCoord,gridSize,origin,direction);
+					if(intersection.s0)return intersection;
+					distance=minFloat3(gridDistance);
+				}
+				return intersection;
+			}
+			inline float16 intersectMolecule1(float depth,float3 color,__global uint* primaryIndices,__global uint* secondaryIndices,__global float* moleculeData,float8 boundingBox,int3 gridSize,float3 origin,float3 direction,float distance,float maxDistance)
+			{
+				float16 intersection=(float16)(0.0);
+				float3 minXYZ=boundingBox.s012;
+				float3 maxXYZ=boundingBox.s345;
+				float3 dXYZ=(maxXYZ-minXYZ)/Float3(gridSize);
+				while(distance<maxDistance)
+				{
+					float3 position=propagateRay(origin,direction,distance);
+					int3 gridCoord=getGridCoord(position,minXYZ,dXYZ);
+					intersection=intersectMoleculeInGrid(depth,color,primaryIndices,secondaryIndices,moleculeData,minXYZ,dXYZ,gridCoord,gridSize,origin,direction);
+					if(intersection.s0)break;
+					distance=intersectGrid(origin,direction,minXYZ,dXYZ,gridCoord);
+				}
+				return intersection;
+			}
+			inline uchar4 pixelColor(float3 color)
+			{
+				uint r=(uint)(color.s0*255);
+				uint g=(uint)(color.s1*255);
+				uint b=(uint)(color.s2*255);
+				return (uchar4)(r,g,b,255);
+			}
+			inline float3 colorPixel(uchar4 pixel)
+			{
+				float r=pixel.s0/255.0;
+				float g=pixel.s1/255.0;
+				float b=pixel.s2/255.0;
+				return (float3)(r,g,b);
+			}
+			__kernel void main(uint isObject,float8 boundingBox,__global uchar4* pixels,__global float* depths,float16 viewInfo,float8 lightInfo,__global uint* primaryIndices,__global uint* secondaryIndices,__global uint* indices,__global float* vertices,__global uint* molPrimeIndices,__global uint* molSecondIndices,__global float* moleculeData,uint atomNum,int3 gridSize,uint2 imageSize)
+			{
+				uint height=imageSize.s0,width=imageSize.s1;
+				uint row=get_global_id(0),col=get_global_id(1);
+				if(row>=height||col>=width)return;
+				float depth=depths[(height-1-row)*width+col];
+				float3 eyePosition=viewInfo.s012;
+				float3 viewDirection=getViewDirection(viewInfo,row,col,imageSize);
+				float2 distance=intersectCube(boundingBox,eyePosition,viewDirection);
+				if(distance.s0==MaxDistance)
+				{
+					if(isObject)
+					{
+						pixels[(height-1-row)*width+col]=(uchar4)(0,0,0,255);
+						depths[(height-1-row)*width+col]=MaxDistance;
+					}
+					return;
+				}
+				float3 lightDirection=lightInfo.s012,normal,color,viewColor=isObject?(float3)(0.0):colorPixel(pixels[(height-1-row)*width+col]);float16 intersection;
+				if(isObject)intersection=intersectObject(primaryIndices,secondaryIndices,indices,vertices,boundingBox,gridSize,eyePosition,viewDirection,distance.s0,distance.s1);
+				else intersection=intersectMolecule(depth,viewColor,molPrimeIndices,molSecondIndices,moleculeData,boundingBox,gridSize,eyePosition,viewDirection,distance.s0,distance.s1);
+				if(intersection.s0)
+				{
+					normal=intersection.s456;
+					color=intersection.s789;
+					viewColor=lightColor(lightDirection,normal,viewDirection,color);
+				}
+				pixels[(height-1-row)*width+col]=pixelColor(viewColor);
+				depths[(height-1-row)*width+col]=intersection.sa;
+			}
+		</script>
+		<script>
+			var cl=null;
+			var device_id=0;
+			var kernel_id="webcl-kernel";
+			var canvas_id="webcl-canvas";
+			function main()
+			{
+				clInitDevices(true);
+				clCreateKernels([kernel_id]);
+				clCreateObject("object","Teapot");
+				clCreateMolecule("molecule","DNA");
+				clCreateCanvas(canvas_id,1350,550);
+				clAddEventListener();
+				clUpdateViewInfo();
+				clDisplayFunc();
+			}
+			function clInitDevices(useGPU)
+			{
+				if(typeof(webcl)=="undefined")alert("Webcl is undefined");
+				if(webcl===null){alert("No webcl object available");return;}
+				cl=webcl.createContext();cl.canvas=[];cl.devices=[];
+				var platforms=webcl.getPlatforms(),devices=[];
+				if(platforms.length==0){alert("No platforms available");return;}
+				for(var i in platforms)
+				{
+					if(useGPU)devices=platforms[i].getDevices(webcl.DEVICE_TYPE_GPU);
+					else devices=platforms[i].getDevices(webcl.DEVICE_TYPE_CPU);
+					for(var j in devices)cl.devices.push(devices[j]);
+				}
+			}
+			function clCreateKernels(ids)
+			{
+				if(cl.devices.length==0){alert("No devices available");return;}
+				var device=cl.devices[device_id];cl.kernels=[];
+				for(var i=0;i<ids.length;i++)
+				{
+					var id=ids[i],kernelSource=clGetKernelSource(id);
+					var program=cl.createProgram(kernelSource);
+					program.build([device]);
+					cl.kernels[id]=program.createKernel("main");
+					cl.kernels[id].commandQueue=cl.createCommandQueue(device,null);
+				}
+			}
+			function clCreateCanvas(id,width,height)
+			{
+				var canvas=document.getElementById(id);
+				canvas.width=width;canvas.height=height;
+				canvas.element=document.createElement('canvas');
+				canvas.element.setAttribute("id",id);
+				canvas.element.setAttribute("width",width);
+				canvas.element.setAttribute("height",height);
+				canvas.appendChild(canvas.element);
+				canvas.context=canvas.element.getContext("2d");
+				canvas.image=canvas.context.createImageData(width,height);
+				canvas.pixelBuffer=cl.createBuffer(webcl.MEM_WRITE_ONLY,height*width*4);
+				canvas.depthBuffer=cl.createBuffer(webcl.MEM_READ_WRITE,height*width*Float32Array.BYTES_PER_ELEMENT);
+				canvas.depthBuffer.length=height*width*Float32Array.BYTES_PER_ELEMENT;
+				canvas.sizeArray=new Uint32Array([height,width]);
+				canvas.pixelBuffer.length=height*width*4;
+				canvas.viewSize=[1,width/height];
+				cl.canvas[id]=canvas;
+			}
+			var K=10,level=K,row=K,column=K;
+			var gridSizeArray=new Int32Array([column,level,row]);
+			var objectBoundingBox,objectVerticesArray,objectVerticesBuffer;
+			var objectPrimaryIndicesArray,objectPrimaryIndicesBuffer;
+			var objectSecondaryIndicesArray,objectSecondaryIndicesBuffer;
+			function clCreateObject(objectDir,objectName)
+			{
+				var scale=0.1;
+				var translate=[0,0,0];
+				var objectID=objectDir+"/"+objectName;
+				var objectData=getObjectData(objectID);
+				var indicesLength=objectData.indices.length,k=0;
+				var verticesLength=objectData.coordinates.length;
+				var Uint32Size=Uint32Array.BYTES_PER_ELEMENT;
+				var Float32Size=Float32Array.BYTES_PER_ELEMENT;
+				objectIndicesArray=new Uint32Array(Uint32Size*indicesLength);
+				objectVerticesArray=new Float32Array(Float32Size*verticesLength*2);
+				objectIndicesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,Uint32Size*indicesLength);
+				objectVerticesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,Float32Size*verticesLength*2);
+				for(var i=0;i<indicesLength;i++)objectIndicesArray[i]=objectData.indices[i];
+				clCreateBoundingBox(objectID);
+				for(var i=0;i<verticesLength;i+=3)
+				{
+					clTransformObjectCoordinates(objectData,i,scale,translate);
+					objectVerticesArray[k++]=objectData.coordinates[i+0];
+					objectVerticesArray[k++]=objectData.coordinates[i+1];
+					objectVerticesArray[k++]=objectData.coordinates[i+2];
+					objectVerticesArray[k++]=objectData.normals[i+0];
+					objectVerticesArray[k++]=objectData.normals[i+1];
+					objectVerticesArray[k++]=objectData.normals[i+2];
+					clUpdateBoundingBox(objectID,objectVerticesArray,k-6);
+				}
+				clWriteKernelBuffer(kernel_id,objectIndicesArray,objectIndicesBuffer,Uint32Size*indicesLength);
+				clWriteKernelBuffer(kernel_id,objectVerticesArray,objectVerticesBuffer,Float32Size*verticesLength*2);
+				objectBoundingBox=clGetBoundingBox(objectID);
+				var objectGrid=new ObjectUniformGrid(objectData,objectBoundingBox,level,row,column);
+				objectPrimaryIndicesArray=objectGrid.getPrimaryIndicesArray();
+				objectSecondaryIndicesArray=objectGrid.getSecondaryIndicesArray();
+				objectPrimaryIndicesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,objectPrimaryIndicesArray.size);
+				objectSecondaryIndicesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,objectSecondaryIndicesArray.size);
+				clWriteKernelBuffer(kernel_id,objectPrimaryIndicesArray,objectPrimaryIndicesBuffer,objectPrimaryIndicesArray.size);
+				clWriteKernelBuffer(kernel_id,objectSecondaryIndicesArray,objectSecondaryIndicesBuffer,objectSecondaryIndicesArray.size);
+			}
+			function clTransformObjectCoordinates(objectData,i,zoom,translation)
+			{
+				objectData.coordinates[i+0]=objectData.coordinates[i+0]*zoom+translation[0];
+				objectData.coordinates[i+1]=objectData.coordinates[i+1]*zoom+translation[1];
+				objectData.coordinates[i+2]=objectData.coordinates[i+2]*zoom+translation[2];
+			}
+			var translate=[0,0,0],scale=0.08;
+			var moleculePrimaryIndicesArray,moleculePrimaryIndicesBuffer;
+			var moleculeSecondaryIndicesArray,moleculeSecondaryIndicesBuffer;
+			var moleculeDataBuffer,moleculeDataArray,atomNumArray,moleculeBoundingBox;
+			function clCreateMolecule(moleculeDir,moleculeName)
+			{
+				var moleculeID=moleculeDir+"/"+moleculeName;
+				var moleculeData=getMoleculeData(moleculeID);
+				var atomNum=moleculeData.indexData.length,k=0;
+				var bufferSize=Float32Array.BYTES_PER_ELEMENT*atomNum*7;
+				moleculeDataBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,bufferSize);
+				moleculeDataArray=new Float32Array(atomNum*7);
+				clCreateBoundingBox(moleculeID);
+				for(var i=0;i<atomNum;i++)
+				{
+					var index=moleculeData.indexData[i];
+					moleculeDataArray[k++]=moleculeData.centerData[i*3+0]*scale+translate[0];
+					moleculeDataArray[k++]=moleculeData.centerData[i*3+1]*scale+translate[1];
+					moleculeDataArray[k++]=moleculeData.centerData[i*3+2]*scale+translate[2];
+					moleculeDataArray[k++]=moleculeData.colorData[index*3+0];
+					moleculeDataArray[k++]=moleculeData.colorData[index*3+1];
+					moleculeDataArray[k++]=moleculeData.colorData[index*3+2];
+					moleculeDataArray[k++]=moleculeData.radiusData[index]*scale;
+					clUpdateMoleculeBoundingBox(moleculeID,moleculeDataArray,i*7);
+				}
+				clWriteKernelBuffer(kernel_id,moleculeDataArray,moleculeDataBuffer,bufferSize);
+				atomNumArray=new Uint32Array([atomNum]);
+				moleculeBoundingBox=clGetBoundingBox(moleculeID);
+				var moleculeGrid=new MoleculeUniformGrid(moleculeDataArray,moleculeBoundingBox,level,row,column);
+				moleculePrimaryIndicesArray=moleculeGrid.getPrimaryIndicesArray();
+				moleculeSecondaryIndicesArray=moleculeGrid.getSecondaryIndicesArray();
+				moleculePrimaryIndicesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,moleculePrimaryIndicesArray.size);
+				moleculeSecondaryIndicesBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,moleculeSecondaryIndicesArray.size);
+				clWriteKernelBuffer(kernel_id,moleculePrimaryIndicesArray,moleculePrimaryIndicesBuffer,moleculePrimaryIndicesArray.size);
+				clWriteKernelBuffer(kernel_id,moleculeSecondaryIndicesArray,moleculeSecondaryIndicesBuffer,moleculeSecondaryIndicesArray.size);
+			}
+			var clBoundingBox=[],MAX=1e10,MIN=-MAX;
+			function clCreateBoundingBox(id)
+			{
+				clBoundingBox[id]=[];
+				clBoundingBox[id].min=new Vector3([MAX,MAX,MAX]);
+				clBoundingBox[id].max=new Vector3([MIN,MIN,MIN]);
+			}
+			function clUpdateBoundingBox(id,array,i)
+			{
+				var xyz=[array[i+0],array[i+1],array[i+2]];
+				clBoundingBox[id].min.minimize(xyz);
+				clBoundingBox[id].max.maximize(xyz);
+			}
+			function clUpdateMoleculeBoundingBox(id,array,i)
+			{
+				var r=array[i+6];
+				var xyzMin=[array[i+0]-r,array[i+1]-r,array[i+2]-r];
+				var xyzMax=[array[i+0]+r,array[i+1]+r,array[i+2]+r];
+				clBoundingBox[id].min.minimize(xyzMin);
+				clBoundingBox[id].max.maximize(xyzMax);
+			}
+			function clGetBoundingBox(id)
+			{
+				var Error=0.00001;
+				var s0=clBoundingBox[id].min.elements[0]-Error;
+				var s1=clBoundingBox[id].min.elements[1]-Error;
+				var s2=clBoundingBox[id].min.elements[2]-Error;
+				var s3=clBoundingBox[id].max.elements[0]+Error;
+				var s4=clBoundingBox[id].max.elements[1]+Error;
+				var s5=clBoundingBox[id].max.elements[2]+Error;
+				return new Float32Array([s0,s1,s2,s3,s4,s5,0,0]);
+			}
+			var viewDistance=10.0,viewFocus=0.5;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var viewInfoArray=new Float32Array([0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0,0]);
+			var eyeX=0,eyeY=0,eyeZ=viewDistance,translateMouseX=0,translateMouseY=0;
+			var currentMouseX=0,currentMouseY=0,mouseIsDown=false;
+			function clUpdateViewDirection()
+			{
+				var k=0.5;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+			}
+			function clUpdateViewInfo()
+			{
+				var eyePositionInfo=[eyeX,eyeY,eyeZ];
+				var viewDirectionInfo=viewDirection.elements;
+				var viewUpDirectionInfo=viewUpDirection.elements;
+				var viewRightDirectionInfo=viewRightDirection.elements;
+				viewInfoArray[0]=eyePositionInfo[0];
+				viewInfoArray[1]=eyePositionInfo[1];
+				viewInfoArray[2]=eyePositionInfo[2];
+				viewInfoArray[3]=viewDirectionInfo[0];
+				viewInfoArray[4]=viewDirectionInfo[1];
+				viewInfoArray[5]=viewDirectionInfo[2];
+				viewInfoArray[6]=viewUpDirectionInfo[0];
+				viewInfoArray[7]=viewUpDirectionInfo[1];
+				viewInfoArray[8]=viewUpDirectionInfo[2];
+				viewInfoArray[9]=viewRightDirectionInfo[0];
+				viewInfoArray[10]=viewRightDirectionInfo[1];
+				viewInfoArray[11]=viewRightDirectionInfo[2];
+				viewInfoArray[12]=cl.canvas[canvas_id].viewSize[0];
+				viewInfoArray[13]=cl.canvas[canvas_id].viewSize[1];
+				viewInfoArray[14]=viewDistance;
+				viewInfoArray[15]=viewFocus;
+			}
+			var lightColor=new Vector3([1,1,1]);
+			var lightDirection=new Vector3([0,0,1]);
+			var lightUpDirection=new Vector3([0,1,0]);
+			var lightRightDirection=new Vector3([1,0,0]);
+			var lightInfoArray=new Float32Array([0,0,1, 1,1,1, 20.0, 0.5]);
+			var translateUpDown=0,translateRightLeft=0,translateMouseZ=0;
+			function clUpdateLightDirection()
+			{
+				var k=1.2;
+				var rotUp=k*translateRightLeft;
+				var rotRight=-k*translateUpDown;
+				lightDirection.rotate(lightUpDirection,rotUp);
+				lightRightDirection.rotate(lightUpDirection,rotUp);
+				lightDirection.rotate(lightRightDirection,rotRight);
+			}
+			function clUpdateLightInfo()
+			{
+				var lightDirectionInfo=lightDirection.elements;
+				lightInfoArray[0]=lightDirectionInfo[0];
+				lightInfoArray[1]=lightDirectionInfo[1];
+				lightInfoArray[2]=lightDirectionInfo[2];
+			}
+			function clDisplayFunc()
+			{
+				var canvas=cl.canvas[canvas_id];
+				var sizeArray=canvas.sizeArray;
+				var pixelBuffer=canvas.pixelBuffer;
+				var depthBuffer=canvas.depthBuffer;
+				var isObject=new Uint32Array([1]);
+				var args=
+				[
+					isObject,
+					objectBoundingBox,
+					pixelBuffer,
+					depthBuffer,
+					viewInfoArray,
+					lightInfoArray,
+					objectPrimaryIndicesBuffer,
+					objectSecondaryIndicesBuffer,
+					objectIndicesBuffer,
+					objectVerticesBuffer,
+					moleculePrimaryIndicesBuffer,
+					moleculeSecondaryIndicesBuffer,
+					moleculeDataBuffer,
+					atomNumArray,
+					gridSizeArray,
+					sizeArray
+				];
+				clSetKernelArgs(kernel_id,args);
+				clExecuteKernelProgram(kernel_id);
+
+				isObject[0]=0;
+				args[1]=moleculeBoundingBox;
+				clSetKernelArgs(kernel_id,args);
+				clExecuteKernelProgram(kernel_id);
+
+				clReadKernelBuffer(kernel_id,canvas.image.data,pixelBuffer,pixelBuffer.length);
+				canvas.context.putImageData(canvas.image,0,0);
+			}
+			function clResizeCanvas(id,scale)
+			{
+				var canvas=cl.canvas[id],k=scale;
+				var width=canvas.width,height=canvas.height;
+				var width_k=width*k,height_k=height*k;
+				canvas.element.setAttribute("width",width_k);
+				canvas.element.setAttribute("height",height_k);
+				var image=canvas.resizedImage;
+				if(image==null)
+				{
+					image=canvas.context.createImageData(width_k,height_k);
+					canvas.resizedImage=image;
+				}
+				for(var i=0;i<height_k;i++)
+				{
+					for(var j=0;j<width_k;j++)
+					{
+						image.data[(i*width_k+j)*4+0]=clInterpolatePixel(canvas.image,width,i/k,j/k,0);
+						image.data[(i*width_k+j)*4+1]=clInterpolatePixel(canvas.image,width,i/k,j/k,1);
+						image.data[(i*width_k+j)*4+2]=clInterpolatePixel(canvas.image,width,i/k,j/k,2);
+						image.data[(i*width_k+j)*4+3]=clInterpolatePixel(canvas.image,width,i/k,j/k,3);
+					}
+				}
+				canvas.context.putImageData(image,0,0);
+			}
+			function clInterpolatePixel(image,width,i,j,k)
+			{
+				var i0=Math.floor(i),i1=i0+1,u=i-i0;
+				var j0=Math.floor(j),j1=j0+1,v=j-j0;
+				var p00=image.data[(i0*width+j0)*4+k];
+				var p01=image.data[(i0*width+j1)*4+k];
+				var p11=image.data[(i1*width+j1)*4+k];
+				var p10=image.data[(i1*width+j0)*4+k];
+				var p0V=(1.0-v)*p00+v*p01;
+				var p1V=(1.0-v)*p10+v*p11;
+				return (1.0-u)*p0V+u*p1V;
+			}
+			function clGetKernelSource(id)
+			{
+				var kernelSource=document.getElementById(id);
+				if(kernelSource===null)return null;
+				if(kernelSource.type!="x-kernel")return null;
+				return kernelSource.firstChild.textContent;
+			}
+			function clSetKernelArgs(id,args)
+			{
+				var kernel=cl.kernels[id];
+				kernel.args=args;
+				for(var i=0;i<args.length;i++)
+				{
+					kernel.setArg(i,args[i]);
+				}
+				kernel.workDim=args[args.length-1].length;
+				kernel.localWorkSize=clGetLocalWorkSize(id,kernel.workDim);
+				kernel.globalWorkSize=clGetGlobalWorkSize(id,kernel.localWorkSize);
+			}
+			function clExecuteKernelProgram(id)
+			{
+				var kernel=cl.kernels[id];
+				var queue=kernel.commandQueue;
+				var workDim=kernel.workDim,globalWorkOffset=kernel.globalWorkOffset;
+				var globalWorkSize=kernel.globalWorkSize,localWorkSize=kernel.localWorkSize;
+				queue.enqueueNDRangeKernel(kernel,workDim,globalWorkOffset,globalWorkSize,localWorkSize);
+			}
+			function clReadKernelBuffer(id,outputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueReadBuffer(kernelBuffer,true,0,length,outputData);
+			}
+			function clWriteKernelBuffer(id,inputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueWriteBuffer(kernelBuffer,true,0,length,inputData);
+			}
+			function clGetLocalWorkSize(id,workDim)
+			{	
+				var GROUP_SIZE=webcl.KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE;
+				var groupSize=cl.kernels[id].getWorkGroupInfo(cl.devices[0],GROUP_SIZE);
+				switch(workDim)
+				{
+					case 1: return [groupSize];
+					case 2: return dim2(groupSize);
+					case 3: return dim3(groupSize);
+				}
+			}
+			function clGetGlobalWorkSize(id,localWorkSize)
+			{
+				var globalWorkSize=[];
+				var args=cl.kernels[id].args;
+				var workSize=args[args.length-1];
+				for(var i=0;i<localWorkSize.length;i++)
+				{
+					var k=Math.ceil(workSize[i]/localWorkSize[i]);
+					globalWorkSize[i]=k*localWorkSize[i];
+				}
+				return globalWorkSize;
+			}
+			function dim2(size)
+			{
+				var xSize=pow2(Math.floor(Math.sqrt(size)));
+				return [xSize, Math.floor(size/xSize)];
+			}
+			function dim3(size)
+			{
+				var xSize=pow2(Math.floor(Math.pow(size,1/3)));
+				var ySize=pow2(Math.floor(Math.sqrt(size/xSize)));
+				return [xSize, ySize, Math.floor(size/(xSize*ySize))];
+			}
+			function pow2(x){return isPowerOfTwo(x)?x:nextHighestPowerOfTwo(x);}
+			function isPowerOfTwo(x){return (x&(x-1))==0;}
+			function nextHighestPowerOfTwo(x)
+			{
+				--x;
+				for(var i=1;i<32;i<<= 1)x=x|x>>i;
+				return x+1;
+			}
+			function clAddEventListener()
+			{
+				cl.canvas[canvas_id].onmousemove=mouseDragged;
+				cl.canvas[canvas_id].onmousedown=mouseDown;
+				cl.canvas[canvas_id].onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				clUpdateViewDirection();
+				clUpdateViewInfo();
+				clDisplayFunc();
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)
+				{
+					translateRightLeft=-1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_RIGHT)
+				{
+					translateRightLeft=1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_UP)
+				{
+					translateUpDown=1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					translateUpDown=-1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				translateRightLeft=0;
+				translateUpDown=0;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<center><div id="webcl-canvas"></div></center>
+	</body>
+</html>

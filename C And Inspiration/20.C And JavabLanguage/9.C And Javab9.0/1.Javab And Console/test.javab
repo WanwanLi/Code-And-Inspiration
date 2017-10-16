@@ -1,0 +1,17 @@
+String f="a15"+"a16";
+double g=2.1+2.2+3.3;
+int h=5+8+10;
+public test()
+{
+	print("Hello World !");
+	print(-f);
+	print(-g+"2.4");
+	print(-h+g);
+	int c=h+nextInt();
+	print(c);
+	print(next());
+	print(nextDouble()+nextLine());
+	print(nextLine()+nextDouble());
+	print("This is Javab !");
+}
+

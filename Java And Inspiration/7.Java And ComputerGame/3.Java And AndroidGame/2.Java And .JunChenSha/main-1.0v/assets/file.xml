@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<records>
+	<google>
+		<employee>
+			<name>Sairamkrishna</name>
+			<surname>Mr</surname>
+			<salary>50000</salary>
+		</employee>
+	
+		<employee>
+			<name>Gopal </name>
+			<surname>Bs</surname>
+			<salary>60000</salary>
+		</employee>
+	
+		<employee>
+			<name>Raja</name>
+			<surname>Mr</surname>
+			<salary>70000</salary>
+		</employee>
+	</google>
+
+	<google>
+		<employee>
+			<name>Tim</name>
+			<surname>Bs</surname>
+			<salary>50000</salary>
+		</employee>
+	
+		<employee>
+			<name>Liu</name>
+			<surname>PhD</surname>
+			<salary>60000</salary>
+		</employee>
+	</google>
+
+	<google>
+		<employee>
+			<name>Tom</name>
+			<surname>PhD</surname>
+			<salary>85000</salary>
+		</employee>
+
+		<employee>
+			<name>Jack</name>
+			<surname>PhD</surname>
+			<salary>125000</salary>
+		</employee>
+	
+		<employee>
+			<name>Jerry</name>
+			<surname>Mr</surname>
+			<salary>60000</salary>
+		</employee>
+	
+		<employee>
+			<name>Josha</name>
+			<surname>Bs</surname>
+			<salary>70000</salary>
+		</employee>
+	</google>
+
+	<apple>
+		<employee>
+			<name>Tom</name>
+			<surname>PhD</surname>
+			<salary>40000</salary>
+		</employee>
+	
+		<employee>
+			<name>Kim</name>
+			<surname>Mr</surname>
+			<salary>60000</salary>
+		</employee>
+	</apple>
+
+	<apple>
+		<employee>
+			<name>Mark</name>
+			<surname>Ms</surname>
+			<salary>23000</salary>
+		</employee>
+
+		<employee>
+			<name>Sam</name>
+			<surname>Bs</surname>
+			<salary>80000</salary>
+		</employee>
+
+		<employee>
+			<name>Luke</name>
+			<surname>Mr</surname>
+			<salary>60000</salary>
+		</employee>
+	
+		<employee>
+			<name>David</name>
+			<surname>PhD</surname>
+			<salary>78000</salary>
+		</employee>
+	</apple>
+</records>

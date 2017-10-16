@@ -1,0 +1,8 @@
+public main()
+{
+	this.setFont(1,0);
+	this.setColor(0,255,0);
+	this.setScale(20,50,20);
+	this.setTranslation(0-60,0,2);
+	this.addText3D("test2.javab");
+}

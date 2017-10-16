@@ -1,0 +1,37 @@
+					JavaAndLaplaceFilter
+
+The principal of sharp is£º
+	When the middle of the pixel is lower than the average (mean value) of the neighbors£¨4 or 8£©then the middle pixel should be much lower,
+ otherwise,it should be much higher.
+
+	The Laplace filter=
+	{
+		 0	-1	 0
+		-1	 4	-1
+		 0	-1	 0
+	};
+
+	or:
+
+	The Laplace filter=
+	{
+		-1	-1	-1
+		-1	 8	-1
+		-1	-1	-1
+	};
+
+The Principal Of LaplaceFilter is£º
+
+	 when the result of filer F is bigger than zero£¬the new value of pixel = pixel+F*scale  is higher,
+otherwise it would be lower, and the effect  is connected with the constant scale.
+So , the result is : 
+	newCenter=scale*[center-(left+right+up+down)/4] 
+or
+	newCenter=scale*[4*center-(left+right+up+down)] 
+So , It is the Laplace filter=
+{
+	 0	-1	 0
+	-1	 4	-1
+	 0	-1	 0
+};
+It is also called unsharp marsking: it can enhance the contour.

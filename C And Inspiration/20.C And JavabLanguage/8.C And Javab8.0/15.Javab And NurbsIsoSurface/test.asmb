@@ -1,0 +1,169 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=13
+integerNumber=70
+integerTableLength=13
+integerTable[0]=0
+integerTable[1]=0
+integerTable[2]=1
+integerTable[3]=0
+integerTable[4]=1
+integerTable[5]=0
+integerTable[6]=40
+integerTable[7]=3
+integerTable[8]=3
+integerTable[9]=3
+integerTable[10]=2
+integerTable[11]=2
+integerTable[12]=2
+doubleNumber=69
+doubleTableLength=59
+doubleTable[0]=1.000000
+doubleTable[1]=1.000000
+doubleTable[2]=10.000000
+doubleTable[3]=2.000000
+doubleTable[4]=2.000000
+doubleTable[5]=2.000000
+doubleTable[6]=2.000000
+doubleTable[7]=2.000000
+doubleTable[8]=2.000000
+doubleTable[9]=2.000000
+doubleTable[10]=2.000000
+doubleTable[11]=2.000000
+doubleTable[12]=2.000000
+doubleTable[13]=2.000000
+doubleTable[14]=2.000000
+doubleTable[15]=2.000000
+doubleTable[16]=100.000000
+doubleTable[17]=2.000000
+doubleTable[18]=2.000000
+doubleTable[19]=2.000000
+doubleTable[20]=2.000000
+doubleTable[21]=2.000000
+doubleTable[22]=2.000000
+doubleTable[23]=2.000000
+doubleTable[24]=2.000000
+doubleTable[25]=2.000000
+doubleTable[26]=2.000000
+doubleTable[27]=2.000000
+doubleTable[28]=2.000000
+doubleTable[29]=2.000000
+doubleTable[30]=10.000000
+doubleTable[31]=1.000000
+doubleTable[32]=1.000000
+doubleTable[33]=1.000000
+doubleTable[34]=1.000000
+doubleTable[35]=1.000000
+doubleTable[36]=1.000000
+doubleTable[37]=1.000000
+doubleTable[38]=1.000000
+doubleTable[39]=1.000000
+doubleTable[40]=1.000000
+doubleTable[41]=1.000000
+doubleTable[42]=1.000000
+doubleTable[43]=1.000000
+doubleTable[44]=1.000000
+doubleTable[45]=1.000000
+doubleTable[46]=1.000000
+doubleTable[47]=10.000000
+doubleTable[48]=1.000000
+doubleTable[49]=1.000000
+doubleTable[50]=1.000000
+doubleTable[51]=1.000000
+doubleTable[52]=1.000000
+doubleTable[53]=1.000000
+doubleTable[54]=1.000000
+doubleTable[55]=1.000000
+doubleTable[56]=1.000000
+doubleTable[57]=0.500000
+doubleTable[58]=0.500000
+stringNumber=0
+stringTableLength=0
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=80
+0: MOV #59,@0
+1: MOV #60,@1
+2: NEG @13,@2
+3: MOV #61,@13
+4: LIGHT #0,~59
+5: MOV #62,@3
+6: MOV #63,@4
+7: MOV #64,@5
+8: COLOR ~62
+9: MOV %3, 65
+10: MOV #65,#1
+11: MOV %4, 66
+12: MOV #66,#2
+13: STEP @6
+14: MOV %6, 14
+15: MOV @14, 27
+16: MOV @15, 3
+17: MOV @16, 4
+18: MOV @17, 5
+19: MOV @18, 6
+20: MOV @19, 7
+21: MOV @20, 8
+22: MOV @21, 9
+23: MOV @22, 10
+24: MOV @23, 11
+25: MOV @24, 12
+26: MOV @25, 13
+27: MOV @26, 14
+28: MOV @27, 15
+29: NEG #67,#16
+30: MOV @28, 67
+31: MOV @29, 17
+32: MOV @30, 18
+33: MOV @31, 19
+34: MOV @32, 20
+35: MOV @33, 21
+36: MOV @34, 22
+37: MOV @35, 23
+38: MOV @36, 24
+39: MOV @37, 25
+40: MOV @38, 26
+41: MOV @39, 27
+42: MOV @40, 28
+43: MOV @41, 29
+44: MOV %7, 42
+45: MOV @42, 27
+46: MOV @43, 30
+47: MOV @44, 31
+48: MOV @45, 32
+49: MOV @46, 33
+50: MOV @47, 34
+51: MOV @48, 35
+52: MOV @49, 36
+53: MOV @50, 37
+54: MOV @51, 38
+55: MOV @52, 39
+56: MOV @53, 40
+57: MOV @54, 41
+58: MOV @55, 42
+59: MOV @56, 43
+60: MOV @57, 44
+61: MOV @58, 45
+62: MOV @59, 46
+63: MOV @60, 47
+64: MOV @61, 48
+65: MOV @62, 49
+66: MOV @63, 50
+67: MOV @64, 51
+68: MOV @65, 52
+69: MOV @66, 53
+70: MOV @67, 54
+71: MOV @68, 55
+72: MOV @69, 56
+73: CTRLCOUNT @7,@8,@9
+74: ORDER @10,@11,@12
+75: KNOTS 21,-1,21,-1,21,-1
+76: WEIGHTS 7
+77: NEG #68,#57
+78: ISONURBS 6,^3,#68,#58
+79: EXIT

@@ -1,0 +1,9 @@
+public test()
+{
+	addLight(1,<0,0,-1>);
+	setColor(<0,1,0>);
+	double A=0.1,r=PI/8,wU=1.0PI,wV=2.0PI;
+	func(u) pU0=<-r,A*sin(wU*u),u>,pU1=<r,-A*sin(wU*u),u>;
+	func(v) p0V=<v,A*sin(wV*v),-r>,p1V=<v,-A*sin(wV*v),r>;
+	addCoonsSurface(pU0,-r:r,pU1,-r:r,p0V,-r:r,p1V,-r:r);
+}

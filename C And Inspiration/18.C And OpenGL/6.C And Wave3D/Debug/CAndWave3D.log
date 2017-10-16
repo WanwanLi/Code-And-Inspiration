@@ -1,0 +1,7 @@
+﻿生成启动时间为 2014/2/23 12:41:08。
+     1>项目“E:\C And OpenGL\CAndWave3D\CAndWave3D.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug\CAndWave3D.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CAndWave3D.cpp
+         CAndWave3D.cpp

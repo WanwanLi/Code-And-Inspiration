@@ -1,0 +1,270 @@
+http://www.javaworld.com/article/2071845/swing-gui-programming/hello-jogl.html
+
+
+import net.java.games.jogl.*;
+
+public class HelloWorld {
+   public static void main (String args[]) {
+      try {
+         System.loadLibrary("jogl");
+         System.out.println(
+            "Hello World! (The native libraries are installed.)"
+         );
+        GLCapabilities caps = new GLCapabilities();
+        System.out.println(
+            "Hello JOGL! (The jar appears to be available.)"
+         );
+      } catch (Exception e) {
+         System.out.println(e);
+      }
+   }
+}   
+
+First, this program tests to see if the native and Java libraries are installed correctly. JOGL is installed properly only when the jogl.jar and the native library, named something like libjogl.jnilib or jogl.dll, are both installed. If the native library is not accessible, this program will throw a java.lang.UnsatisfiedLinkError exception. If the JAR is not installed in the classpath, then the program will not even compile. The javac compiler will say something similar to "package net.java.games.jogl does not exist." When this class compiles and runs without exceptions, you are ready to continue learning JOGL.
+A good template
+
+Let's move on to a couple of classes that you may find useful to use as a template while messing around with JOGL. I've used them as templates more than once. Feel free to use them however you like.
+
+This template is made up of two classes. The first is SimpleJoglApp shown below, and the second is SimpleGLEventListener shown after a brief description. You will need to type both in to compile the template. The main app:
+
+ 
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import net.java.games.jogl.*;
+
+/**
+   * This is a basic JOGL app. Feel free to
+   * reuse this code or modify it.
+   */
+public class SimpleJoglApp extends JFrame {
+   public static void main(String[] args) {
+      final SimpleJoglApp app = new SimpleJoglApp();
+
+      // show what we've done
+      SwingUtilities.invokeLater (
+         new Runnable() {
+            public void run() {
+               app.setVisible(true);
+            }
+         }
+      );
+   }
+
+   public SimpleJoglApp() {
+      //set the JFrame title
+      super("Simple JOGL Application");
+
+      //kill the process when the JFrame is closed
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      //only three JOGL lines of code ... and here they are
+      GLCapabilities glcaps = new GLCapabilities();
+      GLCanvas glcanvas =
+         GLDrawableFactory.getFactory().createGLCanvas(glcaps);
+      glcanvas.addGLEventListener(new SimpleGLEventListener());
+
+      //add the GLCanvas just like we would any Component
+      getContentPane().add(glcanvas, BorderLayout.CENTER);
+      setSize(500, 300);
+
+      //center the JFrame on the screen
+      centerWindow(this);
+   }
+
+   public void centerWindow(Component frame) {
+      Dimension screenSize =
+         Toolkit.getDefaultToolkit().getScreenSize();
+      Dimension frameSize = frame.getSize();
+
+      if (frameSize.width > screenSize.width )
+         frameSize.width = screenSize.width;
+      if (frameSize.height > screenSize.height)
+         frameSize.height = screenSize.height;
+
+      frame.setLocation (
+          (screenSize.width - frameSize.width ) >> 1,
+          (screenSize.height - frameSize.height) >> 1
+      );
+   }
+}
+ 
+
+That is it. Let's focus on the three lines of JOGL-specific code in this first class. To start:
+
+ GLCapabilities glcaps = new GLCapabilities();
+
+This determines what OpenGL/graphics features are available to our JOGL libraries and the JVM.
+
+Next:
+
+ GLCanvas glcanvas =
+   GLDrawableFactory.getFactory().createGLCanvas(glcaps);
+
+We cannot create GLCanvases or GLJPanels. We need to have them created for us by a GLDrawableFactory. So, we retrieve a GLDrawableFactory using GLDrawableFactory's static method, getFactory().
+
+Now we have a GLDrawableFactory, so we use its createGLCanvas() method to create a GLCanvas to draw on. We could have used the createGLJPanel() method instead if we had wanted a Swing component instead of an AWT component.
+
+Notice that we passed in the GLCapabilities object we created earlier. This allows the GLDrawable we're having created to be created properly.
+
+Finally, we are ready to add a GLEventListener to the GLCanvas:
+
+ glcanvas.addGLEventListener(new SimpleGLEventListener());
+
+Our implementation of GLEventListener is SimpleGLEventListener. It will take care of any drawing that needs to be done when it receives a call from the GLDrawable and our one and only GLCanvas. As you will see, I decided not to draw anything in this program. Now for the GLEventListener:
+
+ 
+
+import java.awt.*;
+import java.awt.event.*;
+import net.java.games.jogl.*;
+
+/**
+ * For our purposes only two of the
+ * GLEventListeners matter. Those would
+ * be init() and display().
+ */
+public class SimpleGLEventListener implements GLEventListener
+{
+
+   /**
+    * Take care of initialization here.
+    */
+   public void init(GLDrawable drawable) {
+
+   }
+
+   /**
+    * Take care of drawing here.
+    */
+   public void display(GLDrawable drawable) {
+
+   }
+
+   /**
+    * Called when the GLDrawable (GLCanvas
+    * or GLJPanel) has changed in size. We
+    * won't need this, but you may eventually
+    * need it -- just not yet.
+    */
+   public void reshape(
+                        GLDrawable drawable,
+                        int x,
+                        int y,
+                        int width,
+                        int height
+                       ) {}
+
+   /**
+    * If the display depth is changed while the
+    * program is running this method is called.
+    * Nowadays this doesn't happen much, unless
+    * a programmer has his program do it.
+    */
+   public void displayChanged(
+                               GLDrawable drawable,
+                               boolean modeChanged,
+                               boolean deviceChanged
+                             ) {}
+}
+ 
+
+That is the heart of the JOGL work we will do. Notice the UML graphic below. SimpleJoglApp is a JFrame. It contains our GLDrawable, which is actually a GLCanvas, but don't tell him that. We add the SimpleGLEventListener, which implements GLEventListener to the GLCanvas so the GLCanvas knows we care if he wants any OpenGL work done. GLDrawables can talk your ear off, so you'll want to make sure your GLEventListener is optimized…for real.
+
+This app may look a bit scrambled depending on your OS. This is to be expected because you are just displaying random bits of memory at this point. So congratulations on your new-found graphics talents.
+You're ready for the real thing
+
+After you've familiarized yourself with the previous example, make a pretty picture.
+
+Here is your next app. Make sure you type this and all examples in. Debugging and messing around with them will serve to quickly teach you how they work.
+1 2 Next
+View Comments
+Recommended
+
+    JavaWorld Java IDEs review, September 2016
+    Eclipse, NetBeans, or IntelliJ? Choose your Java IDE
+    android beginners2
+    Android Studio for beginners: Code the app
+    A collection of marigolds.
+    Immutable empty collections and iterators
+    jw dockerswarm
+    Open source Java projects: Docker Swarm
+    White Paper
+    Coding with JRebel: Java Forever Changed
+    White Paper
+    A Mobile Application Development Primer
+
+Join the discussion
+Be the first to comment on this article. Our Commenting Policies
+Login
+
+0 Comments
+
+    SubscribeRSS
+
+Popular on JavaWorld
+JavaWorld Java IDEs review, September 2016
+Eclipse, NetBeans, or IntelliJ? Choose your Java IDE
+
+Find out what to look for in a Java IDE and get tips for deciding which of the top three--Eclipse,...
+
+    android beginners2
+    Android Studio for beginners: Code the app
+    jw dockerswarm
+    Open source Java projects: Docker Swarm
+
+Newsletters
+Stay up to date on the latest tutorials and Java community news posted on JavaWorld
+
+Get our Enterprise Java newsletter
+Redis NoSQL
+Lightning fast NoSQL with Spring Data Redis
+
+Redis isn't your typical NoSQL data store, and that's exactly why it hits the sweet spot for certain...
+Big data messaging with Kafka, Part 1
+Big data messaging with Kafka, Part 1
+
+Built for realtime, Kafka scales horizontally and offers much higher throughput than some traditional...
+Popular Resources
+
+    White Paper
+    Coding with JRebel: Java Forever Changed
+    White Paper
+    E-Learning Provider Reduces Liferay Development Time with JRebel
+    White Paper
+    Rocket-Powered Java Development
+    White Paper
+    What Developers Want: The End of Application Redeploys
+    White Paper
+    A Mobile Application Development Primer
+
+Featured Stories
+coffee cup table java order
+Java founder endorses Apache takeover of NetBeans IDE
+
+Under a new proposal, Oracle will turn over reins of the project that began at Sun Microsystems
+JavaWorld Java IDEs review, September 2016
+Eclipse, NetBeans, or IntelliJ? Choose your Java IDE
+
+Find out what to look for in a Java IDE and get tips for deciding which of the top three is best for...
+ruby rubies
+Ruby creator floats new concurrency model
+
+The new concurrency and parallelism model, called Guild, would feature thread safety, but isn't...
+Swift vs. Objective-C: 10 reasons the future favors Swift
+Challenger nudges Java, Node.js for Swift app dev
+
+PerfectlySoft's Perfect 2.0 framework supports Swift 3.0 and focuses on modularity
+JavaWorld JavaWorld is the original independent resource for Java developers, architects, and managers.
+Follow us
+
+    Core Java Enterprise Java Learn Java Mobile Java 
+
+    How-Tos Features News Blogs Resources Newsletters 
+
+    About Us Contact Privacy Policy Advertising Careers at IDG Site Map Ad Choices E-commerce Affiliate Relationships 
+
+Copyright © 1994 - 2016 JavaWorld, Inc. All rights reserved.
+Explore the IDG Network
+descend

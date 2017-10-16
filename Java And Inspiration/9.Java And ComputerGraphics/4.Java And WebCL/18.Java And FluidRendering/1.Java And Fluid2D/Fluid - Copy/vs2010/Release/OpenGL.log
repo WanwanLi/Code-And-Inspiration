@@ -1,0 +1,25 @@
+﻿生成启动时间为 9/26/2015 10:39:34 PM。
+     1>项目“C:\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\18.Java And FluidRendering\1.Java And Fluid2D\Fluid\vs2010\OpenGL.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Release\OpenGL.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../lib/pez /I../lib/glew /I../lib/glsw /I../lib/vectormath /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D JU_WIN /D JUDYL /D GLEW_STATIC /D OPENCTM_STATIC /D WIN32 /D NDEBUG /D _LIB /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt ..\lib\glew\glew.c ..\lib\glsw\bstrlib.c ..\lib\glsw\glsw.c
+         glew.c
+         bstrlib.c
+         glsw.c
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../lib/pez /I../lib/glew /I../lib/glsw /I../lib/vectormath /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D GLEW_STATIC /D WIN32 /D NDEBUG /D _LIB /D JU_WIN /D JUDYL /D GLEW_STATIC /D OPENCTM_STATIC /D WIN32 /D NDEBUG /D _LIB /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt ..\lib\pez\Windows.c
+         Windows.c
+       Lib:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"C:\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\18.Java And FluidRendering\1.Java And Fluid2D\Fluid\vs2010\Release\OpenGL.lib" /NOLOGO /LTCG Release\glew.obj
+         Release\bstrlib.obj
+         Release\glsw.obj
+         Release\Windows.obj
+         OpenGL.vcxproj -> C:\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\18.Java And FluidRendering\1.Java And Fluid2D\Fluid\vs2010\Release\OpenGL.lib
+       FinalizeBuildStatus:
+         正在删除文件“Release\OpenGL.unsuccessfulbuild”。
+         正在对“Release\OpenGL.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“C:\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\18.Java And FluidRendering\1.Java And Fluid2D\Fluid\vs2010\OpenGL.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:06.37

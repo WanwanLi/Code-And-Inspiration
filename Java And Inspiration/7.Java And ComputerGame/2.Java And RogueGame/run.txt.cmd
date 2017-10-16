@@ -1,0 +1,1 @@
+java JavaAndRogueGame 5 50 < Dungeons\dungeonB.txt

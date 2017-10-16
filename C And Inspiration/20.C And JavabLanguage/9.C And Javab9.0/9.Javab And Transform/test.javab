@@ -1,0 +1,25 @@
+public test()
+{
+	addLight(<2,2,2>,<0,0,-1>);
+	setColor(<1,0,0>);
+	scale(<0.5,0.5,0.5>);
+	translate(<0.2,0.1,0.1>);
+	rotate(<1,1,1>,PI/4);
+	[
+		addCone(0.2,0.1);
+		translate(<-0.2,-0.1,0.3>);
+		[
+			addColorCube(0.2);
+		]
+	]
+	setColor(<0,1,0>);
+	setEmissiveColor(<0,0.2,0.5>);
+	setSpecularColor(<0.5,0.5,0.5>);
+	rotX(PI/4);
+	[
+		addCylinder(0.1,0.2);
+	]
+	setColor();
+	setColor(<0,0,1>);
+	addSphere(0.1);
+}

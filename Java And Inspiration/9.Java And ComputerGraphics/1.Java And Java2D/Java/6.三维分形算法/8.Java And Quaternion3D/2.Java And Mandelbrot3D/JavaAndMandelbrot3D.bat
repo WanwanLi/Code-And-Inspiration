@@ -1,0 +1,2 @@
+javac JavaAndMandelbrot3D.java
+java -Xmx1500m JavaAndMandelbrot3D

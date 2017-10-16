@@ -1,0 +1,9 @@
+public main()
+{
+	open("a.txt");
+	for(int i=0;i<100;i++)
+	{
+		write(i);
+	}
+	close();
+}

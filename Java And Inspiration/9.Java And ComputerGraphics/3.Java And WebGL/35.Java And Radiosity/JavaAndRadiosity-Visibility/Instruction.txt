@@ -1,0 +1,50 @@
+直线与平面求交点的算法：
+Line：
+	   x	y	z
+	——  =   ——   =   ——
+	   a	b	c
+	
+	x=x0+at
+	y=y0+bt
+	z=z0+ct
+	
+Plane：
+	A(x-x1)+B(y-y1)+C(z-z1)=0
+
+Intersection:
+
+	Plane.x=Line.x
+	Plane.y=Line.y
+	Plane.z=Line.z
+
+	A(x0+at-x1)+B(y0+bt-y1)+C(z0+ct-z1)=0
+
+=>	A(x1-x0)+B(y1-y0)+C(z1-z0)=t(Aa+Bb+Cc)
+	
+		A(x1-x0)+B(y1-y0)+C(z1-z0)
+=>	t = ————————————————————
+			Aa+Bb+Cc
+
+_________________________________________________________________________________________________________________
+判断一个空间点P是否在三角形ABC内的算法：
+原理：首先我们对点P和三角形做平移操作，把P点移到原点位置，现在问题就转化为：
+判断原点是否包含在平移后的三角形内。当且仅当三角形PAB、PBC、PCA同是顺时针或逆时针方向时，
+P才位于三角形ABC内（如图1所示）。现在我们可以通过求叉积u = B × C, v = C × A, w = A × B, 
+当u, v, w在同一方向，即u﹒v >= 0并且u﹒w >= 0时，PAB, PBC, PCA 方向一致，即P位于三角形内部。
+
+Point P is:
+	P.x=x0+at
+	P.y=y0+bt
+	P.z=z0+ct
+
+Pathch is [P0,P1,P2]:
+
+	A = P0 - P
+	B = P1 - P
+	C = P2 - P
+
+Cross Product:
+	u = B × C, v = C × A, w = A × B
+
+if ( u . v >= 0 and u . w >= 0) then P is in this  Patch:
+

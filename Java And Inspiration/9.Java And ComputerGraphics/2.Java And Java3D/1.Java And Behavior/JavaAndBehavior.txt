@@ -1,0 +1,29 @@
+MouseRotate:Mouse.Left
+MouseZoom:Press Alt+Mouse.Left
+MouseTranslate:Mouse.Right
+class JavaAndMouseBehavior
+{
+		MouseRotate MouseRotate1=new MouseRotate(TransformGroup1);
+		MouseRotate1.setTransformGroup(TransformGroup1);
+		MouseRotate1.setSchedulingBounds(BoundingSphere1);
+		BranchGroup1.addChild(MouseRotate1);
+		MouseZoom MouseZoom1=new MouseZoom();
+		MouseZoom1.setTransformGroup(TransformGroup1);
+		MouseZoom1.setSchedulingBounds(BoundingSphere1);
+		BranchGroup1.addChild(MouseZoom1);
+		MouseTranslate MouseTranslate1=new MouseTranslate();
+		MouseTranslate1.setTransformGroup(TransformGroup1);
+		MouseTranslate1.setSchedulingBounds(BoundingSphere1);
+		BranchGroup1.addChild(MouseTranslate1);
+}
+
+Rotation:Press Left Right PgUp PgDn
+Translation:Press Up Down Alt+Left Alt+Right Alt+PgUp Alt+PgDn
+Reset:=
+class JavaAndKeyboardBehavior
+{
+
+		KeyNavigatorBehavior KeyNavigatorBehavior1=new KeyNavigatorBehavior(TransformGroup1);
+		KeyNavigatorBehavior1.setSchedulingBounds(BoundingSphere1);
+		BranchGroup1.addChild(KeyNavigatorBehavior1);
+}

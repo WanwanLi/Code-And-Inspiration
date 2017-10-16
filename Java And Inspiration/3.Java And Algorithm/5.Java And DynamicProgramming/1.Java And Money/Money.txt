@@ -1,0 +1,13 @@
+minTotalCount[i][j]:means the min total count of the denominations[0:i] using which to pay money j (Yuan).
+preMoney[i][j]:means how much money has denominations[0:i-1] already payed.
+preMoney[i][j]=j-k*denominations[i];  k:means use how many denominations[i].
+minTotalCount[i][j]=minTotalCount[i-1][j-k*denominations[i]]+k;
+
+for(int k=0;k<=j/denominations[i];k++)
+{
+	if(minTotalCount[i-1][j-k*denominations[i]]+k<minTotalCount[i][j])
+	{
+		minTotalCount[i][j]=minTotalCount[i-1][j-k*denominations[i]]+k;
+		this.preMoney[i][j]=j-k*denominations[i];
+	}
+}

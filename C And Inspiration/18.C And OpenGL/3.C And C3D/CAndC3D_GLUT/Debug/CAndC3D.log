@@ -1,0 +1,23 @@
+﻿生成启动时间为 2014/5/3 14:55:36。
+     1>项目“E:\C And OpenGL\CAndC3D\CAndC3D.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在对“Debug\CAndC3D.unsuccessfulbuild”执行 Touch 任务。
+       ClCompile:
+         D:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CAndC3D.cpp
+         CAndC3D.cpp
+     1>e:\c and opengl\candc3d\c3d.h(98): warning C4554: “&”: 检查运算符优先级可能存在的错误；使用圆括号阐明优先级
+     1>e:\c and opengl\candc3d\c3d.h(100): warning C4554: “&”: 检查运算符优先级可能存在的错误；使用圆括号阐明优先级
+     1>e:\c and opengl\candc3d\c3d.h(102): warning C4554: “&”: 检查运算符优先级可能存在的错误；使用圆括号阐明优先级
+       Link:
+         D:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C And OpenGL\CAndC3D\Debug\CAndC3D.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\CAndC3D.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\C And OpenGL\CAndC3D\Debug\CAndC3D.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C And OpenGL\CAndC3D\Debug\CAndC3D.lib" /MACHINE:X86 Debug\CAndC3D.obj
+         CAndC3D.vcxproj -> E:\C And OpenGL\CAndC3D\Debug\CAndC3D.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"E:\C And OpenGL\CAndC3D\Debug\CAndC3D.exe;#1" /manifest Debug\CAndC3D.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         正在删除文件“Debug\CAndC3D.unsuccessfulbuild”。
+         正在对“Debug\CAndC3D.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\C And OpenGL\CAndC3D\CAndC3D.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.79

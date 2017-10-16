@@ -1,0 +1,96 @@
+<dx:DXWindow x:Class="DXWpfApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DXWpfApplication"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+xmlns:dxd="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+
+        Title="DXWpfApplication" Height="600" Width="800"
+        dx:ThemeManager.ThemeName="Office2007Blue"
+    >
+    <dxb:BarManager Name="barManager" CreateStandardLayout="True">
+        <dxb:BarManager.Categories>
+            <dxb:BarManagerCategory Name="File" />
+            <dxb:BarManagerCategory Name="Edit" />
+            <dxb:BarManagerCategory Name="Help" />
+            <dxb:BarManagerCategory Name="Build-in Menus" />
+        </dxb:BarManager.Categories>
+        <dxb:BarManager.Items>
+            <dxb:BarButtonItem Name="bNew" CategoryName="File" Content="New" Glyph="Images/Icons/new-16x16.png" KeyGesture="Ctrl+N" Hint="New Blank Document"/>
+            <dxb:BarButtonItem Name="bOpen" CategoryName="File" Content="Open" Glyph="Images/Icons/open-16x16.png" KeyGesture="Ctrl+O" Hint="Open"/>
+            <dxb:BarButtonItem Name="bClose" CategoryName="File" Content="Close" Glyph="Images/Icons/close-16x16.png" Hint="Close"/>
+            <dxb:BarButtonItem Name="bSave" CategoryName="File" Content="Save" Glyph="Images/Icons/save-16x16.png" KeyGesture="Ctrl+S" Hint="Save Document"/>
+            <dxb:BarButtonItem Name="bSaveAs" CategoryName="File" Content="Save As..." Glyph="Images/Icons/save-as-16x16.png" Hint="Save Document As..."/>
+            <dxb:BarButtonItem Name="bPrint" CategoryName="File" Content="Print" Glyph="Images/Icons/print-16x16.png" KeyGesture="Ctrl+P"/>
+            <dxb:BarButtonItem Name="bExit" CategoryName="File" Content="Exit" KeyGesture="Ctrl+X"/>
+
+            <dxb:BarButtonItem Name="bHome" CategoryName="Help" Content="Developer Express on the Web"/>
+            <dxb:BarButtonItem Name="bAbout" CategoryName="Help" Content="About"/>
+
+            <dxb:BarSubItem Name="smFile" CategoryName="Build-in Menus" Content="File">
+                <dxb:BarSubItem.ItemLinks>
+                    <dxb:BarButtonItemLink BarItemName="bNew"/>
+                    <dxb:BarButtonItemLink BarItemName="bOpen"/>
+                    <dxb:BarButtonItemLink BarItemName="bClose"/>
+                    <dxb:BarItemLinkSeparator/>
+                    <dxb:BarButtonItemLink BarItemName="bSave"/>
+                    <dxb:BarButtonItemLink BarItemName="bSaveAs"/>
+                    <dxb:BarItemLinkSeparator/>
+                    <dxb:BarButtonItemLink BarItemName="bPrint"/>
+                    <dxb:BarItemLinkSeparator/>
+                    <dxb:BarButtonItemLink BarItemName="bExit"/>
+                </dxb:BarSubItem.ItemLinks>
+            </dxb:BarSubItem>
+            <dxb:BarSubItem Name="smHelp" CategoryName="Build-in Menus" Content="Help">
+                <dxb:BarSubItem.ItemLinks>
+                    <dxb:BarButtonItemLink BarItemName="bHome"/>
+                    <dxb:BarItemLinkSeparator/>
+                    <dxb:BarButtonItemLink BarItemName="bAbout"/>
+                </dxb:BarSubItem.ItemLinks>
+            </dxb:BarSubItem>
+        </dxb:BarManager.Items>
+        <dxb:BarManager.Bars>
+            <dxb:Bar Caption="MainMenu" x:Name="MainMenu" IsMainMenu="True" UseWholeRow="True">
+                <dxb:Bar.DockInfo>
+                    <dxb:BarDockInfo ContainerType="Top"/>
+                </dxb:Bar.DockInfo>
+                <dxb:Bar.ItemLinks>
+                    <dxb:BarSubItemLink BarItemName="smFile"/>
+                    <dxb:BarSubItemLink BarItemName="smHelp"/>
+                </dxb:Bar.ItemLinks>
+            </dxb:Bar>
+        </dxb:BarManager.Bars>
+        <dxd:DockLayoutManager>
+            <dxd:LayoutGroup>
+                <dxd:LayoutGroup Orientation="Vertical"  Width="3*">
+                    <dxd:DocumentGroup Height="3*">
+                        <dxd:DocumentPanel Caption="Document1" Height="3*" CaptionImage="Images/Icons/MainView.png">
+                            <TextBox BorderThickness="0" />
+                        </dxd:DocumentPanel>
+                        <dxd:DocumentPanel Caption="Document2" Height="3*" CaptionImage="Images/Icons/MainView.png">
+                            <TextBox BorderThickness="0" />
+                        </dxd:DocumentPanel>
+                    </dxd:DocumentGroup>
+                    <dxd:LayoutPanel Caption="DetailView" Height="*"  CaptionImage="Images/Icons/DetailView.png">
+                        <TextBox BorderThickness="0" />
+                    </dxd:LayoutPanel>
+                </dxd:LayoutGroup>
+                <dxd:TabbedGroup Width="*">
+                    <dxd:LayoutPanel Caption="Properties" />
+                    <dxd:LayoutPanel Caption="Explorer" />
+                </dxd:TabbedGroup>
+            </dxd:LayoutGroup>
+            <dxd:DockLayoutManager.AutoHideGroups>
+                <dxd:AutoHideGroup >
+                    <dxd:LayoutPanel Caption="Navigation">
+                        <TextBox BorderThickness="0" />
+                    </dxd:LayoutPanel>
+                    <dxd:LayoutPanel Caption="Tools"/>
+                </dxd:AutoHideGroup>
+            </dxd:DockLayoutManager.AutoHideGroups>
+        </dxd:DockLayoutManager>
+    </dxb:BarManager>
+
+</dx:DXWindow>

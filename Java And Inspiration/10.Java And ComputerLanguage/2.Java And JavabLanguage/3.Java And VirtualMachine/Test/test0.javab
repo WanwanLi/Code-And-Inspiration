@@ -1,0 +1,12 @@
+int a=(3*5+8);
+int b()
+{
+	return 2+8;
+}
+int c=b()*2+1;
+public test0()
+{
+	this.drawImage("frame.jpg",50,30);
+	this.println("a="+a);
+	this.println("c="+c);
+}

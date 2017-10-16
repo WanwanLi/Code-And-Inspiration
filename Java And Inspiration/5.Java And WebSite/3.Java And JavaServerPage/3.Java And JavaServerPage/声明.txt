@@ -1,0 +1,9 @@
+Resin-3.1.6文件夹必须放在c:\根目录里
+JavaServerPagePrograming文件夹必须放在C:\resin-3.1.6\webapps\ROOT文件夹里
+启动Resin则双击C:\resin-3.1.6\httpd.exe文件
+检验Resin输入在IE中http://127.0.0.1:8080/index.jsp地址
+关闭Resin则双击Resin Web Server 窗体的Quit按钮
+JavaServerPagePrograming.jsp的地址如下所示：
+真实地址：C:\resin-3.1.6\webapps\ROOT\JavaServerPagePrograming\JavaServerPagePrograming.jsp
+虚拟地址：http://127.0.0.1:8080/JavaServerPagePrograming/JavaServerPagePrograming.jsp
+JavaNean文件放在:C:\resin-3.1.6\webapps\ROOT\WEB-INF\classes\

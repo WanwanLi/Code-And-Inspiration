@@ -1,0 +1,38 @@
+		double minX=0;
+		double maxX=2*Math.PI;
+		double minZ=0;
+		double maxZ=Math.PI/2;
+
+
+	static double SZ0(double b,double a)
+	{
+		double PI=Math.PI;
+		double sina=Math.sin(a);
+		double cosa=Math.cos(a);
+		double sz0=814.94*cosa;
+		if(0<=b&&b<PI/2)sz0+=sina*(980.10*Math.cos(b)+573.82*Math.cos(b-PI/2));
+		else if(PI/2<=b&&b<PI)sz0+=sina*(573.82*Math.cos(b-PI/2)+8.75*Math.cos(b-PI));
+		else if(PI<=b&&b<3*PI/2)sz0+=sina*(8.57*Math.cos(b-PI)+263.54*Math.cos(b-3*PI/2));
+		else sz0+=sina*(263.54*Math.cos(b+PI/2)+980.10*Math.cos(b));
+		return sz0;
+	}
+	static double SM0(double b,double a)
+	{
+		return (651.32+240.26*Math.tan(a))/(Math.tan(a)+1);
+	}
+	static double SZ1(double b,double a)
+	{
+		double PI=Math.PI;
+		double sina=Math.sin(a);
+		double cosa=Math.cos(a);
+		double sz1=943.32*cosa;
+		if(0<=b&&b<PI/2)sz1+=sina*(788.69*Math.cos(b)+619.76*Math.cos(b-PI/2));
+		else if(PI/2<=b&&b<PI)sz1+=sina*619.76*Math.cos(b-PI/2);
+		else if(PI<=b&&b<3*PI/2)sz1+=sina*332.73*Math.cos(b+PI/2);
+		else sz1+=sina*(332.73*Math.cos(b+PI/2)+788.69*Math.cos(b));
+		return sz1;
+	}
+	static double SM1(double b,double a)
+	{
+		return (522.96+261.48*Math.tan(a))/(Math.tan(a)+1);
+	}

@@ -1,0 +1,37 @@
+class Mirror;
+public test()
+{
+	addLight(0.5,<0,0,-1>);
+	setColor(<0,1,0>);
+	setStep(70);
+	func(x,y,z) f1=[a=1.0,b=0.5,c=0.4]x*x/(a*a)+y*y/(b*b)+z*z/(c*c);
+	double r=1.2;
+	share("Group1")
+	{
+		addIsoSurface(f1==1.0,-r:r,-r:r,-r:r);
+	}
+	int length=8;
+	double a=2.0PI/(length),r=0.4;
+	share("Group2")
+	{
+		scale(0.2);
+		[
+			for(int i=0;i<length;i++)
+			{
+				rotate(<0,1,0>,-a*i);
+				translate(<r*cos(a*i),0,r*sin(a*i)>);
+				[
+					addGroup("Group1");
+				]
+			}
+		]
+	}
+	translate(0);
+	scale(2);
+	rotX(0.5PI);
+	[
+		addGroup("Group2");
+	]
+	Mirror Mirror1=new Mirror(<1,0.2,0.2>);
+	Mirror1.addMirror(<0,0,0>);
+}

@@ -1,0 +1,47 @@
+public test()
+{
+	int a=2^3;
+	print(a);
+	int b=8\3;
+	print(b);
+	print(3.0\2);
+	print(./3.0);
+	print(|"asdf"|);
+	print(|2.0*-2|);
+	print(sin(0.25PI));
+	print(sin(PI/6));
+	print(cos(PI/6));
+	print(tan(PI/4));
+	print(6.0*asin(0.5)/PI);
+	print(6.0*acos(0.5*./3.0)/PI);
+	print(atan(1)/PI);
+	print(atan(0.2)+acot(0.2)-PI/2);
+	print(asec(1.0/0.2)+asin(0.2)-PI/2);
+	print(acsc(1.0/0.2)+acos(0.2)-PI/2);
+	print(lg(100));
+	print(ln(exp(10)));
+	print(log(2,2^20));
+	open("rand.txt");
+	for(int i=0;i<100;i++)write(random());
+	close();
+	print(4!);
+	print(P(4,2));
+	print(C(4,2));
+	print(square(0.5PI));
+	print(square(1.5PI));
+	print(sawtooth(0.5PI,0.3));
+	print(sawtooth(1.5PI,0.3));
+	print(sh(1)+sh(-1));
+	print(ch(1)+ch(-1));
+	print(th(1)+th(-1));
+	print(arsh(1));
+	print(arch(1));
+	print(arth(0.5));
+	print(gauss(0.3,0,0.6));
+	int[] df={0,1,0,-1,0,1,0,-1};
+	print(taylor(PI/5,0,df));
+	print(sin(PI/5));
+}
+
+
+

@@ -1,0 +1,14 @@
+
+D:\Code And Inspiration\C And Inspiration\15.C And JavabLanguage\1.C And Javab1.0>javab test
+a=1
+a=2
+a=3
+a=1.800000
+a=1.500000
+a=3.400000
+a=ABCD
+a=HIJK
+a=UVW
+
+D:\Code And Inspiration\C And Inspiration\15.C And JavabLanguage\1.C And Javab1.0>gcc CAndJavab.c -o javab
+

@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Graph</title>
+		<style>
+			body{ background-color:black;}
+		</style>
+		<script id="matrix-kernel" type="x-kernel">
+			inline float getDistance(__global float* input1,__global float* input2,int i,int j,int dim)
+			{
+				float d=0.0;
+				for(int k=0;k<dim;k++)
+				{
+					float x=input1[i*dim+k];
+					float y=input2[j*dim+k];
+					d+=(x-y)*(x-y);
+				}
+				return sqrt(d);
+			}
+			__kernel void main(__global float* input1,__global float* input2,__global float* output,int3 size)
+			{
+				int i=get_global_id(0),j=get_global_id(1);
+				int row=size.s0,col=size.s1,dim=size.s2;
+				if(i<row&&j<col)output[i*col+j]=getDistance(input1,input2,i,j,dim);
+			}
+		</script>
+		<script>
+			var cl=null,interval=1000;
+			var kernel_id="matrix-kernel";
+			function main()
+			{
+				clInitDevices(true);
+				clCreateKernels([kernel_id]);
+				clInitComputeFunc();
+				clAddTimer(interval);
+			}
+			function clInitDevices(useGPU)
+			{
+				if(typeof(webcl)=="undefined")alert("Webcl is undefined");
+				if(webcl===null){alert("No webcl object available");return;}
+				cl=webcl.createContext();
+				cl.platforms=webcl.getPlatforms();
+				if(cl.platforms.length==0){alert("No platforms available");return;}
+				if(useGPU)cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_GPU);
+				else cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_CPU);
+			}
+			function clCreateKernels(ids)
+			{
+				if(cl.devices.length==0){alert("No devices available");return;}
+				var device=cl.devices[0];cl.kernels=[];
+				for(var i=0;i<ids.length;i++)
+				{
+					var id=ids[i],kernelSource=clGetKernelSource(id);
+					var program=cl.createProgram(kernelSource);
+					program.build([device]);
+					cl.kernels[id]=program.createKernel("main");
+					cl.kernels[id].commandQueue=cl.createCommandQueue(device,null);
+				}
+			}
+			var inputData1,inputData2,outputData;
+			var row=col=10,dim=10,size,sizeArray,dataLength;
+			var readOnlyBuffer1,readOnlyBuffer2,writeOnlyBuffer;
+			function clInitComputeFunc()
+			{
+				size=[row,col,dim];
+				dataLength=3*row;
+				sizeArray=new Uint32Array(size);
+				inputData1=new Float32Array(row*dim);
+				inputData2=new Float32Array(row*dim);
+				outputData=new Float32Array(row*col);
+				readOnlyBuffer1=clCreateKernelBuffer(true,row*dim);
+				readOnlyBuffer2=clCreateKernelBuffer(true,row*dim);
+				writeOnlyBuffer=clCreateKernelBuffer(false,row*col);
+			}
+			function clComputeFunc(x,y)
+			{
+				for(var i=0;i<row;i++)
+				{
+					for(var j=0;j<dim;j++)
+					{
+						inputData1[i*dim+j]=(x+i)*dim+j;
+						inputData2[i*dim+j]=(y+i)*dim+j;
+					}
+				}
+				var args=[readOnlyBuffer1,readOnlyBuffer2,writeOnlyBuffer,sizeArray];
+				clSetKernelArgs(kernel_id,args);
+				clWriteKernelBuffer(kernel_id,inputData1,readOnlyBuffer1);
+				clWriteKernelBuffer(kernel_id,inputData2,readOnlyBuffer2);
+				clExecuteKernelProgram(kernel_id);
+				clReadKernelBuffer(kernel_id,outputData,writeOnlyBuffer);
+				var msg="Array=\n"+clGetArrayMsg(inputData1,size);
+				msg+="\n"+clGetArrayMsg(inputData2,size);
+				msg+="Matrix=\n"+clGetMatrixMsg(outputData,size);
+				document.getElementById("msg").firstChild.nodeValue=msg;
+				console.log(msg);
+			}
+			function clExecuteFunc()
+			{
+				for(var x=0;x<dataLength;x+=row)
+				{
+					for(var y=x;y<dataLength;y+=col)
+					{
+						clComputeFunc(x,y);
+					}
+				}
+			}
+			var timeX=0,timeY=0;
+			function clAnimationFunc(e)
+			{
+				if(timeY>=dataLength){timeX+=row;timeY=timeX;}
+				if(timeX>=dataLength)return;
+				console.log("Time is: ["+timeX+","+timeY+"]\n");
+				clComputeFunc(timeX,timeY);
+				timeY+=col;
+			}
+			function clAddTimer(interval)
+			{
+				var start = new Date();
+				setInterval(
+				function()
+				{
+					var now=new Date();
+					var time=(now-start)/interval;
+					clAnimationFunc(parseInt(time)); 
+				}, 
+				interval);
+			}
+			function clGetKernelSource(id)
+			{
+				var kernelSource=document.getElementById(id);
+				if(kernelSource===null)return null;
+				if(kernelSource.type!="x-kernel")return null;
+				return kernelSource.firstChild.textContent;
+			}
+			function clCreateKernelBuffer(isReadOnly,length)
+			{
+				var kernelBuffer=null;
+				if(isReadOnly)kernelBuffer=cl.createBuffer(webcl.MEM_READ_ONLY,Float32Array.BYTES_PER_ELEMENT*length);
+				else kernelBuffer=cl.createBuffer(webcl.MEM_WRITE_ONLY,Float32Array.BYTES_PER_ELEMENT*length);
+				return kernelBuffer;
+			}
+			function clWriteKernelBuffer(id,inputData,kernelBuffer)
+			{
+				var queue=cl.kernels[id].commandQueue,length=inputData.length;
+				queue.enqueueWriteBuffer(kernelBuffer,true,0,Float32Array.BYTES_PER_ELEMENT*length,inputData);
+			}
+			function clSetKernelArgs(id,args)
+			{
+				var kernel=cl.kernels[id];
+				kernel.args=args;
+				for(var i=0;i<args.length;i++)
+				{
+					kernel.setArg(i,args[i]);
+				}
+				kernel.workDim=args[args.length-1].length;
+				kernel.localWorkSize=clGetLocalWorkSize(id,kernel.workDim);
+				kernel.globalWorkSize=clGetGlobalWorkSize(id,kernel.localWorkSize);
+			}
+			function clExecuteKernelProgram(id)
+			{
+				var kernel=cl.kernels[id];
+				var queue=kernel.commandQueue;
+				var workDim=kernel.workDim,globalWorkOffset=kernel.globalWorkOffset;
+				var globalWorkSize=kernel.globalWorkSize,localWorkSize=kernel.localWorkSize;
+				queue.enqueueNDRangeKernel(kernel,workDim,globalWorkOffset,globalWorkSize,localWorkSize);
+				queue.finish();
+			}
+			function clReadKernelBuffer(id,outputData,kernelBuffer)
+			{
+				var queue=cl.kernels[id].commandQueue,length=outputData.length;
+				queue.enqueueReadBuffer(kernelBuffer,true,0,Float32Array.BYTES_PER_ELEMENT*length,outputData);
+			}
+			function clGetLocalWorkSize(id,workDim)
+			{	
+				var GROUP_SIZE=webcl.KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE;
+				var groupSize=cl.kernels[id].getWorkGroupInfo(cl.devices[0],GROUP_SIZE);
+				switch(workDim)
+				{
+					case 1: return [groupSize];
+					case 2: return dim2(groupSize);
+					case 3: return dim3(groupSize);
+				}
+			}
+			function clGetGlobalWorkSize(id,localWorkSize)
+			{
+				var globalWorkSize=[];
+				var args=cl.kernels[id].args;
+				var workSize=args[args.length-1];
+				for(var i=0;i<localWorkSize.length;i++)
+				{
+					var k=Math.ceil(workSize[i]/localWorkSize[i]);
+					globalWorkSize[i]=k*localWorkSize[i];
+				}
+				return globalWorkSize;
+			}
+			function dim2(size)
+			{
+				var xSize=pow2(Math.floor(Math.sqrt(size)));
+				return [xSize, Math.floor(size/xSize)];
+			}
+			function dim3(size)
+			{
+				var xSize=pow2(Math.floor(Math.pow(size,1/3)));
+				var ySize=pow2(Math.floor(Math.sqrt(size/xSize)));
+				return [xSize, ySize, Math.floor(size/(xSize*ySize))];
+			}
+			function pow2(x){return isPowerOfTwo(x)?x:nextHighestPowerOfTwo(x);}
+			function isPowerOfTwo(x){return (x&(x-1))==0;}
+			function nextHighestPowerOfTwo(x)
+			{
+				--x;
+				for(var i=1;i<32;i<<= 1)x=x|x>>i;
+				return x+1;
+			}
+			function clGetArrayMsg(data,size)
+			{
+				var msg="",tab="\t";
+				var len=size[0],dim=size[2];
+				for(var i=0;i<len;i++)
+				{
+					msg+=tab+"[";
+					for(var j=0;j<dim-1;j++)
+					{
+						msg+=data[i*dim+j]+","
+					}
+					msg+=data[i*dim+(dim-1)]+"]";
+				}
+				msg+="\n";
+				return msg;
+			}
+			function clGetMatrixMsg(data,size)
+			{
+				var msg="",tab="\t",str="",num="";
+				var row=size[0],col=size[1];
+				for(var i=0;i<row;i++)
+				{
+					for(var j=0;j<col;j++)
+					{
+						str="["+i+"]["+j+"]=";
+						num=(""+data[i*col+j]).substring(0,3);
+						msg+=tab+str+num;
+					}
+					msg+="\n";
+				}
+				return msg;
+			}
+		</script>
+		<style type="text/css">
+			.css_style
+			{
+				font-family: Arial;
+				font-weight: bold;
+				font-size: 14px;
+				text-align: right;
+				color: white;
+			}
+		</style>
+	</head>
+	<body onload="main()">
+		<div id="msg" class="css_style" style="position:absolute; left:60px; top:15px; width:258px;">ERROR: No Result</div>
+	</body>
+</html>

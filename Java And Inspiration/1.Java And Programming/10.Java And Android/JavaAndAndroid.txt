@@ -1,0 +1,148 @@
+Android Studio Projects File Frameworks:
+______________________________________________________________
+
+AndroidStudioProjects\project\app\src\main
+{
+
+	res\drawable
+	{
+		image_main.png
+	}
+	res\layout
+	{
+		activity_main.xml
+	}
+	res\values
+	{
+		strings.xml
+		attributes.xml
+	}
+	java\com\android\project
+	{
+		MainActivity.java
+		MainService.java
+		MainReceiver.java
+	}
+	AndroidManifest.xml
+}
+______________________________________________________________
+
+1.Java And Events: 
+{
+	change: MainActivity.java 
+	controls: MainControls\
+	drawables: MainDrawables\
+}
+
+2.Java And Activity:
+{
+	add: image_main.png
+	change: MainActivity.java
+	change: activity_main.xml
+	{
+		add: <ImageButton "image_main" />
+		add: <Button "Start Browser" />
+		add: <Button "Stop Phone" />
+	}
+}
+
+3.Java And Service: 
+{
+	add: MainService.java
+	change: MainActivity.java
+	change: AndroidManifest.xml
+	{
+		add: <service android:name=".MainService" />
+	}
+	change: activity_main.xml
+	{
+		add: <ImageButton "image_main" />
+		add: <Button "Start Services" />
+		add: <Button "Stop Services" />
+	}
+}
+
+4.Java And Receiver:
+{
+	add: MainReceiver.java
+	change: MainActivity.java
+	change: AndroidManifest.xml
+	{
+		add: <receiver android:name=".MainReceiver">
+	}
+	change: activity_main.xml
+	{
+		add: <ImageButton "image_main" />
+		add: <Button "Broadcast Intent" />
+	}
+}
+
+5.Java And TextView
+{
+	add: attributes.xml
+	change: MainActivity.java
+	change: activity_main.xml
+	{
+		add: <xmlns:custom />
+		add: <TextView "TextView1" />
+		add: <TimeView "TimeView1" />
+	}
+	build: build APK
+	{
+		app\build\outputs\apk
+		{
+			app-debug.apk
+		}
+	}
+}
+
+6.Java And Language
+{
+	change: MainActivity.java
+	change: strings.xml
+	{
+		add: <string "chinese" /> ...
+	}
+	change: activity_main.xml
+	{
+		add: <TextView "textView1" /> ...
+	}
+}
+
+7.Java And XMLParser
+{
+	add: file.xml
+	{
+		app\src\main\assets
+		{
+			file.xml
+		}
+	}
+	add: XMLParser.java
+	change: MainActivity.java
+	change: activity_main.xml
+}
+
+8.Java And Clipboard
+{
+	add: font.ttf
+	{
+		app\src\main\assets
+		{
+			font.ttf
+		}
+	}
+	change: MainActivity.java
+	change: activity_main.xml
+}
+
+9.Java And EditImage
+{
+	add: EditImage.java
+	add: image_prev.png
+	add: image_next.png
+	add: image_button.gif
+	change: MainActivity.java
+	change: activity_main.xml
+}
+

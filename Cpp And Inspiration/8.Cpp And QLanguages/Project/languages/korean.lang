@@ -1,0 +1,25 @@
+﻿Languages : 언어
+chinese : 중국어
+hindi : 힌디어
+japanese : 일본어
+korean : 한국어
+thai : 타이
+vietnamese : 베트남 사람
+french : 프랑스어
+english : 영어
+wood : 나무
+snow : 눈
+grass : 잔디
+flame : 불꽃
+QHBoxLayout : 상자 레이아웃
+QGridLayout : 그리드 레이아웃
+QFormLayout : 테이블 레이아웃
+QTextEdit : 텍스트 상자
+QLineEdit : 편집 막대
+QRadioButton : 라디오 버튼
+QPushButton : 버튼을 클릭 
+Line : 텍스트 행
+File : 파일
+Quit : 종료
+OK : 승인
+Cancel : 취소

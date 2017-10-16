@@ -1,0 +1,28 @@
+int a=10;
+String s="";
+double d=1.2;
+public test1(int b)
+{
+	a+=b;
+	d*=b;
+}
+void show(String name)
+{
+	print(name+".a="+a);
+}
+void setString(String string)
+{
+	s=string;
+}
+String getString()
+{
+	return "String="+s;
+}
+double getDouble()
+{
+	return d;
+}
+int getInt()
+{
+	return a;
+}

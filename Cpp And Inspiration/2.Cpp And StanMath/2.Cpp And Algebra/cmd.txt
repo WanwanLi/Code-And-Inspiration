@@ -1,0 +1,5 @@
+g++ CppAndAlgebra.cpp -o CppAndAlgebra -std=c++11 -w -I/stan-math/lib/eigen_3.2.9
+
+_________________________________
+least Squares website: 
+http://ltcconline.net/greenl/courses/203/MatrixOnVectors/leastSquares.htm

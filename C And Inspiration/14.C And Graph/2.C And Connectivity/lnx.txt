@@ -1,0 +1,9 @@
+# download cygwin @ https://cygwin.com/install.html
+# install package please select 'make' utility
+# run cygwin terminal and input:
+# ctrl+l "to cls"
+cd D:
+cd "Code And Inspiration"/"C And Inspiration"/"19.C And Graph"/"2.C And Connectivity"
+make
+#printf "\ec"  clear the screen
+./main

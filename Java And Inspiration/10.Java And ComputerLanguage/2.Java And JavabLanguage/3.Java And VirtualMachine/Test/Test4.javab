@@ -1,0 +1,9 @@
+class Test5;
+public Test4()
+{
+	Test5 Test51=new Test5(10,20);
+	Test5 Test52=new Test5(30,50);
+	int a=Test51.add();
+	this.println("s1="+a);
+	this.println("s2="+Test52.add());
+}

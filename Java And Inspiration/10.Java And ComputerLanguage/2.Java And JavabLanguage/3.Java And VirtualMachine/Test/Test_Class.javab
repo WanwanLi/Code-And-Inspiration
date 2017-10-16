@@ -1,0 +1,9 @@
+public Test_Class(int i1,String s1,double d1)
+{
+	/*
+		Java Flat Virtual Machine>javab Test.Test_Class(10,asdf,3.14);
+	*/
+	i1=i1%3;
+	d1*=50.0%;
+	this.println("Test_Class:"+i1+","+s1+","+d1);
+}

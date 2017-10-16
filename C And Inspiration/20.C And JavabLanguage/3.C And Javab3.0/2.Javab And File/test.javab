@@ -1,0 +1,46 @@
+public test()
+{
+	open("a.txt");
+	write(1);
+	write(2);
+	write(3);
+	write(-1);
+	close();
+	open("a.txt");
+	int a=readInt();
+	while(a!=-1)
+	{
+		print("a="+a);
+		int a=readInt();
+	}
+	close();
+	open("a.txt");
+	write(1.8);
+	write(1.5);
+	write(3.4);
+	write(-1.0);
+	close();
+	open("a.txt");
+	double a=readDouble();
+	do
+	{
+		print("a="+a);
+		double a=readDouble();
+	}
+	while(a!=-1.0);
+	close();
+	open("a.txt");
+	write("ABCD");
+	write("HIJK");
+	write("UVW");
+	close();
+	open("a.txt");
+	String a=readLine();
+	until(a==0)
+	{
+		print("a="+a);
+		String a=readLine();
+	}
+	close();
+}
+

@@ -1,0 +1,113 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=22
+integerNumber=19
+integerTableLength=14
+integerTable[0]=0
+integerTable[1]=0
+integerTable[2]=1
+integerTable[3]=0
+integerTable[4]=1
+integerTable[5]=0
+integerTable[6]=70
+integerTable[7]=10
+integerTable[8]=1
+integerTable[9]=0
+integerTable[10]=0
+integerTable[11]=1
+integerTable[12]=0
+integerTable[13]=0
+doubleNumber=49
+doubleTableLength=9
+doubleTable[0]=0.500000
+doubleTable[1]=1.000000
+doubleTable[2]=0.500000
+doubleTable[3]=0.400000
+doubleTable[4]=1.200000
+doubleTable[5]=1.000000
+doubleTable[6]=6.283185
+doubleTable[7]=0.400000
+doubleTable[8]=0.300000
+stringNumber=2
+stringTableLength=2
+stringTable[0]=Group1
+stringTable[1]=Group1
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=71
+0: MOV #9,@0
+1: MOV #10,@1
+2: NEG @14,@2
+3: MOV #11,@14
+4: LIGHT #0,~9
+5: MOV #12,@3
+6: MOV #13,@4
+7: MOV #14,@5
+8: COLOR ~12
+9: STEP @6
+10: MOV %4, 15
+11: MOV %5, 16
+12: MOV %6, 17
+13: MOV %8, 18
+14: MOV #18,#1
+15: MOV %9, 19
+16: MOV #19,#2
+17: MOV %10, 20
+18: MOV #20,#3
+19: MUL #22,^8,*^8
+20: MUL #21,^4,*^4,/#22
+21: MUL #25,^9,*^9
+22: MUL #24,^5,*^5,/#25
+23: MUL #27,^10,*^10
+24: MUL #26,^6,*^6,/#27
+25: ADD #23,#21,+#24,+#26
+26: MOV %11, 28
+27: MOV #28,#4
+28: SHARE $0
+29: NEG #29,^11
+30: NEG #30,^11
+31: NEG #31,^11
+32: ISOSURF #5,#23,15,16,17,#29,^11,#30,^11,#31,^11,13,26
+33: POPTG 
+34: MOV %14, 15
+35: MOV @15,@7
+36: MOV %8, 32
+37: ADD @16,&14,-@8
+38: MUL #33,#6,/@16
+39: MOV #32,#33
+40: MOV %11, 34
+41: MOV #34,#7
+42: SCALE #8
+43: PUSHTG 
+44: MOV %16, 17
+45: MOV @17,@9
+46: LT @18,&16,&14
+47: JZ @18,69
+48: MOV #35,@10
+49: MOV #36,@11
+50: MOV #37,@12
+51: NEG #38,^8
+52: MUL #39,#38,*&16
+53: ROTATE ~35,#39
+54: MUL #45,^8,*&16
+55: COS #44,#45
+56: MUL #43,^11,*#44
+57: MOV #40,#43
+58: MOV #41,@13
+59: MUL #48,^8,*&16
+60: SIN #47,#48
+61: MUL #46,^11,*#47
+62: MOV #42,#46
+63: TRANSLATE ~40
+64: PUSHTG 
+65: GROUP $1
+66: POPTG 
+67: INC &16
+68: JMP 46
+69: POPTG 
+70: EXIT

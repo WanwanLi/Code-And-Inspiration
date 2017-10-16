@@ -1,0 +1,237 @@
+objectNumber=0
+classNumber=0
+identifierNumber=17
+integerNumber=49
+integerTableLength=27
+integerTable[0]=1
+integerTable[1]=1
+integerTable[2]=1
+integerTable[3]=1
+integerTable[4]=1
+integerTable[5]=2
+integerTable[6]=2
+integerTable[7]=4
+integerTable[8]=1
+integerTable[9]=2
+integerTable[10]=3
+integerTable[11]=2
+integerTable[12]=2
+integerTable[13]=2
+integerTable[14]=0
+integerTable[15]=1
+integerTable[16]=2
+integerTable[17]=10
+integerTable[18]=10
+integerTable[19]=5
+integerTable[20]=3
+integerTable[21]=5
+integerTable[22]=2
+integerTable[23]=4
+integerTable[24]=6
+integerTable[25]=8
+integerTable[26]=10
+stringNumber=45
+stringTableLength=26
+stringTable[0]=Move disk from 
+stringTable[1]= to 
+stringTable[2]=null
+stringTable[3]=Two
+stringTable[4]=Four
+stringTable[5]=Six
+stringTable[6]=Eight
+stringTable[7]=name=
+stringTable[8]=
+stringTable[9]=Ten
+stringTable[10]=M
+stringTable[11]=O
+stringTable[12]=V
+stringTable[13]=ADD
+stringTable[14]=a=
+stringTable[15]=b=
+stringTable[16]=A
+stringTable[17]=B
+stringTable[18]=C
+stringTable[19]=5!=
+stringTable[20]=OK
+stringTable[21]=Thanks!
+stringTable[22]=Bye!
+stringTable[23]=MOV
+stringTable[24]=ADD
+stringTable[25]=JMP
+doubleNumber=0
+doubleTableLength=0
+declarationsLength=0
+beginInstructionPointer=112
+instructionsLength=172
+0: PUSH &1
+1: MOV %1, 27
+2: DEQ @27
+3: PUSH *2
+4: MOV %2, 26
+5: DEQ $26
+6: PUSH *3
+7: MOV %3, 27
+8: DEQ $27
+9: PUSH *4
+10: MOV %4, 28
+11: DEQ $28
+12: EQ @28,&1,@0
+13: JZ @28,17
+14: ADD $29,$0,+*2,+$1,+*4
+15: OUT $29
+16: JMP 34
+17: ADD @29,&1,-@1
+18: ENQ @29
+19: ENQ *2
+20: ENQ *4
+21: ENQ *3
+22: CALL 0
+23: ENQ @2
+24: ENQ *2
+25: ENQ *3
+26: ENQ *4
+27: CALL 0
+28: ADD @30,&1,-@3
+29: ENQ @30
+30: ENQ *3
+31: ENQ *2
+32: ENQ *4
+33: CALL 0
+34: POP *4
+35: POP *3
+36: POP *2
+37: POP &1
+38: RET
+39: PUSH &1
+40: MOV %1, 31
+41: DEQ @31
+42: MOV %7, 32
+43: MOV @32,@4
+44: MOV %8, 33
+45: MOV @33,@5
+46: LE @34,&8,&1
+47: JZ @34,51
+48: PRO &7,*&8
+49: INC &8
+50: JMP 46
+51: ENQ &7
+52: POP &1
+53: RET
+54: PUSH &2
+55: MOV %2, 35
+56: DEQ @35
+57: PUSH &3
+58: MOV %3, 36
+59: DEQ @36
+60: ACC &2,+&3
+61: ADD @37,&2,-&3
+62: MOV &3,@37
+63: ACC &2,-&3
+64: POP &3
+65: POP &2
+66: RET
+67: PUSH &8
+68: MOV %8, 38
+69: DEQ @38
+70: MOV %11, 30
+71: MOV $30,$2
+72: SWITCH &8,73,73,@6,75,75,@7,78,79,@39,82,83,@40,~89
+73: MOV *11,$3
+74: JMP 92
+75: ENQ $4
+76: POP &8
+77: RET
+78: ADD @39,@8,+@9,+@10
+79: ENQ $5
+80: POP &8
+81: RET
+82: MUL @40,@11,*@12,*@13
+83: MOV *11,$6
+84: ADD $31,$7,+*11
+85: OUT $31
+86: ENQ $8
+87: POP &8
+88: RET
+89: ENQ $9
+90: POP &8
+91: RET
+92: ENQ *11
+93: POP &8
+94: RET
+95: PUSH *11
+96: MOV %11, 32
+97: DEQ $32
+98: MOV %13, 41
+99: MOV @41,@14
+100: SWITCH *11,101,102,$33,104,104,$13,~106
+101: ADD $33,$10,+$11,+$12
+102: MOV &13,@15
+103: JMP 109
+104: MOV &13,@16
+105: JMP 109
+106: ENQ @17
+107: POP *11
+108: RET
+109: ENQ &13
+110: POP *11
+111: RET
+112: MOV %2, 42
+113: MOV @42,@18
+114: MOV %3, 43
+115: MOV @43,@19
+116: ENQ &2
+117: ENQ &3
+118: CALL 54
+119: ADD $34,$14,+&2
+120: OUT $34
+121: ADD $35,$15,+&3
+122: OUT $35
+123: ENQ @20
+124: ENQ $16
+125: ENQ $17
+126: ENQ $18
+127: CALL 0
+128: ENQ @21
+129: CALL 39
+130: DEQ @44
+131: ADD $36,$19,+@44
+132: OUT $36
+133: MOV %15, 37
+134: IN $38
+135: EQ @45,$38,$20
+136: CMOV $39,@45,$21,$22
+137: MOV $37,$39
+138: OUT *15
+139: ENQ @22
+140: CALL 67
+141: DEQ $40
+142: OUT $40
+143: ENQ @23
+144: CALL 67
+145: DEQ $41
+146: OUT $41
+147: ENQ @24
+148: CALL 67
+149: DEQ $42
+150: OUT $42
+151: ENQ @25
+152: CALL 67
+153: DEQ $43
+154: OUT $43
+155: ENQ @26
+156: CALL 67
+157: DEQ $44
+158: OUT $44
+159: ENQ $23
+160: CALL 95
+161: DEQ @46
+162: OUT @46
+163: ENQ $24
+164: CALL 95
+165: DEQ @47
+166: OUT @47
+167: ENQ $25
+168: CALL 95
+169: DEQ @48
+170: OUT @48
+171: EXIT

@@ -1,0 +1,25 @@
+Vector v;
+public test1(Vector v1,Vector v2)
+{
+	print("v1="+v1);
+	v=v1-v2;
+
+}
+Vector sub()
+{
+	return v;
+}
+void printVectorName(Vector v)
+{
+	if(v==<0,0,0>)print("Zero Vector");
+	else
+	{
+		switch(v)
+		{
+			case <1,0,0>:print("X Unit Vector");break;
+			case <0,1,0>:print("Y Unit Vector");break;
+			case <0,0,1>:print("Z Unit Vector");break;
+			default:print("Other Vectors");
+		}
+	}
+}

@@ -1,0 +1,1 @@
+g++ CppAndFunction.cpp -o CppAndFunction  -std=c++11 -w -I/stan-math -I/stan-math/lib/boost_1.62.0 -I/stan-math/lib/cvodes_2.9.0/include -I/stan-math/lib/eigen_3.2.9

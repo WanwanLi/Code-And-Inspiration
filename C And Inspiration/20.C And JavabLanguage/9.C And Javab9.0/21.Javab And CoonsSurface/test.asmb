@@ -1,0 +1,87 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=16
+integerNumber=9
+integerTableLength=8
+integerTable[0]=1
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=0
+integerTable[5]=1
+integerTable[6]=0
+integerTable[7]=8
+doubleNumber=49
+doubleTableLength=3
+doubleTable[0]=0.100000
+doubleTable[1]=3.141593
+doubleTable[2]=6.283185
+stringNumber=0
+stringTableLength=0
+vectorNumber=4
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=59
+0: MOV #3,@1
+1: MOV #4,@2
+2: NEG @8,@3
+3: MOV #5,@8
+4: LIGHT @0,~3
+5: MOV #6,@4
+6: MOV #7,@5
+7: MOV #8,@6
+8: COLOR ~6
+9: MOV %3, 9
+10: MOV #9,#0
+11: MOV %4, 10
+12: MOVPI #11
+13: MUL #12,#11,/@7
+14: MOV #10,#12
+15: MOV %6, 13
+16: MOV #13,#1
+17: MOV %7, 14
+18: MOV #14,#2
+19: MOV %8, 15
+20: NEG #19,^4
+21: MOV #16,#19
+22: MUL #22,^6,*^8
+23: SIN #21,#22
+24: MUL #20,^3,*#21
+25: MOV #17,#20
+26: MOV #18,^8
+27: MOV \0,~16
+28: MOV #23,^4
+29: NEG #26,^3
+30: MUL #29,^6,*^8
+31: SIN #28,#29
+32: MUL #27,#26,*#28
+33: MOV #24,#27
+34: MOV #25,^8
+35: MOV \1,~23
+36: MOV %12, 30
+37: MOV #31,^12
+38: MUL #36,^7,*^12
+39: SIN #35,#36
+40: MUL #34,^3,*#35
+41: MOV #32,#34
+42: NEG #37,^4
+43: MOV #33,#37
+44: MOV \2,~31
+45: MOV #38,^12
+46: NEG #41,^3
+47: MUL #44,^7,*^12
+48: SIN #43,#44
+49: MUL #42,#41,*#43
+50: MOV #39,#42
+51: MOV #40,^4
+52: MOV \3,~38
+53: NEG #45,^4
+54: NEG #46,^4
+55: NEG #47,^4
+56: NEG #48,^4
+57: COONS \0,15,#45,^4,20,28,\1,15,#46,^4,28,36,\2,30,#47,^4,37,45,\3,30,#48,^4,45,53,
+58: EXIT

@@ -1,0 +1,25 @@
+﻿Languages : Langue
+chinese : Chinois
+hindi : Hindi
+japanese : Japonais
+korean : Coréen
+thai : thaï
+vietnamese : Vietnamien
+french : Français
+english : Anglais
+wood : Arbres
+snow : Neige
+grass : herbe
+flame : Flamme
+QHBoxLayout : boîte de mise en page
+QGridLayout : grille mise en page
+QFormLayout : Formulaire mise en page
+QTextEdit : Text Box
+QLineEdit : barre d'édition
+QRadioButton : bouton radio
+QPushButton : Cliquez sur le bouton
+Line : une ligne de texte
+File : Fichier
+Quit : Quitter
+OK : D'ACCORD
+Cancel : Annuler

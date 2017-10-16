@@ -1,0 +1,49 @@
+11
+Test10
+5
+0
+1
+16
+3
+func
+16
+13
+16
+16
+0
+0
+10
+5
+3
+Test10.javab : 
+ 
+ 
+4
+0
+0
+0
+24
+INT &1
+DEQ &1
+DOU &2
+MOV &2,#0
+DEQ &2
+STR &3
+MOV &3,$3
+DEQ &3
+STR &8
+MOV &8,$4
+ADD $4,$0,+&1,+$1,+&2,+$2,+&3
+PRINT &8
+EXIT
+DOU &6
+MOV &6,#1
+DEQ &6
+DOU &7
+MOV &7,#2
+DEQ &7
+DOU &9
+MOV &9,#3
+ADD #3,&6,+&7
+ENQ &9
+RET

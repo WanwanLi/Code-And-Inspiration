@@ -1,0 +1,31 @@
+class Test1;
+Vector v=<1,2,3>;
+Vector add(Vector v1,Vector v2)
+{
+	return v1+v2;
+}
+public test()
+{
+	print("v="+v);
+	print("add="+add(<2,3,4>,<2,4,5>));
+	Test1 t=new Test1(<2,4,6>,<1,3,5>);
+	print("sub="+t.sub());
+	print("Lenth="+|<1,1,1>|);
+	double p=<1,2,3>*<1,2,3>;
+	print("Product="+p);
+	Vector b=<1,0,0>^<0,1,0>;
+	print("Cross="+b);
+	Vector c=<1,1,0>\<2,0,0>;
+	print("Project="+c);
+	Vector[] vec=
+	{
+		<1,1+<1,2,3>*<1,2,3>+1,3>,
+		<|<1,1+<1,2,3>*<1,2,3>+1,3>|,1+<1,2,3>*<1,2,3>+1,3>,
+		<1,1+<1,2,3>*<1,2,3>+1,3>+<1,1+<1,2,3>*<1,2,3>+1,3>
+	};
+	for(int i=0;i<vec.length;i++)print("vec["+i+"]="+vec[i]);
+	Vector a=c!=<1,0,0>?<1,2,3>:<3,2,1>;
+	print("a="+a);
+	print("The Name of Vector <0,1,0> is:");
+	Test1.printVectorName(<0,1,0>);
+}

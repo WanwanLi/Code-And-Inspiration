@@ -1,0 +1,24 @@
+0
+0
+11
+1
+1
+A
+0
+16
+SCALE  10, 10, 10
+INT &2
+MOV &2, 0
+INT &8
+LT &8,&2, 360
+JZ &8,15
+INT &9
+COS &9,&2
+INT &10
+SIN &10,&2
+TRANS &9,&10,&2
+COLOR  255,&2, 0
+TEXT $0
+INC &2
+JMP 4
+EXIT

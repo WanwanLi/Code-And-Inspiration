@@ -1,0 +1,46 @@
+Install AMD APP SDK v3.0 For Linux-64 System:
+
+Copy the install files into the remote terminal system:
+scp AMD-APP-SDK-v3.0-0.113.50-Beta-linux64.tar.bz2 wanwan@10.173.215.229:CAndOpenCL/AMD-APP-SDK-v3.0-0.113.50-Beta-linux64.tar.bz2
+
+Extract the install files: ( Under the sudo permission )
+sudo tar xvfj AMD-APP-SDK-v3.0-0.113.50-Beta-linux64.tar.bz2
+
+Run the install file:
+sudo ./AMD-APP-SDK-v3.0-0.113.50-Beta-linux64.sh
+
+
+For copy source code:
+cd d: 
+cd Code\ And\ Inspiration/C\ And\ Inspiration/20.C\ And\ OpenCL/0.C\ And\ Hello/
+scp hello.c wanwan@10.173.215.229:CAndOpenCL/0.CAndHello/hello.c 
+wa448855
+scp hello.cl wanwan@10.173.215.229:CAndOpenCL/0.CAndHello/hello.cl
+wa448855
+
+
+
+System is 64 bits Linux: path-to-AMD is : home/wanwan/AMDAPPSDK-3.0-0-Beta
+
+gcc -I /home/wanwan/AMDAPPSDK-3.0-0-Beta/include -L/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64 -o hello hello.c -Wl,-rpath,/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64 -lOpenCL
+
+For complie source code, please refer to:
+http://www.fixstars.com/en/opencl/book/OpenCLProgrammingBook/first-opencl-program/
+
+For (32-bit Linux) AMD OpenCL:
+gcc -I /path-to-AMD/include -L/path-to-AMD/lib/x86 -o hello hello.c -Wl,-rpath,/path-to-AMD/lib/x86 -lOpenCL 
+
+For  (64-bit Linux) AMD OpenCL:
+gcc -I /path-to-AMD/include -L/path-to-AMD/lib/x86_64 -o hello hello.c -Wl,-rpath,/path-to-AMD/lib/x86_64 -lOpenCL
+
+For FOXC:
+gcc -I /path-to-foxc/include -L /path-to-foxc/lib -o hello hello.c -Wl,-rpath,/path-to-foxc/lib -lOpenCL
+
+For Apple:
+gcc -o hello hello.c -framework opencl
+
+For  (32-bit Linux) NVIDIA:
+gcc -I /path-to-NVIDIA/OpenCL/common/inc -L /path-to-NVIDIA/OpenCL/common/lib/Linux32 -o hello hello.c -lOpenCL
+
+For  (64-bit Linux) NVIDIA:
+gcc -I /path-to-NVIDIA/OpenCL/common/inc -L /path-to-NVIDIA/OpenCL/common/lib/Linux64 -o hello hello.c -lOpenCL

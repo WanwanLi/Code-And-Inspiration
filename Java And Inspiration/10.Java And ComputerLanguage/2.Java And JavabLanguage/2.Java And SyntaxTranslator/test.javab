@@ -1,0 +1,76 @@
+int sub0()
+{
+	int[] A=new int[]
+	{
+		1*(2+3),
+		2,
+		3,
+		4
+	};
+	int b=13;
+	A[b*3]=A[A[3]*A[2]];
+	int[] c=new int[10];
+	int d=0;
+	this.length(d,A);
+	this.length(A,d);
+	int k=0;
+	this.fillPolygon(new int[]{2,3,4});
+	int e=15*2;
+}
+int sub1()
+{
+	String s1,s2;
+	s1=0+""+(8+10*5);
+	int q1,q2;
+	int q3=q1+q2;
+	return q3+q2;
+}
+public main(int p,int q)
+{
+	int a=0;
+	this.println("a is: "+(a+8*10));
+	this.nextInt(a);
+	this.drawImage("Love",a,a*5);
+	this.setColor(3,(4+5/5),(a+5/2));
+	this.drawLine(7,a*5,8,9+a*a);
+	a-=3+5*5;
+	this.drawRect(3*(5+a),4,17*a,a/15);
+	while(!(a+5<10+14))
+	{
+		a=a+50;
+		a=a*(a+70);
+	}
+	if(a<3&&a>2||a<1)
+	{
+		a=5;
+		a=6;
+	}
+	else if(a==5)
+	{
+		a=50;
+		a=60;
+	}
+	else if(a==7)
+	{
+		a=70;
+		a=80;
+	}
+	else
+	{
+		a=500;
+		a=600;
+	}
+	a=sub1(3+10*a,5);
+	a++;
+	a--;
+	for(int i=0;i<a;i+=5)
+	{
+		for(int j=3;j+4<i;j++)
+		{
+			int b=i*j+5;
+		}	
+		a=a-15;
+	}
+	a=1000;
+	a=100000;
+}

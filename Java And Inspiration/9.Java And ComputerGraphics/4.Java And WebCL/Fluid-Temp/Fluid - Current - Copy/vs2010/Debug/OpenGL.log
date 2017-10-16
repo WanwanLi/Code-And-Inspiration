@@ -1,0 +1,26 @@
+﻿生成启动时间为 12/7/2015 9:34:34 PM。
+     1>项目“C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\OpenGL.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug\OpenGL.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../lib/glsl /I../lib/glew /I../lib/glsw /I../lib/vectormath /ZI /nologo /W3 /WX- /Od /Oy- /D JU_WIN /D JUDYL /D GLEW_STATIC /D OPENCTM_STATIC /D WIN32 /D _DEBUG /D _LIB /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt ..\lib\glew\glew.c ..\lib\glsw\bstrlib.c ..\lib\glsw\glsw.c
+         glsw.c
+         bstrlib.c
+         glew.c
+         正在生成代码...
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../lib/glsl /I../lib/glew /I../lib/glsw /I../lib/vectormath /ZI /nologo /W3 /WX- /Od /Oy- /D GLEW_STATIC /D WIN32 /D _DEBUG /D _LIB /D JU_WIN /D JUDYL /D GLEW_STATIC /D OPENCTM_STATIC /D WIN32 /D _DEBUG /D _LIB /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt ..\lib\glsl\Windows.c
+         Windows.c
+       Lib:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\OpenGL.lib" /NOLOGO Debug\glew.obj
+         Debug\bstrlib.obj
+         Debug\glsw.obj
+         Debug\Windows.obj
+         OpenGL.vcxproj -> C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\OpenGL.lib
+       FinalizeBuildStatus:
+         正在删除文件“Debug\OpenGL.unsuccessfulbuild”。
+         正在对“Debug\OpenGL.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\OpenGL.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:20.46

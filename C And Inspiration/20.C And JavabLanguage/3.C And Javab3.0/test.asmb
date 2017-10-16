@@ -1,0 +1,310 @@
+methodNumber=2
+methodTable[0]=add
+methodTable[1]=test
+methodPointerTable[0]=5
+methodPointerTable[1]=16
+methodReturnTypeTable[0]=16
+methodReturnTypeTable[1]=5
+objectNumber=1
+classNumber=1
+classTable[0]=Test1
+identifierNumber=17
+integerNumber=112
+integerTableLength=98
+integerTable[0]=1
+integerTable[1]=2
+integerTable[2]=3
+integerTable[3]=2
+integerTable[4]=3
+integerTable[5]=4
+integerTable[6]=2
+integerTable[7]=4
+integerTable[8]=5
+integerTable[9]=2
+integerTable[10]=4
+integerTable[11]=6
+integerTable[12]=1
+integerTable[13]=3
+integerTable[14]=5
+integerTable[15]=1
+integerTable[16]=1
+integerTable[17]=1
+integerTable[18]=1
+integerTable[19]=2
+integerTable[20]=3
+integerTable[21]=1
+integerTable[22]=2
+integerTable[23]=3
+integerTable[24]=1
+integerTable[25]=0
+integerTable[26]=0
+integerTable[27]=0
+integerTable[28]=1
+integerTable[29]=0
+integerTable[30]=1
+integerTable[31]=1
+integerTable[32]=0
+integerTable[33]=2
+integerTable[34]=0
+integerTable[35]=0
+integerTable[36]=1
+integerTable[37]=1
+integerTable[38]=1
+integerTable[39]=2
+integerTable[40]=3
+integerTable[41]=1
+integerTable[42]=2
+integerTable[43]=3
+integerTable[44]=1
+integerTable[45]=3
+integerTable[46]=1
+integerTable[47]=1
+integerTable[48]=1
+integerTable[49]=2
+integerTable[50]=3
+integerTable[51]=1
+integerTable[52]=2
+integerTable[53]=3
+integerTable[54]=1
+integerTable[55]=3
+integerTable[56]=1
+integerTable[57]=1
+integerTable[58]=2
+integerTable[59]=3
+integerTable[60]=1
+integerTable[61]=2
+integerTable[62]=3
+integerTable[63]=1
+integerTable[64]=3
+integerTable[65]=1
+integerTable[66]=1
+integerTable[67]=1
+integerTable[68]=2
+integerTable[69]=3
+integerTable[70]=1
+integerTable[71]=2
+integerTable[72]=3
+integerTable[73]=1
+integerTable[74]=3
+integerTable[75]=1
+integerTable[76]=1
+integerTable[77]=1
+integerTable[78]=2
+integerTable[79]=3
+integerTable[80]=1
+integerTable[81]=2
+integerTable[82]=3
+integerTable[83]=1
+integerTable[84]=3
+integerTable[85]=0
+integerTable[86]=1
+integerTable[87]=0
+integerTable[88]=0
+integerTable[89]=1
+integerTable[90]=2
+integerTable[91]=3
+integerTable[92]=3
+integerTable[93]=2
+integerTable[94]=1
+integerTable[95]=1
+integerTable[96]=0
+integerTable[97]=0
+doubleNumber=96
+doubleTableLength=0
+stringNumber=20
+stringTableLength=11
+stringTable[0]=v=
+stringTable[1]=add=
+stringTable[2]=sub=
+stringTable[3]=Lenth=
+stringTable[4]=Product=
+stringTable[5]=Cross=
+stringTable[6]=Project=
+stringTable[7]=vec[
+stringTable[8]=]=
+stringTable[9]=a=
+stringTable[10]=The Name of Vector <0.0.1> is:
+vectorNumber=21
+declarationsLength=2
+declarations[0]=0
+declarations[1]=5
+beginInstructionPointer=16
+instructionsLength=178
+0: MOV %1, 0
+1: MOV #0,@0
+2: MOV #1,@1
+3: MOV #2,@2
+4: MOV \0,~0
+5: PUSH <3
+6: MOV %3, 1
+7: DEQ \1
+8: PUSH <4
+9: MOV %4, 2
+10: DEQ \2
+11: ADD \3,<3,+<4
+12: ENQ \3
+13: POP <4
+14: POP <3
+15: RET
+16: ADD $11,$0,+<1
+17: OUT $11
+18: MOV #3,@3
+19: MOV #4,@4
+20: MOV #5,@5
+21: ENQ ~3
+22: MOV #6,@6
+23: MOV #7,@7
+24: MOV #8,@8
+25: ENQ ~6
+26: CALL 5
+27: DEQ \4
+28: ADD $12,$1,+\4
+29: OUT $12
+30: NEW 1,0
+31: MOV #9,@9
+32: MOV #10,@10
+33: MOV #11,@11
+34: ENQ ~9
+35: MOV #12,@12
+36: MOV #13,@13
+37: MOV #14,@14
+38: ENQ ~12
+39: RUN 1
+40: INVOKE 1,14
+41: DEQ \5
+42: ADD $13,$2,+\5
+43: OUT $13
+44: MOV #15,@15
+45: MOV #16,@16
+46: MOV #17,@17
+47: ABS #18,~15
+48: ADD $14,$3,+#18
+49: OUT $14
+50: MOV %9, 19
+51: MOV #20,@18
+52: MOV #21,@19
+53: MOV #22,@20
+54: MOV #23,@21
+55: MOV #24,@22
+56: MOV #25,@23
+57: VMUL \6,~20,*~23
+58: MOV #19,\6
+59: ADD $15,$4,+^9
+60: OUT $15
+61: MOV %10, 7
+62: MOV #26,@24
+63: MOV #27,@25
+64: MOV #28,@26
+65: MOV #29,@27
+66: MOV #30,@28
+67: MOV #31,@29
+68: POW \8,~26,^~29
+69: MOV \7,\8
+70: ADD $16,$5,+<10
+71: OUT $16
+72: MOV %11, 9
+73: MOV #32,@30
+74: MOV #33,@31
+75: MOV #34,@32
+76: MOV #35,@33
+77: MOV #36,@34
+78: MOV #37,@35
+79: POW \10,~32,\~35
+80: MOV \9,\10
+81: ADD $17,$6,+<11
+82: OUT $17
+83: MOV %12, 98
+84: MOV @98, 3
+85: MOV #38,@36
+86: MOV #41,@38
+87: MOV #42,@39
+88: MOV #43,@40
+89: MOV #44,@41
+90: MOV #45,@42
+91: MOV #46,@43
+92: VMUL \11,~41,*~44
+93: ADD @102,@37,+\11,+@44
+94: MOV #39,@102
+95: MOV #40,@45
+96: MOV \12,~38
+97: MOV @99, 12
+98: MOV #50,@46
+99: MOV #53,@48
+100: MOV #54,@49
+101: MOV #55,@50
+102: MOV #56,@51
+103: MOV #57,@52
+104: MOV #58,@53
+105: VMUL \13,~53,*~56
+106: ADD @103,@47,+\13,+@54
+107: MOV #51,@103
+108: MOV #52,@55
+109: ABS #59,~50
+110: MOV #47,#59
+111: MOV #60,@57
+112: MOV #61,@58
+113: MOV #62,@59
+114: MOV #63,@60
+115: MOV #64,@61
+116: MOV #65,@62
+117: VMUL \14,~60,*~63
+118: ADD @104,@56,+\14,+@63
+119: MOV #48,@104
+120: MOV #49,@64
+121: MOV \15,~47
+122: MOV @100, 15
+123: MOV #66,@65
+124: MOV #69,@67
+125: MOV #70,@68
+126: MOV #71,@69
+127: MOV #72,@70
+128: MOV #73,@71
+129: MOV #74,@72
+130: VMUL \16,~69,*~72
+131: ADD @105,@66,+\16,+@73
+132: MOV #67,@105
+133: MOV #68,@74
+134: MOV #75,@75
+135: MOV #78,@77
+136: MOV #79,@78
+137: MOV #80,@79
+138: MOV #81,@80
+139: MOV #82,@81
+140: MOV #83,@82
+141: VMUL \18,~78,*~81
+142: ADD @106,@76,+\18,+@83
+143: MOV #76,@106
+144: MOV #77,@84
+145: ADD \17,~66,+~75
+146: MOV @101, 17
+147: MOV %13, 107
+148: MOV @107,@85
+149: LT @109,&13,&12
+150: JZ @109,156
+151: ADD @110, 99,+&13
+152: ADD $18,$7,+&13,+$8,+>110
+153: OUT $18
+154: INC &13
+155: JMP 149
+156: MOV %15, 19
+157: MOV #84,@86
+158: MOV #85,@87
+159: MOV #86,@88
+160: NE @111,<11,~84
+161: MOV #87,@89
+162: MOV #88,@90
+163: MOV #89,@91
+164: MOV #90,@92
+165: MOV #91,@93
+166: MOV #92,@94
+167: CMOV \20,@111,~87,~90
+168: MOV \19,\20
+169: ADD $19,$9,+<15
+170: OUT $19
+171: OUT $10
+172: MOV #93,@95
+173: MOV #94,@96
+174: MOV #95,@97
+175: ENQ ~93
+176: INVOKE 0,16
+177: EXIT

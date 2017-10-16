@@ -1,0 +1,60 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=11
+integerNumber=14
+integerTableLength=13
+integerTable[0]=1
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=0
+integerTable[5]=1
+integerTable[6]=1
+integerTable[7]=1000
+integerTable[8]=10
+integerTable[9]=1
+integerTable[10]=0
+integerTable[11]=0
+integerTable[12]=1
+doubleNumber=21
+doubleTableLength=3
+doubleTable[0]=100.000000
+doubleTable[1]=0.010000
+doubleTable[2]=1.250000
+stringNumber=0
+stringTableLength=0
+vectorNumber=2
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=27
+0: MOV #3,@1
+1: MOV #4,@2
+2: NEG @13,@3
+3: MOV #5,@13
+4: LIGHT @0,~3
+5: MOV #6,@4
+6: MOV #7,@5
+7: MOV #8,@6
+8: COLOR ~6
+9: MOV #9,@7
+10: MOV #10,@8
+11: MOV #11,@9
+12: STEP ~9
+13: MOV %4, 12
+14: MOV %6, 13
+15: MOV #13,#0
+16: MOV #14,^4
+17: MUL #18,^4,*^6
+18: SIN #17,#18
+19: MOV #15,#17
+20: MUL #20,^4,*^6
+21: COS #19,#20
+22: MOV #16,#19
+23: VMUL \0,~14,*^4
+24: MOV \1,\0
+25: CURVE3D \1,12,@10,#2,14,25,#1,12,@11,@12,25,25,
+26: EXIT

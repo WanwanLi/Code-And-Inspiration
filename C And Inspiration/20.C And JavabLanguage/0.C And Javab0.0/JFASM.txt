@@ -1,0 +1,8 @@
+		Java Flat Assembly Language
+
+MOV %5, 115			IdentifierTable[5]=115
+AND @4,&5,*:6			IntegerTable[4]=IntegerTable[IdentifierTable[5]]&&IntegerTable[IntegerTable[6]]]
+ADD $4,*5,+?6			StringTable[4]=StringTable[IdentifierTable[5]]+StringTable[IntegerTable[6]]]
+MUL #4,^5,*!6			DoubleTable[4]=DoubleTable[IdentifierTable[5]]*DoubleTable[IntegerTable[6]]]
+CMOV @60,@52,@57,@61		IntegerTable[60]=IntegerTable[52]==1?IntegerTable[57]:IntegerTable[61]
+SWITCH @62,20,21,@63,23,23,@11	Execute(Instructions[20]);if(IntegerTable[62]==IntegerTable[63])goto 21;else if(IntegerTable[62]==IntegerTable[11])goto 23;

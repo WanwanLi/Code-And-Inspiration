@@ -1,0 +1,109 @@
+<Html>
+	<Head>
+		<Title>JavaScriptPrograming</Title>
+	</Head>
+	<Script Language=JavaScript>
+		function  function1()
+		{
+			alert('function1');
+			for(i=0;i<10;i++)
+				document.write('<Font Color= Fuchsia Size='+i+' Face=Î¢ÈíÑÅºÚ>function1:'+i+'</Font><Br>');
+			for(i=0;i<10;i++)
+			{
+				String1="String1";
+				document.write(String1.fontcolor('Fuchsia').fontsize(i).blink().toUpperCase()+'<Br>');
+			}			
+			document.write('<Font Face=Î¢ÈíÑÅºÚ Size=8 Color=Green><B>');
+			document.write("100"+'<Font Size=2>10</Font>'+"="+parseInt('100',10)+'<Br>');
+			document.write("100"+'<Font Size=2>16</Font>'+"="+parseInt('100',16)+'<Br>');
+			document.write("100"+'<Font Size=2>8</Font>'+"="+parseInt('100',8)+'<Br>');
+			document.write("100"+'<Font Size=2>2</Font>'+"="+parseInt('100',2)+'<Br>');
+			document.write('</B></Font >');
+			Date1=new Date();
+			document.write('<Font Face=Î¢ÈíÑÅºÚ Size=6 Color=Blue><B>');
+			document.write("Year is: "+Date1.getYear()+'<Br>');
+			document.write("Month is: "+(Date1.getMonth()+1)+'<Br>');
+			document.write("Date is: "+Date1.getDate()+'<Br>');
+			H=Date1.getHours();if(H==0)H=12;if(H>12){K=".PM";H-=12;}else K=".AM";
+			M=Date1.getMinutes();if(M<10)M="0"+M;
+			S=Date1.getSeconds();if(M<10)S="0"+M;
+			document.write("Time is: "+H+":"+M+":"+S+K);			
+			document.write('</B></Font >');
+		}
+		function function2()
+		{
+			Array1=new Array(5);
+			Array1[0]="Array1[0]";
+			Array1[1]="Array1[1]";
+			Array1[2]="Array1[2]";
+			Array1[3]="Array1[3]";
+			Array1[4]="Array1[4]";
+			for(i in Array1)TextArea1.value+="\n"+Array1[i];
+			Date1=new Date();
+			with(Date1)
+			{
+				TextArea1.value+="\nYear: "+getYear();
+				TextArea1.value+="\nMonth: "+(getMonth()+1);
+				TextArea1.value+="\nDate: "+getDate();
+				TextArea1.value+="\nHours: "+getHours();
+				TextArea1.value+="\nMinutes: "+getMinutes();
+				TextArea1.value+="\nSeconds: "+getSeconds();
+			}
+		}
+		function function3()
+		{
+			status="status1";
+		}
+		function function4()
+		{
+			location="H.html";
+		}
+		function function5()
+		{
+			location="D:\\ÎÒµÄÎÄµµ\\ÁÙÊ±ÎÄ¼þ\\Íò×Ð³ÌÐò¿â-----Java\\JavaÓïÑÔ³ÌÐòÉè¼Æ×ÛºÏ\\JavaScriptPrograming					\\HTMLPrograming\\HTMLPrograming.html";
+		}
+		function function6()
+		{
+			top.frames(0).location="JavaScriptPrograming.html";
+			top.frames(1).location="HTMLPrograming.html";
+			top.frames(2).location="J.html";
+			top.frames(3).location="H.html";
+		}
+	</Script>
+	<Body BackGround=W.jpg BGColor=Black Text=White VLink=White ALink=Purple >
+
+		<Marquee Behavior=Alternate ScrollAmount=50><B><H1>JavaScriptPrograming</H1></B></Font></Marquee>
+		<Input Type=Button Value=Button1 Size=30 onClick=function1()><Br>
+		<Input Type=Button Value=Button2 Size=30 onClick=function2()><Br>
+		<Input Type=Button Value=Button3 Size=30 onClick=function3()><Br>
+		<Input Type=Button Value=Button4 Size=80 onClick=function4()><Br>
+		<Input Type=Button Value=Button5 Size=80 onClick=function5()><Br>
+		<Input Type=Button Value=Button6 Size=80 onClick=function6()><Br>
+		<Input Type=Reset Value=Reset1 onMouseOver=confirm('onMouseOver') onMouseOut=confirm('onMouseOut')><Br>
+		<Input Type=Submit Value=Submit1 onMouseDown=alert('onMouseDown') onMouseUp=alert('onMouseUp')><Br>
+		<Input Type=Password Value=Password1 onKeyPress=alert('onKeyPress')><Br>
+		<Input Type=CheckBox Checked>CheckBox1<Br>
+		<Input Type=Radio Name=Radio1>Radio1<Br>
+		<Input Type=Radio Name=Radio2>Radio2<Br>
+		<TextArea Name=TextArea1 Rows=15 Cols=40>TextArea1</TextArea>
+		<Pre>Pre1<Br>Pre2<Br>Pre3<Br>Pre4</Pre>
+		<Ul>
+			<Li Type=Square>Li1
+			<Li Type=Diac>Li2
+			<Li Type=Circle>Li3
+		</Ul>
+		<Ol>
+			<Li Type=A>Li1
+			<Li Type=a>Li2
+			<Li Type=1>Li3
+			<Li Type=I>Li3
+			<Li Type=i>Li3
+		</Ol>
+		<Select>
+			<Option Value=1>Option1
+			<Option Value=2 Selected>Option2
+			<Option Value=3>Option3
+		</Select>
+		<IFrame Img Src=W.jpg Scrolling=Yes Width=700 Height=500></IFrame>
+	</Body>
+</Html>

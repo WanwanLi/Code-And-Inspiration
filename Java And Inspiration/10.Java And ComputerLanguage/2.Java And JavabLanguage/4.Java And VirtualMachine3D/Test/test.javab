@@ -1,0 +1,10 @@
+class test2;
+public main()
+{
+	new test2();
+	this.setFont(1,0);
+	this.setColor(255,255,0);
+	this.setScale(20,50,100);
+	this.setTranslation(20,0,-20);
+	this.addText3D("my Java Flat 3D OK Hello : ");
+}

@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Stars</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script src="Stars.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 coordinate;
+			attribute vec4 color;
+			attribute vec4 normal;
+			attribute vec2 texCoord;
+			varying vec4 fragColor;
+			varying vec2 fragTexCoord;
+			uniform mat4 modelViewMatrix;
+			uniform vec3 lightColor;
+			uniform vec3 lightDirection;
+			void main(void)
+			{
+				gl_Position=modelViewMatrix*coordinate;
+				fragColor=vec4(1,1,1,1);
+				fragTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			varying highp vec4 fragColor;
+			varying highp vec2 fragTexCoord;
+			uniform sampler2D fragSampler2D;
+			uniform highp vec3 starColor;
+			void main(void)
+			{
+				highp vec4 texColor=texture2D(fragSampler2D,fragTexCoord);
+				gl_FragColor=texColor*vec4(starColor,1.0);
+			}
+		</script>
+		<script>
+			var canvas=null;
+			var gl=null;
+			var glTexture=null;
+			var glProgram=null;
+			var glVertexShader=null;
+			var glFragmentShader=null;
+			function main()
+			{
+				canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					glInitShaders();
+					glInitStars();
+					glCreateGeometryInfo();
+					glCreateTexture2D("star.gif");
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				glVertexShader=glCreateShader(gl.VERTEX_SHADER);
+				glFragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				glProgram=gl.createProgram();
+				gl.attachShader(glProgram,glVertexShader);
+				gl.attachShader(glProgram,glFragmentShader);
+				gl.linkProgram(glProgram);
+				if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(glProgram);
+				var samplerUniform=gl.getUniformLocation(glProgram,"fragSampler2D");
+				gl.uniform1i(samplerUniform,0);
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var coordinatesBuffer=null,texCoordsBuffer=null;
+			var indicesBuffer=null;	
+			function glCreateGeometryInfo()
+			{
+				var coordinates=
+				[
+					-1.0, -1.0,  0.0,
+					1.0, -1.0,  0.0,
+					-1.0,  1.0,  0.0,
+					1.0,  1.0,  0.0
+				];
+				coordinatesBuffer=glCreateFloat32ArrayBuffer(coordinates,3);
+				glEnableVertexAttribute("coordinate",coordinatesBuffer);
+				var texCoords=
+				[
+					0.0, 0.0,
+					1.0, 0.0,
+					0.0, 1.0,
+					1.0, 1.0
+				];
+				texCoordsBuffer=glCreateFloat32ArrayBuffer(texCoords,2);
+				glEnableVertexAttribute("texCoord",texCoordsBuffer);
+			}
+			function glDisplayFunc()
+			{
+				gl.enable(gl.BLEND);
+				gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+			//	gl.enable(gl.DEPTH_TEST);
+				gl.viewport(0,0,canvas.width,canvas.height);
+				glLoadIdentity()
+				gluPerspective(45,canvas.width/canvas.height,0.1,100.0);
+				gluLookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
+				gl.clearColor(0.0,0.0,0.0,1.0);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glAnimation();
+			}
+			function glAnimation()
+			{
+				requestAnimationFrame(glAnimation,canvas);
+				glDrawStars();
+			}
+			function glDrawStar(r,g,b)
+			{
+				var starColor=gl.getUniformLocation(glProgram,'starColor');
+				gl.uniform3f(starColor,r,g,b);
+				glUniformMatrix();
+				gl.drawArrays(gl.TRIANGLE_STRIP,0,coordinatesBuffer.numItems);
+			}
+			var projectionMatrixStack=[],projectionMatrix=null;
+			function glLoadIdentity()
+			{
+				projectionMatrix=new Matrix4();
+			}
+			function gluPerspective(fieldOfView,widthHeightRatio,near,far)
+			{
+				projectionMatrix.setPerspective(fieldOfView,widthHeightRatio,near,far);
+			}
+			function gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				projectionMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+			}
+			function glPushMatrix()
+			{
+				var newProjectionMatrix=new Matrix4(projectionMatrix);
+				projectionMatrixStack.push(newProjectionMatrix);
+			}
+			function glPopMatrix()
+			{
+				projectionMatrix=projectionMatrixStack.pop();
+			}
+			function glTranslate(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setTranslate(x,y,z);
+				projectionMatrix.multiply(transformMatrix);
+			}
+			function glRotate(angle,x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setRotate(angle,x,y,z);
+				projectionMatrix.multiply(transformMatrix);
+			}
+			function glScale(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setScale(x,y,z);
+				projectionMatrix.multiply(transformMatrix);
+			}
+			function glUniformMatrix()
+			{
+				var modelViewMatrix=gl.getUniformLocation(glProgram,'modelViewMatrix');
+				gl.uniformMatrix4fv(modelViewMatrix,false,projectionMatrix.elements);
+			}
+			function glCreateTexture2D(imageName)
+			{
+				glTexture=gl.createTexture();
+				glTexture.image=new Image();
+				glTexture.image.onload=function(){glLoadTexture(glTexture);}
+				glTexture.image.src=imageName;
+			}
+			function glLoadTexture(texture)
+			{
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+			}
+			function glEnableVertexAttribute(attributeName,verticesBuffer)
+			{
+				var vertexAttribute=gl.getAttribLocation(glProgram,attributeName);
+				gl.enableVertexAttribArray(vertexAttribute);
+				gl.bindBuffer(gl.ARRAY_BUFFER,verticesBuffer);
+				gl.vertexAttribPointer(vertexAttribute,verticesBuffer.itemSize,gl.FLOAT,false,0,0);
+			}
+			function glCreateFloat32ArrayBuffer(float32Array,itemSize)
+			{
+				var newBuffer=gl.createBuffer();
+				gl.bindBuffer(gl.ARRAY_BUFFER,newBuffer);
+				gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(float32Array),gl.STATIC_DRAW);
+				newBuffer.numItems=float32Array.length/itemSize;
+				newBuffer.itemSize=itemSize;
+				return newBuffer;
+			}
+			function glCreateUint8ArrayBuffer(uint8Array)
+			{
+				var newBuffer=gl.createBuffer();
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,newBuffer);
+				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint8Array(uint8Array),gl.STATIC_DRAW);
+				newBuffer.numItems=uint8Array.length;
+				newBuffer.itemSize=1;
+				return newBuffer;	
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="750">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</body>
+</html>

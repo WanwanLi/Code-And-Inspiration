@@ -1,0 +1,15 @@
+﻿生成启动时间为 2014/9/29 12:41:59。
+     1>项目“E:\C And OpenGL\Test_CAM\Test_CAM\Test_CAM.vcxproj”在节点 2 上(build 个目标)。
+     1>PrepareForBuild:
+         正在创建目录“E:\C And OpenGL\Test_CAM\Debug\”。
+       InitializeBuildStatus:
+         正在创建“Debug\Test_CAM.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CPP1.cpp
+         CPP1.cpp
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\Platforms\Win32\Microsoft.Cpp.Win32.Targets(147,5): error MSB6006: “CL.exe”已退出，代码为 14810240。
+     1>已完成生成项目“E:\C And OpenGL\Test_CAM\Test_CAM\Test_CAM.vcxproj”(build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:01.07

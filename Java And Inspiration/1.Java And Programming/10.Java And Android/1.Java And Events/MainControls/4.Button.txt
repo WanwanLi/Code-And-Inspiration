@@ -1,0 +1,11 @@
+	<Button	
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Add"
+		android:id="@+id/button2"
+		android:textSize="30dp" 
+		android:textColor="#eff9ee" 
+		android:background="#243b8b"
+		android:layout_alignBaseline="@+id/button1"
+		android:layout_toRightOf="@+id/button1"
+		android:layout_marginLeft="10dp" />

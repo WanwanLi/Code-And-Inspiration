@@ -1,0 +1,53 @@
+public test()
+{
+	addLight(2,<0,0,-1>);
+	double r=0.2,f=0.5*(./5+1);
+	Point[] coordinates=
+	{
+		<r,r,r>,
+		<0.0,r/f,r*f>,
+		<r*f,0.0,r/f>,
+		<r/f,r*f,0.0>,
+
+		<-r,r,r>,
+		<0.0,-r/f,r*f>,
+		<r,-r,r>,
+		<r*f,0.0,-r/f>,
+
+		<r,r,-r>,
+		<-r/f,r*f,0.0>,
+		<-r*f,0.0,r/f>,
+		<-r,-r,r>,
+
+		<r/f,-r*f,0.0>,
+		<r,-r,-r>,
+		<0.0,r/f,-r*f>,
+		<-r,r,-r>,
+
+		<-r/f,-r*f,0.0>,
+		<-r*f,0.0,-r/f>,
+		<0.0,-r/f,-r*f>,
+		<-r,-r,-r>
+	};
+	int[] coordinateIndices=
+	{
+		0,1,5,6,2,
+		0,2,7,8,3,
+		0,3,9,4,1,
+		1,4,10,11,5,
+
+		2,6,12,13,7,
+		3,8,14,15,9,
+		5,11,16,12,6,
+		7,13,18,14,8,
+
+		9,15,17,10,4,
+		19,16,11,10,17,
+		19,17,15,14,18,
+		19,18,13,12,16
+	};
+	int[] stripCounts=new int[12];
+	for(int i=0;i<12;i++)stripCounts[i]=5;
+	setColor(<0,1,0>);
+	addPolygons(coordinates,coordinateIndices,stripCounts);
+}

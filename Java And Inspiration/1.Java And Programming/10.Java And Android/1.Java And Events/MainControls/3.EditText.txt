@@ -1,0 +1,10 @@
+	<EditText
+		android:id="@+id/editText1"
+		android:hint=" red  "
+		android:textSize="20dp" 
+		android:background="#eff9ee"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/textView1"
+		android:layout_below="@+id/imageView1"
+		android:layout_marginTop="20dp" />

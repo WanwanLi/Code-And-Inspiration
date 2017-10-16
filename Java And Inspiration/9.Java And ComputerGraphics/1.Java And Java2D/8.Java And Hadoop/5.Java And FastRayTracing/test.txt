@@ -1,0 +1,49 @@
+Map(100): 10:22 - 13:00  = 2:38
+Reduce(100): 45:51 - 48:19 = 2:27
+MapReduce(100): 33:25 - 42:31 = 9:14
+
+
+Map Intensive Computation
+{
+	map(key,value)
+	{
+		output=0;
+		for(i=0:BigNumber)output+=i;
+		emit((key,output);
+	}
+	reduce(key,value)
+	{
+		emit(null,value);
+	}
+}
+
+
+Reduce Intensive Computation
+{
+	map(key,value)
+	{
+		emit(key,null);
+	}
+	reduce(key,value)
+	{
+		output=0;
+		for(i=0:BigNumber)output+=i;
+		emit(null,output);
+	}
+}
+
+
+Map-Reduce Balanced Computation
+{
+	map(key,value)
+	{
+		for(i=0:BigNumber)emit(key,i);
+	}
+	reduce(key,value)
+	{
+		output=0;
+		for(val : value)output+=val;
+		emit(null,output);
+	}
+}
+

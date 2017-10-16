@@ -1,0 +1,26 @@
+﻿生成启动时间为 2014/5/15 4:38:58。
+     1>项目“E:\C And OpenGL\CAndGLUT\CAndC3D.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Release\CAndC3D.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CAndC3D.cpp
+         CAndC3D.cpp
+     1>CAndC3D.cpp(267): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : 参见“sprintf”的声明
+     1>CAndC3D.cpp(268): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(234) : 参见“fopen”的声明
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C And OpenGL\CAndGLUT\Release\CAndC3D.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\CAndC3D.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\C And OpenGL\CAndGLUT\Release\CAndC3D.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C And OpenGL\CAndGLUT\Release\CAndC3D.lib" /MACHINE:X86 Release\CAndC3D.obj
+         正在生成代码
+         已完成代码的生成
+         CAndC3D.vcxproj -> E:\C And OpenGL\CAndGLUT\Release\CAndC3D.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"E:\C And OpenGL\CAndGLUT\Release\CAndC3D.exe;#1" /manifest Release\CAndC3D.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         正在删除文件“Release\CAndC3D.unsuccessfulbuild”。
+         正在对“Release\CAndC3D.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\C And OpenGL\CAndGLUT\CAndC3D.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:02.80

@@ -1,0 +1,4 @@
+this.row=3;
+this.column=2;
+this.box[4][4]=cup.52;
+this.setBox(4,6,0,5,57);

@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<script  type="text/javascript" src="webgl-objs.js"></script>
+		<title>Quad Mesh</title>
+		<script>
+			function main()
+			{
+				var script="";
+				var height=10,width=10;
+				for(var i=0;i<height-1;i++)
+				{
+					for(var j=0;j<width-1;j++)
+					{
+						var n00=(i+0)*width+(j+0);
+						var n01=(i+0)*width+(j+1);
+						var n10=(i+1)*width+(j+0);
+						script+=n00+","+n01+",";
+						script+=n00+","+n10+",";
+					}
+				}
+				var i=height-1;
+				for(var j=0;j<width-1;j++)
+				{
+					var n00=(i+0)*width+(j+0);
+					var n01=(i+0)*width+(j+1);
+					script+=n00+","+n01+",";
+				}
+				var j=width-1;
+				for(i=0;i<height-1;i++)
+				{
+					var n00=(i+0)*width+(j+0);
+					var n10=(i+1)*width+(j+0);
+					script+=n00+","+n10+",";
+				}
+				document.write(script);
+			}
+		</script>
+	</head>
+	<body onload="main()"></body>
+</html>
+

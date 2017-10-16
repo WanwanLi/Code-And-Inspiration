@@ -1,0 +1,142 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=1
+classNumber=1
+classTable[0]=Mirror
+identifierNumber=26
+integerNumber=23
+integerTableLength=19
+integerTable[0]=0
+integerTable[1]=0
+integerTable[2]=1
+integerTable[3]=0
+integerTable[4]=1
+integerTable[5]=0
+integerTable[6]=70
+integerTable[7]=8
+integerTable[8]=0
+integerTable[9]=0
+integerTable[10]=1
+integerTable[11]=0
+integerTable[12]=0
+integerTable[13]=0
+integerTable[14]=2
+integerTable[15]=1
+integerTable[16]=0
+integerTable[17]=0
+integerTable[18]=0
+doubleNumber=58
+doubleTableLength=12
+doubleTable[0]=0.500000
+doubleTable[1]=1.000000
+doubleTable[2]=0.500000
+doubleTable[3]=0.400000
+doubleTable[4]=1.200000
+doubleTable[5]=1.000000
+doubleTable[6]=6.283185
+doubleTable[7]=0.400000
+doubleTable[8]=0.200000
+doubleTable[9]=1.570796
+doubleTable[10]=0.200000
+doubleTable[11]=0.200000
+stringNumber=4
+stringTableLength=4
+stringTable[0]=Group1
+stringTable[1]=Group2
+stringTable[2]=Group1
+stringTable[3]=Group2
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=89
+0: MOV #12,@0
+1: MOV #13,@1
+2: NEG @19,@2
+3: MOV #14,@19
+4: LIGHT #0,~12
+5: MOV #15,@3
+6: MOV #16,@4
+7: MOV #17,@5
+8: COLOR ~15
+9: STEP @6
+10: MOV %5, 18
+11: MOV %6, 19
+12: MOV %7, 20
+13: MOV %9, 21
+14: MOV #21,#1
+15: MOV %10, 22
+16: MOV #22,#2
+17: MOV %11, 23
+18: MOV #23,#3
+19: MUL #25,^9,*^9
+20: MUL #24,^5,*^5,/#25
+21: MUL #28,^10,*^10
+22: MUL #27,^6,*^6,/#28
+23: MUL #30,^11,*^11
+24: MUL #29,^7,*^7,/#30
+25: ADD #26,#24,+#27,+#29
+26: MOV %12, 31
+27: MOV #31,#4
+28: SHARE $0
+29: NEG #32,^12
+30: NEG #33,^12
+31: NEG #34,^12
+32: ISOSURF #5,#26,18,19,20,#32,^12,#33,^12,#34,^12,13,26
+33: POPTG 
+34: MOV %15, 20
+35: MOV @20,@7
+36: MOV %9, 35
+37: MUL #36,#6,/&15
+38: MOV #35,#36
+39: MOV %12, 37
+40: MOV #37,#7
+41: SHARE $1
+42: SCALE #8
+43: PUSHTG 
+44: MOV %17, 21
+45: MOV @21,@8
+46: LT @22,&17,&15
+47: JZ @22,69
+48: MOV #38,@9
+49: MOV #39,@10
+50: MOV #40,@11
+51: NEG #41,^9
+52: MUL #42,#41,*&17
+53: ROTATE ~38,#42
+54: MUL #48,^9,*&17
+55: COS #47,#48
+56: MUL #46,^12,*#47
+57: MOV #43,#46
+58: MOV #44,@12
+59: MUL #51,^9,*&17
+60: SIN #50,#51
+61: MUL #49,^12,*#50
+62: MOV #45,#49
+63: TRANSLATE ~43
+64: PUSHTG 
+65: GROUP $2
+66: POPTG 
+67: INC &17
+68: JMP 46
+69: POPTG 
+70: POPTG 
+71: TRANSLATE @13
+72: SCALE @14
+73: ROTX #9
+74: PUSHTG 
+75: GROUP $3
+76: POPTG 
+77: NEW 1,0
+78: MOV #52,@15
+79: MOV #53,#10
+80: MOV #54,#11
+81: ENQ ~52
+82: RUN 1
+83: MOV #55,@16
+84: MOV #56,@17
+85: MOV #57,@18
+86: ENQ ~55
+87: INVOKE 1,7
+88: EXIT

@@ -1,0 +1,28 @@
+﻿生成启动时间为 12/7/2015 9:34:55 PM。
+     1>项目“C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Fluid.vcxproj”在节点 3 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug\Fluid.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I../lib/glew /I../lib/glsl /I../lib/glsw /I../lib/vectormath /ZI /nologo /W3 /WX- /Od /Oy- /D GLEW_STATIC /D WIN32 /D _DEBUG /D _WINDOWS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /wd4996 /analyze- /errorReport:prompt ..\Fluid.c
+         Fluid.c
+     1>c:\code and inspiration\java and inspiration\8.java and computergraphics\4.java and webcl\fluid-temp\fluid - current - copy\fluid.h(37): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+       ManifestResourceCompile:
+         c:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\Fluid.exe.embed.manifest.res" Debug\Fluid_manifest.rc 
+       Link:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\Fluid.exe" /INCREMENTAL /NOLOGO opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Fluid.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\Fluid.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\Fluid.lib" /MACHINE:X86 Debug\Fluid.exe.embed.manifest.res
+         Debug\Fluid.obj
+         "C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\OpenGL.lib"
+       Manifest:
+         c:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\Fluid.exe.embed.manifest" /manifest Debug\Fluid.exe.intermediate.manifest
+         所有输出均为最新。
+       LinkEmbedManifest:
+         所有输出均为最新。
+         Fluid.vcxproj -> C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Debug\Fluid.exe
+       FinalizeBuildStatus:
+         正在删除文件“Debug\Fluid.unsuccessfulbuild”。
+         正在对“Debug\Fluid.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“C:\Code And Inspiration\Java And Inspiration\8.Java And ComputerGraphics\4.Java And WebCL\Fluid-Temp\Fluid - Current - Copy\vs2010\Fluid.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:07.63

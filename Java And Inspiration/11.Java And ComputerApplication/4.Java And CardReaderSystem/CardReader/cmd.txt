@@ -1,0 +1,1 @@
+gcc CAndCardReader.c -o CAndCardReader -I C:/"Program Files"/MySQL/"MySQL Server 5.1"/include -L C:/"Program Files"/MySQL/"MySQL Server 5.1"/lib/opt -llibmysql -lmysqlclient

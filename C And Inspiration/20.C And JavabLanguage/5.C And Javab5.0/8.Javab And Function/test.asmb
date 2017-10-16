@@ -1,0 +1,134 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=29
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=29
+integerNumber=45
+integerTableLength=43
+integerTable[0]=4
+integerTable[1]=40
+integerTable[2]=3
+integerTable[3]=10
+integerTable[4]=50
+integerTable[5]=2
+integerTable[6]=2
+integerTable[7]=1
+integerTable[8]=2
+integerTable[9]=3
+integerTable[10]=4
+integerTable[11]=1
+integerTable[12]=2
+integerTable[13]=3
+integerTable[14]=4
+integerTable[15]=1
+integerTable[16]=2
+integerTable[17]=3
+integerTable[18]=1
+integerTable[19]=2
+integerTable[20]=3
+integerTable[21]=4
+integerTable[22]=5
+integerTable[23]=6
+integerTable[24]=7
+integerTable[25]=8
+integerTable[26]=9
+integerTable[27]=10
+integerTable[28]=1
+integerTable[29]=2
+integerTable[30]=1
+integerTable[31]=2
+integerTable[32]=3
+integerTable[33]=4
+integerTable[34]=5
+integerTable[35]=6
+integerTable[36]=4
+integerTable[37]=1
+integerTable[38]=2
+integerTable[39]=3
+integerTable[40]=4
+integerTable[41]=5
+integerTable[42]=6
+doubleNumber=42
+doubleTableLength=0
+stringNumber=4
+stringTableLength=3
+stringTable[0]=d=
+stringTable[1]=f3
+stringTable[2]=f4
+vectorNumber=6
+declarationsLength=2
+declarations[0]=0
+declarations[1]=29
+beginInstructionPointer=29
+instructionsLength=69
+0: MOV %0, 0
+1: MOV %1, 1
+2: MOV %2, 2
+3: MOV %3, 3
+4: MOV %5, 4
+5: MUL @43,@0,*^0
+6: MOV #4,@43
+7: MOV %6, 5
+8: MOV #5,@1
+9: MUL #6,^0,*^1,*^2,*^3,*^5,*^6
+10: MOV %6, 7
+11: MUL @44,@2,*^3
+12: MOV #7,@44
+13: MOV #8,^0
+14: MOV #9,^1
+15: MUL #11,^6,*^2
+16: MOV #10,#11
+17: MOV \0,~8
+18: MOV %8, 12
+19: MOV %9, 13
+20: MOV %10, 14
+21: MOV %11, 15
+22: MOV %12, 16
+23: MOV %13, 17
+24: MOV %14, 18
+25: MOV %15, 19
+26: MOV %16, 20
+27: MOV %17, 21
+28: ADD #22,^8,+^9,+^10,+^11,+^12,+^13,+^14,+^15,+^16,+^17
+29: FUNC 4,0,1,2,3,@3,@4,@5,@6,4,10
+30: MOV #23,#6
+31: OUT #23
+32: FUNC 4,0,1,2,3,@7,@8,@9,@10,10,18
+33: MOV \1,\0
+34: OUT \1
+35: MOV %21, 24
+36: FUNC 4,0,1,2,3,@11,@12,@13,@14,10,18
+37: MOV \2,\0
+38: MOV #25,@15
+39: MOV #26,@16
+40: MOV #27,@17
+41: VMUL \3,\2,*~25
+42: MOV #24,\3
+43: ADD $3,$0,+^21
+44: OUT $3
+45: FUNC 10,12,13,14,15,16,17,18,19,20,21,@18,@19,@20,@21,@22,@23,@24,@25,@26,@27,28,29
+46: MOV #28,#22
+47: OUT #28
+48: MOV %22, 29
+49: MOV %23, 30
+50: MOV %24, 31
+51: MOV %3, 32
+52: MOV #32,@28
+53: MUL #36,^3,*^22
+54: MOV #33,#36
+55: MOV #34,^23
+56: MOV #35,^24
+57: MOV \4,~33
+58: STEP @29
+59: OUTF $1,\4,3,29,30,31,@30,@31,@32,@33,@34,@35,51,58
+60: MOV %3, 37
+61: MOV #37,@36
+62: MUL #41,^3,*^22
+63: MOV #38,#41
+64: MOV #39,^23
+65: MOV #40,^24
+66: MOV \5,~38
+67: OUTF $2,\5,3,29,30,31,@37,@38,@39,@40,@41,@42,60,67
+68: EXIT

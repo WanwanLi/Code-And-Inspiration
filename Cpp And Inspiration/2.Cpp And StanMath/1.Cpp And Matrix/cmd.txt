@@ -1,0 +1,1 @@
+g++ CppAndMatrix.cpp -o CppAndMatrix -std=c++11 -w -I/stan-math/lib/eigen_3.2.9

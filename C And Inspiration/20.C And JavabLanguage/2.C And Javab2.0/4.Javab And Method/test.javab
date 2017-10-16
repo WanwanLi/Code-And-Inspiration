@@ -1,0 +1,65 @@
+void move(int n,String a,String b,String c)
+{
+	if(n==1)print("Move disk from "+a+" to "+c);
+	else
+	{
+		move(n-1,a,c,b);
+		move(1,a,b,c);
+		move(n-1,b,a,c);
+	}
+}
+int N(int n)
+{
+	int m=1;
+	for(int i=2;i<=n;i++)m*=i;
+	return m;
+}
+void swap(int a,int b)
+{
+	a+=b;
+	b=a-b;
+	a-=b;
+}
+String getString(int i)
+{
+	String name="null";
+	switch(i)
+	{
+		case 2:name="Two";break;
+		case 4:return "Four";
+		case 1+2+3:return "Six";
+		case 2*2*2:name="Eight";print("name="+name);return "";
+		default:return "Ten";
+	}
+	return name;
+}
+int getID(String name)
+{
+	int ID=0;
+	switch(name)
+	{
+		case "M"+"O"+"V":ID=1;break;
+		case "ADD":ID=2;break;
+		default:return 10;
+	}
+	return ID;
+}
+public test()
+{
+	int a=10,b=5;
+	swap(a,b);
+	print("a="+a);
+	print("b="+b);
+	move(3,"A","B","C");
+	print("5!="+N(5));
+	String s=next()=="OK"?"Thanks!":"Bye!";
+	print(s);
+	print(getString(2));
+	print(getString(4));
+	print(getString(6));
+	print(getString(8));
+	print(getString(10));
+	print(getID("MOV"));
+	print(getID("ADD"));
+	print(getID("JMP"));
+}

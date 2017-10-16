@@ -1,0 +1,14 @@
+public test()
+{
+	addLight(2.0,<0,0,-1>);
+	setColor(<0,1,1>);
+	func(u,v) f=[r=0.5,w=20.0]<u,0.05*sin(w*u),-r/2>+<0.0,-0.1,v>,f1=[r=0.5,w=20.0]<-r/2,0.02*sin(w*v),v>+<u,0.0,-0.1>;
+	func(x,z) f2=[d=./(x*x+z*z),A=0.01,w=50.0,p=0.0]A*cos(w*d+p),f3=0.0;
+	double r=0.3;
+	addSurface3D
+	(
+		f,-r,r,-r,r,
+		f2,-r,r,-r,r,
+		f3,-r,r,-r,r
+	);
+}

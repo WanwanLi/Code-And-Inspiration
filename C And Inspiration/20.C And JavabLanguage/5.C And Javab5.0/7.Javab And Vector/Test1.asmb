@@ -1,0 +1,88 @@
+methodNumber=3
+methodTable[0]=test1
+methodTable[1]=sub
+methodTable[2]=printVectorName
+methodPointerTable[0]=1
+methodPointerTable[1]=14
+methodPointerTable[2]=16
+methodReturnTypeTable[0]=5
+methodReturnTypeTable[1]=16
+methodReturnTypeTable[2]=4
+objectNumber=0
+classNumber=0
+identifierNumber=7
+integerNumber=13
+integerTableLength=12
+integerTable[0]=0
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=0
+integerTable[5]=0
+integerTable[6]=0
+integerTable[7]=1
+integerTable[8]=0
+integerTable[9]=0
+integerTable[10]=0
+integerTable[11]=1
+doubleNumber=12
+doubleTableLength=0
+stringNumber=7
+stringTableLength=6
+stringTable[0]=v1=
+stringTable[1]=Zero Vector
+stringTable[2]=X Unit Vector
+stringTable[3]=Y Unit Vector
+stringTable[4]=Z Unit Vector
+stringTable[5]=Other Vectors
+vectorNumber=5
+declarationsLength=2
+declarations[0]=0
+declarations[1]=1
+beginInstructionPointer=1
+instructionsLength=45
+0: MOV %0, 0
+1: PUSH <2
+2: MOV %2, 1
+3: DEQ \1
+4: PUSH <3
+5: MOV %3, 2
+6: DEQ \2
+7: ADD $6,$0,+<2
+8: OUT $6
+9: ADD \3,<2,-<3
+10: MOV <0,\3
+11: POP <3
+12: POP <2
+13: EXIT
+14: ENQ <0
+15: RET
+16: PUSH <0
+17: MOV %0, 4
+18: DEQ \4
+19: MOV #0,@0
+20: MOV #1,@1
+21: MOV #2,@2
+22: EQ @12,<0,~0
+23: JZ @12,26
+24: OUT $1
+25: JMP 43
+26: SWITCH <0,27,30,~3,32,35,~6,37,40,~9,~42
+27: MOV #3,@3
+28: MOV #4,@4
+29: MOV #5,@5
+30: OUT $2
+31: JMP 43
+32: MOV #6,@6
+33: MOV #7,@7
+34: MOV #8,@8
+35: OUT $3
+36: JMP 43
+37: MOV #9,@9
+38: MOV #10,@10
+39: MOV #11,@11
+40: OUT $4
+41: JMP 43
+42: OUT $5
+43: POP <0
+44: RET

@@ -1,0 +1,19 @@
+D:\Code And Inspiration\C And Inspiration\15.C And JavabLanguage\1.C And Javab1.0>javab test
+a[0]=1
+a[1]=2
+a[2]=3
+a[3]=4
+a[4]=6
+b[0]=6.283185
+b[1]=0.500000
+b[2]=0.000010
+c[0]*c[1]=a1a2a3b1b2b3c1c2c3
+c[1]/c[2]=13
+c[2]=22
+c[1]=12
+c[0]=abc6.283185
+c[1]=12581382.6
+b[0]=9.424777
+b[1]=10.000000
+
+D:\Code And Inspiration\C And Inspiration\15.C And JavabLanguage\1.C And Javab1.0>

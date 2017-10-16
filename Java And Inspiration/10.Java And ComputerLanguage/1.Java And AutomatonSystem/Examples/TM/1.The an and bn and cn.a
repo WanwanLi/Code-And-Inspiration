@@ -1,0 +1,24 @@
+type=TM;
+state=q0,q1,q2,q3,q4;
+input=a,b,c,[],X,Y,Z;
+init=q0;
+final=q4;
+transit=
+{
+	S(q0,a)=q1/X,->;
+	S(q0,Y)=q0/Y,->;
+	S(q0,Z)=q0/Z,->;
+	S(q0,[])=q4/[],<-;
+	S(q1,Y)=q1/Y,->;
+	S(q1,a)=q1/a,->;
+	S(q1,b)=q2/Y,->;
+	S(q2,b)=q2/b,->;
+	S(q2,Z)=q2/Z,->;
+	S(q2,c)=q3/Z,<-;
+	S(q3,a)=q3/a,<-;
+	S(q3,b)=q3/b,<-;
+	S(q3,Y)=q3/Y,<-;
+	S(q3,Z)=q3/Z,<-;
+	S(q3,X)=q0/X,->;
+}
+test=a,a,a,b,b,b,c,c,c;

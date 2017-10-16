@@ -1,0 +1,61 @@
+# This is an sketch input file for flat-pack furniture design and this is using FSK format which is similar to SVG format
+# The FSK format is particularly designed to store the sketches for flat-pack furniture design
+# This is the size of image of the 2D sketch input and the view distance of the camera
+s 600 600 10
+# This is the up direction of the camera
+u 0 1 0
+# This is the right direction of the camera
+r 1 0 0
+# This is the forward direction of the camera
+f 0 0 -1
+# Move to a 2D position and mapping to plane [0] 
+m 200 200 0
+# Drawing a Line to a 2D position and mapping to plane [0]
+l 200 400 0                                                              1
+l 400 400 0                                                              2
+l 400 200 0                                                              3
+l 200 200 0                                                              4
+# Move to a 2D position and mapping to plane [1] 
+m 200 200 1
+# Drawing a Line to a 2D position and mapping to plane [1]
+l 200 400 1                                                              5
+l 400 400 1                                                              6
+l 400 200 1                                                              7
+l 200 200 1                                                              8
+# Move to a 2D position and mapping to plane [0] 
+m 200 200 0
+# Drawing a Line to a 2D position and mapping to plane [1]
+l 200 200 1                                                              9
+# Move to a 2D position and mapping to plane [0] 
+m 200 400 0
+# Drawing a Line to a 2D position and mapping to plane [1]
+l 200 400 1                                                              10
+# Move to a 2D position and mapping to plane [0] 
+m 400 400 0
+# Drawing a Line to a 2D position and mapping to plane [1]
+l 400 400 1                                                              11
+# Move to a 2D position and mapping to plane [0] 
+m 400 200 0
+# Drawing a Line to a 2D position and mapping to plane [1]
+l 400 200 1                                                              12
+# Curve to a 2D position using Bezeir control points  and mapping to plane [0, 1]
+#c 200 200 1 300 300 0 400 400 1
+# Move to a 2D position and mapping to plane [0] 
+#m 400 200 0
+# Curve to a 2D position using Bezeir control points  and mapping to plane [0, 1]
+#c 400 200 0 300 300 1 200 400 0
+# Estimated planes used for optimization for corresponding curves
+# Plane Equation: P(A B C D) -> Ax+By+Cz+D=0
+p 0 0 1 0.25                                                         0
+p 0 0 1 -0.25                                                        1
+p 0 -1.5 0 3.5                                                       2     
+p 0 0 1 0                                                               3
+p 0 0 1.5 1                                                            4 
+p 1.5 0 0 0                                                            5
+p 0 0 1.8 0                                                            6 
+p 0.5 1.5 0.5 0                                                      7  
+# GROUND_PARALLEL A 0 0 0 -> plane A is parrallel to ground plane
+GPAR 2 0 0 0
+# GROUND_PERPENDICULAR A 0 0 0 -> plane A is perpendicular to ground plane
+GPER 6 0 0 0
+

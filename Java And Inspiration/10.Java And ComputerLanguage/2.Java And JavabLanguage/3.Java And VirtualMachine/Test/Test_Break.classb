@@ -1,0 +1,63 @@
+3
+Test_Break
+5
+0
+0
+0
+12
+6
+4
+k=
+p=
+br
+EXIT
+0
+0
+0
+0
+45
+INT &1
+MOV &1, 0
+INT &2
+MOV &2, 0
+INT &4
+LT &4,&1, 100
+JZ &4,43
+STR &5
+MOV &5,$4
+ADD $4,$0,+&1
+PRINT &5
+INT &6
+GT &6,&1, 7
+JZ &6,30
+MOV &2, 0
+INT &7
+LT &7,&2, 5
+JZ &7,29
+STR &8
+MOV &8,$5
+ADD $5,$1,+&2
+PRINT &8
+INT &9
+GT &9,&2, 1
+JZ &9,27
+JMP 29
+NOP
+INC &2
+JMP 16
+NOP
+INT &10
+GT &10,&1, 10
+JZ &10,35
+JMP 43
+NOP
+INT &11
+GT &11,&1, 20
+JZ &11,41
+PRINT $2
+JMP 43
+NOP
+INC &1
+JMP 5
+PRINT $3
+EXIT

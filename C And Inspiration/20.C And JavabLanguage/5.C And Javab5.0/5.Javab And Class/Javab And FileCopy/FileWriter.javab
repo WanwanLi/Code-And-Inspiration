@@ -1,0 +1,12 @@
+public FileWriter(String file)
+{
+	open(file);
+}
+void writeString(String string)
+{
+	write(string);
+}
+void closeFile()
+{
+	close();
+}

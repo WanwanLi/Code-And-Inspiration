@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<script  type="text/javascript" src="webgl-objs.js"></script>
+		<title>Java And FormFactors</title>
+		<script src="Teapot.js"></script>
+		<script src="GeometryInfo.js"></script>
+		<script src="webgl-matrix.js"></script>
+		<script src="webgl-radiosity.js"></script>
+		<script src="webgl-geometry.js"></script>
+		<script>
+			function main()
+			{
+				var geometry=new Geometry();
+				geometry.pushMatrix();
+				geometry.translate(0,0.59,0);
+				geometry.rotate(Math.PI/2,1,0,0);
+				geometry.addQuad(quad_light);
+				geometry.popMatrix();
+
+				geometry.scale(3,3,3);
+				geometry.pushMatrix();
+				geometry.translate(0,0,-0.2);
+				geometry.addQuad(quad_front);
+				geometry.popMatrix();
+
+				geometry.pushMatrix();
+				geometry.translate(-0.2,0,0);
+				geometry.rotate(Math.PI/2,0,1,0);
+				geometry.addQuad(quad_left);
+				geometry.popMatrix();
+
+				geometry.pushMatrix();
+				geometry.translate(0.2,0,0);
+				geometry.rotate(-Math.PI/2,0,1,0);
+				geometry.addQuad(quad_right);
+				geometry.popMatrix();
+
+				geometry.pushMatrix();
+				geometry.translate(0,-0.2,0);
+				geometry.rotate(-Math.PI/2,1,0,0);
+				geometry.addQuad(quad_front);
+				geometry.popMatrix();
+
+				geometry.pushMatrix();
+				geometry.translate(0,0.2,0);
+				geometry.rotate(Math.PI/2,1,0,0);
+				geometry.addQuad(quad_front);
+				geometry.popMatrix();
+
+				geometry.scale(0.12,0.12,0.12);
+				geometry.addObject(Teapot);
+
+				var radiosity=new Radiosity(geometry.getGeometryInfo());
+				radiosity.printFormFactors("formFactors");
+			}
+		</script>
+	</head>
+	<body onload="main()"></body>
+</html>
+

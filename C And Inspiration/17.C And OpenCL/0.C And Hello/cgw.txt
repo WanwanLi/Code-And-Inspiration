@@ -1,0 +1,35 @@
+If given IP and username/passwd like this:
+________________________________________________________________________
+IP: 10.173.215.229
+username: wanwan
+password:  wanpasswd
+________________________________________________________________________
+
+First use Cisco AnyConnect to connect to:
+ucfvpn-1.vpn.ucf.edu
+
+Than access remote terminal through putty:
+Or access the remote terminal through cygwin.ssh command:
+________________________________________________________________________
+ssh wanwan@10.173.215.229
+passwd
+New password:  wa448855
+________________________________________________________________________
+
+Create a directory: mkdir CAndOpenCL
+Copy the source code file into the remote terminal, Complie and Run:
+__________________________________________________________________________________________________________________________
+scp CAndRemoteTerminal.c wanwan@10.173.215.229:CAndOpenCL/CAndRemoteTerminal.c 
+gcc CAndRemoteTerminal.c -o CAndRemoteTerminal
+./CAndRemoteTerminal
+__________________________________________________________________________________________________________________________
+
+The result is shown here:
+__________________________________________________________________________________________________________________________
+Remote Terminal Output:
+C And RemoteTerminal
+__________________________________________________________________________________________________________________________
+
+scp CAndOpenCL.c wanwan@10.173.215.229:CAndOpenCL/CAndOpenCL.c
+
+

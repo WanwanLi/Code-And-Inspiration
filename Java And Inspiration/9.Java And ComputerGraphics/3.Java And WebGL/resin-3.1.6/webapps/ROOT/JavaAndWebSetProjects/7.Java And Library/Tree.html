@@ -1,0 +1,225 @@
+<Html>
+	<Script Language="JavaScript">
+var currentNode = null;
+
+function TreeNode(text, url, iconOpen, iconOpenHover, iconClosed, iconClosedHover) {
+	var $ = this;
+	this.level = 0;	
+	this.children = [];	
+	this.parent = null;	
+	this.status = "CLOSED";	
+	this.ancestor = [];	
+	this.isHover = false;
+	
+	this.PATH = "../images/tree/";
+	this.COLLAPSED = this.PATH + "arrow_collapsed.gif";
+	this.EXPANDED = this.PATH + "arrow_expanded.gif";
+	this.COLLAPSED_HOVER = this.PATH + "arrow_collapsed_hover.gif";
+	this.EXPANDED_HOVER = this.PATH + "arrow_expanded_hover.gif";
+	this.CATEGORYOPEN = this.PATH + (iconOpen ? iconOpen : "folder_open.gif");
+	this.CATEGORYOPEN_HOVER = this.CATEGORYOPEN;
+	this.CATEGORYCLOSED = this.PATH + (iconClosed ? iconClosed : "folder_closed.gif");
+	this.CATEGORYCLOSED_HOVER = this.CATEGORYCLOSED;
+	this.EMPTY = this.PATH + "empty.gif";
+
+	this.container = document.createElement("DIV");
+	this.content = document.createElement("DIV");
+	this.indentSpace = document.createElement("SPAN");
+	this.statusIcon = document.createElement("IMG");
+	this.node = document.createElement("SPAN");
+	this.nodeIcon = document.createElement("IMG");
+	this.label = document.createElement("A");
+	this.container.appendChild(this.content);
+	this.content.appendChild(this.indentSpace);
+	this.content.appendChild(this.statusIcon);
+	this.content.appendChild(this.node);
+	this.node.appendChild(this.nodeIcon);
+	this.node.appendChild(this.label);
+
+	this.container.style.display = "block";
+	this.statusIcon.src = this.COLLAPSED;
+	this.nodeIcon.src = this.CATEGORYCLOSED;	
+	this.nodeIcon.align = "absmiddle";
+	this.statusIcon.align = "absmiddle";
+	this.statusIcon.style.cursor = "default";
+	this.node.style.cursor = "default";
+	this.label.style.lineHeight = "20px";
+	this.label.style.fontSize = "12px";
+	this.label.style.display = "inline-block";
+	this.label.style.backgroundImage = "url(" + this.BG + ")";
+	this.label.style.backgroundRepeat = "repeat-x";
+	this.label.innerHTML = text;
+	
+	if (url) {
+	    this.label.href = url;
+	    this.label.target = "mainFrame";
+	}
+
+	this.add = function(child) {
+		this.container.appendChild(child.container);
+		this.children.push(child);
+		child.parent = this;
+	}
+	
+	this.remove = function(child) {
+		child.container.removeNode(true);
+		var temp = [];
+		for (var i = 0; i < this.children.length; i++) {
+			if (this.children[i] != child) {
+				temp.push(this.children[i]);
+			} else {
+				continue;
+			}
+		}
+		this.children = temp;
+	}
+
+	this.hidden = function() {
+		this.container.style.display = "none";
+	}
+
+	this.show = function() {
+		this.container.style.display = "block";
+	}
+
+	this.getAncestor = function(level) {
+		if (this.level == level)
+			return this;
+		for (var i = 0; i < $.ancestor.length; i++) {
+			if ($.ancestor[i].level == level) {
+				return $.ancestor[i];
+			}
+		}
+		return null;
+	}
+	
+	this.contains = function(node) {
+		for (var i = 0; i < $.children.length; i++) {
+			if ($.children[i] == node) {
+				return true;
+			}
+			$.children[i].contains(node);
+		}
+		return false;
+	}
+	
+	this.indent = function() {
+		this.indentSpace.innerHTML = "";
+		for (var i = 0; i < this.level; i++) {
+			var indentImg = document.createElement("IMG");
+			indentImg.src = this.EMPTY;
+			indentImg.align = "absmiddle";
+			this.indentSpace.appendChild(indentImg);
+		}
+		this.collapse();
+	}
+	
+	this.setIcon = function() {
+		this.nodeIcon = this.status == "CLOSED" ? 
+		($.isHover ? $.CATEGORYCLOSED_HOVER : $.CATEGORYCLOSED) : 
+		($.isHover ? $.CATEGORYOPEN_HOVER : $.CATEGORYOPEN);
+	}
+	
+	this.collapse = function() {
+		for (var i = 0; $.children && i < $.children.length; i++) {
+			$.children[i].hidden();
+		}
+		$.statusIcon.src = $.COLLAPSED;
+		$.nodeIcon.src = $.CATEGORYCLOSED;
+		$.status = "CLOSED";
+	}
+	
+	this.expand = function() {
+		for (var i = 0; $.children && i < $.children.length; i++) {
+			$.children[i].show();
+		}
+		$.statusIcon.src = $.EXPANDED;			
+		$.nodeIcon.src = $.CATEGORYOPEN;
+		$.status = "OPEN";
+	}
+	
+	this.expandOrCollapse = function() {
+		if ($.status == "CLOSED") {
+			if (currentNode) {
+				var ancestor = currentNode.getAncestor(1);
+				var myAncestor = $.getAncestor(1);
+				if (ancestor && myAncestor && ancestor != myAncestor) {
+					ancestor.collapse();
+				}
+			}
+			currentNode = $;
+			$.expand();
+		} else {
+			$.collapse();
+		}
+	}
+
+	this.node.onmousedown = function() {
+		if (currentNode) {
+			currentNode.nodeIcon.src = (currentNode.status == "CLOSED" ? currentNode.CATEGORYCLOSED : currentNode.CATEGORYOPEN);
+		}
+	}
+	
+	this.node.onmouseup = function() {
+		if (event.button == 2) {
+			
+		}
+	}
+	
+	this.content.onselectstart = function() {
+		return false;	
+	}
+
+	this.statusIcon.onclick = this.expandOrCollapse;
+	this.nodeIcon.ondblclick = this.expandOrCollapse;
+	this.label.onclick = this.expandOrCollapse;
+	
+	this.statusIcon.onmouseover = function() {
+		this.src = $.status == "CLOSED" ? $.COLLAPSED_HOVER : $.EXPANDED_HOVER;
+	}
+	
+	this.statusIcon.onmouseout = function() {
+		this.src = $.status == "CLOSED" ? $.COLLAPSED : $.EXPANDED;
+	}
+}
+		function Tree(rootNode)
+		{
+			this.root=rootNode;
+			this.show=function(container)
+			{
+				this.update(this.root);
+				this.root.expand();
+				if(container.tagName)container.appendChild(this.root.container);
+				else if(typeof container=="string")document.getElementById(container).appendChild(this.root.container);
+			}
+			this.update=function(parent)
+			{
+				parent.indent();
+				for(var i=0;i<parent.children.length;i++)
+				{
+					parent.children[i].level=parent.level+1;
+				}
+			for (var j = 0; j < parent.ancestor.length; j++) {
+				parent.children[i].ancestor.push(parent.ancestor[j]);
+			}
+			parent.children[i].ancestor.push(parent);
+			$.update(parent.children[i]);
+		}
+		}
+	}
+}
+	</Script>
+	<Body Text=White BackGround="C:\resin-3.1.6\webapps\ROOT\JavaAndWebSetProjects\7.Java And Library\Images\Tree\BackGround.jpg">
+		<Table>
+			<Tr><Td Width=1000 Height=30 BackGround="C:\resin-3.1.6\webapps\ROOT\JavaAndWebSetProjects\7.Java And Library\Images\Tree\Bar.jpg"><Font Color=White Size=5 Body=1 Face=微软雅黑 ><B>  Main Menu  </B></Font></Td></Tr>
+			<Tr>
+				<Td Width=1000 Height=480 BgColor=White> 
+					<SCRIPT type=text/javascript>
+					var tree = null;var root = new TreeNode('系统菜单');var fun1 = new TreeNode('人事管理');var fun2 = new TreeNode('机构管理', 'BranchMgr.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun1.add(fun2);var fun3 = new TreeNode('部门管理', 'DepartmentMgr.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun1.add(fun3);var fun4 = new TreeNode('员工管理', 'EmployeeMgr.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun1.add(fun4);root.add(fun1);var fun5 = new TreeNode('日程管理');var fun6 = new TreeNode('我的日程', 'MySchedule.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun5.add(fun6);var fun7 = new TreeNode('部门日程', 'DeptSchedule.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun5.add(fun7);var fun8 = new TreeNode('我的便签', 'MyNote.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun5.add(fun8);root.add(fun5);var fun9 = new TreeNode('文档管理');var fun10 = new TreeNode('文档管理', 'DocumentMgr.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun9.add(fun10);var fun11 = new TreeNode('回收站', 'Recycler.aspx', 'tree_no					de.gif', null, 'tree_node.gif', null);fun9.add(fun11);var fun12 = new TreeNode('文件搜索', 'FileSearch.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun9.add(fun12);root.add(fun9);var fun13 = new TreeNode('消息传递');var fun14 = new TreeNode('消息管理', 'MessageMgr.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun13.add(fun14);var fun15 = new TreeNode('信箱', 'MailBox.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun13.add(fun15);root.add(fun13);var fun16 = new TreeNode('系统管理');var fun17 = new TreeNode('角色管理', 'RoleMgr.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun16.add(fun17);var fun18 = new TreeNode('登录日志', 'LoginLog.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun16.add(fun18);var fun19 = new TreeNode('操作日志', 'OperationLog.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun16.add(fun19);var fun20 = new TreeNode('菜单排序', 'MenuSort.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun16.add(fun20);root.add(fun16);var fun21 = new TreeNode('考勤管理');var fun22 = new TreeNode(						'签到签退', 'SignInOrOut.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun21.add(fun22);var fun23 = new TreeNode('考勤查询', 'HistoryQuery.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun21.add(fun23);var fun24 = new TreeNode('考勤统计', 'TimeStatistics.aspx', 'tree_node.gif', null, 'tree_node.gif', null);fun21.add(fun24);root.add(fun21);tree = new Tree(root);tree.show('menuTree')
+					</SCRIPT>
+				</Td>
+			</Tr>
+		</Table>
+		
+	</Body>
+</Html>

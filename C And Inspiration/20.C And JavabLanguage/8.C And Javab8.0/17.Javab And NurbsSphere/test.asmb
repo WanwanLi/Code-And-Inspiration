@@ -1,0 +1,222 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=9
+integerNumber=60
+integerTableLength=17
+integerTable[0]=0
+integerTable[1]=0
+integerTable[2]=1
+integerTable[3]=0
+integerTable[4]=1
+integerTable[5]=0
+integerTable[6]=40
+integerTable[7]=2
+integerTable[8]=2
+integerTable[9]=2
+integerTable[10]=2
+integerTable[11]=2
+integerTable[12]=1
+integerTable[13]=4
+integerTable[14]=4
+integerTable[15]=4
+integerTable[16]=1
+doubleNumber=122
+doubleTableLength=57
+doubleTable[0]=1.000000
+doubleTable[1]=0.000000
+doubleTable[2]=0.150000
+doubleTable[3]=0.000000
+doubleTable[4]=0.200000
+doubleTable[5]=0.150000
+doubleTable[6]=0.200000
+doubleTable[7]=0.200000
+doubleTable[8]=0.150000
+doubleTable[9]=0.200000
+doubleTable[10]=0.200000
+doubleTable[11]=0.150000
+doubleTable[12]=0.200000
+doubleTable[13]=0.200000
+doubleTable[14]=0.150000
+doubleTable[15]=0.200000
+doubleTable[16]=0.400000
+doubleTable[17]=0.000000
+doubleTable[18]=0.400000
+doubleTable[19]=0.400000
+doubleTable[20]=0.000000
+doubleTable[21]=0.400000
+doubleTable[22]=0.400000
+doubleTable[23]=0.000000
+doubleTable[24]=0.400000
+doubleTable[25]=0.400000
+doubleTable[26]=0.000000
+doubleTable[27]=0.400000
+doubleTable[28]=0.200000
+doubleTable[29]=0.150000
+doubleTable[30]=0.200000
+doubleTable[31]=0.200000
+doubleTable[32]=0.150000
+doubleTable[33]=0.200000
+doubleTable[34]=0.200000
+doubleTable[35]=0.150000
+doubleTable[36]=0.200000
+doubleTable[37]=0.200000
+doubleTable[38]=0.150000
+doubleTable[39]=0.200000
+doubleTable[40]=0.000000
+doubleTable[41]=0.150000
+doubleTable[42]=0.000000
+doubleTable[43]=1.000000
+doubleTable[44]=1.000000
+doubleTable[45]=1.000000
+doubleTable[46]=1.000000
+doubleTable[47]=1.000000
+doubleTable[48]=1.000000
+doubleTable[49]=1.000000
+doubleTable[50]=1.000000
+doubleTable[51]=1.000000
+doubleTable[52]=1.000000
+doubleTable[53]=1.000000
+doubleTable[54]=1.000000
+doubleTable[55]=1.000000
+doubleTable[56]=1.000000
+stringNumber=0
+stringTableLength=0
+vectorNumber=14
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=131
+0: MOV #57,@0
+1: MOV #58,@1
+2: NEG @17,@2
+3: MOV #59,@17
+4: LIGHT #0,~57
+5: MOV #60,@3
+6: MOV #61,@4
+7: MOV #62,@5
+8: COLOR ~60
+9: STEP @6
+10: MOV %4, 18
+11: MOV @18, 14
+12: MOV #63,#1
+13: MOV #64,#2
+14: MOV #65,#3
+15: MOV \0,~63
+16: MOV @19, 0
+17: NEG #69,#4
+18: MOV #66,#69
+19: MOV #67,#5
+20: NEG #70,#6
+21: MOV #68,#70
+22: MOV \1,~66
+23: MOV @20, 1
+24: NEG #74,#7
+25: MOV #71,#74
+26: MOV #72,#8
+27: MOV #73,#9
+28: MOV \2,~71
+29: MOV @21, 2
+30: MOV #75,#10
+31: MOV #76,#11
+32: MOV #77,#12
+33: MOV \3,~75
+34: MOV @22, 3
+35: MOV #78,#13
+36: MOV #79,#14
+37: NEG #81,#15
+38: MOV #80,#81
+39: MOV \4,~78
+40: MOV @23, 4
+41: NEG #85,#16
+42: MOV #82,#85
+43: MOV #83,#17
+44: NEG #86,#18
+45: MOV #84,#86
+46: MOV \5,~82
+47: MOV @24, 5
+48: NEG #90,#19
+49: MOV #87,#90
+50: MOV #88,#20
+51: MOV #89,#21
+52: MOV \6,~87
+53: MOV @25, 6
+54: MOV #91,#22
+55: MOV #92,#23
+56: MOV #93,#24
+57: MOV \7,~91
+58: MOV @26, 7
+59: MOV #94,#25
+60: MOV #95,#26
+61: NEG #97,#27
+62: MOV #96,#97
+63: MOV \8,~94
+64: MOV @27, 8
+65: NEG #101,#28
+66: MOV #98,#101
+67: NEG #102,#29
+68: MOV #99,#102
+69: NEG #103,#30
+70: MOV #100,#103
+71: MOV \9,~98
+72: MOV @28, 9
+73: NEG #107,#31
+74: MOV #104,#107
+75: NEG #108,#32
+76: MOV #105,#108
+77: MOV #106,#33
+78: MOV \10,~104
+79: MOV @29, 10
+80: MOV #109,#34
+81: NEG #112,#35
+82: MOV #110,#112
+83: MOV #111,#36
+84: MOV \11,~109
+85: MOV @30, 11
+86: MOV #113,#37
+87: NEG #116,#38
+88: MOV #114,#116
+89: NEG #117,#39
+90: MOV #115,#117
+91: MOV \12,~113
+92: MOV @31, 12
+93: MOV #118,#40
+94: NEG #121,#41
+95: MOV #119,#121
+96: MOV #120,#42
+97: MOV \13,~118
+98: MOV @32, 13
+99: MOV %5, 33
+100: MOV @33, 14
+101: MOV @34, 43
+102: MOV @35, 44
+103: MOV @36, 45
+104: MOV @37, 46
+105: MOV @38, 47
+106: MOV @39, 48
+107: MOV @40, 49
+108: MOV @41, 50
+109: MOV @42, 51
+110: MOV @43, 52
+111: MOV @44, 53
+112: MOV @45, 54
+113: MOV @46, 55
+114: MOV @47, 56
+115: MOV %6, 48
+116: MOV @48, 5
+117: MOV @49, 7
+118: MOV @50, 8
+119: MOV @51, 9
+120: MOV @52, 10
+121: MOV @53, 11
+122: MOV %7, 54
+123: MOV @54, 5
+124: MOV @55, 12
+125: MOV @56, 13
+126: MOV @57, 14
+127: MOV @58, 15
+128: MOV @59, 16
+129: SPHNURBS 4,5,6,7
+130: EXIT

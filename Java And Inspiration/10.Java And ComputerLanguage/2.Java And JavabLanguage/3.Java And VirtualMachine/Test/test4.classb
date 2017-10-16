@@ -1,0 +1,40 @@
+3
+Test4
+5
+0
+2
+1
+Test5
+11
+4
+2
+s1=
+s2=
+0
+0
+0
+0
+23
+ENQ  10
+ENQ  20
+OBJECT 0,0
+ENQ  30
+ENQ  50
+OBJECT 1,0
+INT &4
+METHOD 1,add
+INT &7
+DEQ &7
+MOV &4,&7
+STR &8
+MOV &8,$2
+ADD $2,$0,+&4
+PRINT &8
+METHOD 2,add
+INT &10
+DEQ &10
+STR &9
+MOV &9,$3
+ADD $3,$1,+&10
+PRINT &9
+EXIT

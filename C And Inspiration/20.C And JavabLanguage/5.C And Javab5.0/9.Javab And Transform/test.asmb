@@ -1,0 +1,121 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=14
+integerNumber=22
+integerTableLength=21
+integerTable[0]=2
+integerTable[1]=2
+integerTable[2]=2
+integerTable[3]=0
+integerTable[4]=0
+integerTable[5]=1
+integerTable[6]=1
+integerTable[7]=0
+integerTable[8]=0
+integerTable[9]=1
+integerTable[10]=1
+integerTable[11]=1
+integerTable[12]=4
+integerTable[13]=0
+integerTable[14]=1
+integerTable[15]=0
+integerTable[16]=0
+integerTable[17]=4
+integerTable[18]=0
+integerTable[19]=0
+integerTable[20]=1
+doubleNumber=59
+doubleTableLength=20
+doubleTable[0]=0.500000
+doubleTable[1]=0.500000
+doubleTable[2]=0.500000
+doubleTable[3]=0.200000
+doubleTable[4]=0.100000
+doubleTable[5]=0.100000
+doubleTable[6]=0.200000
+doubleTable[7]=0.100000
+doubleTable[8]=0.200000
+doubleTable[9]=0.100000
+doubleTable[10]=0.300000
+doubleTable[11]=0.200000
+doubleTable[12]=0.200000
+doubleTable[13]=0.500000
+doubleTable[14]=0.500000
+doubleTable[15]=0.500000
+doubleTable[16]=0.500000
+doubleTable[17]=0.100000
+doubleTable[18]=0.200000
+doubleTable[19]=0.100000
+stringNumber=0
+stringTableLength=0
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=63
+0: MOV #20,@0
+1: MOV #21,@1
+2: MOV #22,@2
+3: MOV #23,@3
+4: MOV #24,@4
+5: NEG @21,@5
+6: MOV #25,@21
+7: LIGHT ~20,~23
+8: MOV #26,@6
+9: MOV #27,@7
+10: MOV #28,@8
+11: COLOR ~26
+12: MOV #29,#0
+13: MOV #30,#1
+14: MOV #31,#2
+15: SCALE ~29
+16: MOV #32,#3
+17: MOV #33,#4
+18: MOV #34,#5
+19: TRANSLATE ~32
+20: MOV #35,@9
+21: MOV #36,@10
+22: MOV #37,@11
+23: MOVPI #38
+24: MUL #39,#38,/@12
+25: ROTATE ~35,#39
+26: PUSHTG 
+27: CONE #6,#7
+28: NEG #43,#8
+29: MOV #40,#43
+30: NEG #44,#9
+31: MOV #41,#44
+32: MOV #42,#10
+33: TRANSLATE ~40
+34: PUSHTG 
+35: CUBE #11
+36: POPTG 
+37: POPTG 
+38: MOV #45,@13
+39: MOV #46,@14
+40: MOV #47,@15
+41: COLOR ~45
+42: MOV #48,@16
+43: MOV #49,#12
+44: MOV #50,#13
+45: ECOLOR ~48
+46: MOV #51,#14
+47: MOV #52,#15
+48: MOV #53,#16
+49: SCOLOR ~51
+50: MOVPI #54
+51: MUL #55,#54,/@17
+52: ROTX #55
+53: PUSHTG 
+54: CYLINDER #17,#18
+55: POPTG 
+56: COLOR0
+57: MOV #56,@18
+58: MOV #57,@19
+59: MOV #58,@20
+60: COLOR ~56
+61: SPHERE #19
+62: EXIT

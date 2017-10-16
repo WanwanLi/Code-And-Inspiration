@@ -1,0 +1,18 @@
+type=PDA;
+state=q0,q1;
+input=0,1,null;
+stack=0,1,z0;
+init=q0;
+start=z0;
+final=q1;
+transit=
+{
+	S(q0,0,z0)=q0/0.z0;
+	S(q0,1,z0)=q0/1.z0;
+	S(q0,0,0)=q0/0.0;
+	S(q0,1,1)=q0/1.1;
+	S(q0,0,1)=q0/null;
+	S(q0,1,0)=q0/null;
+	S(q0,null,z0)=q1/z0;
+}
+test=0,0,1,1,1,0;

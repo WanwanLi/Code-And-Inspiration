@@ -1,0 +1,36 @@
+8
+Test5
+5
+2
+1
+1
+add
+1
+9
+0
+0
+7
+0
+0
+0
+0
+4
+0
+1
+1
+2
+2
+13
+INT &0
+INT &1
+INT &3
+DEQ &3
+INT &4
+DEQ &4
+MOV &0,&3
+MOV &1,&4
+EXIT
+INT &6
+ADD &6,&0,+&1
+ENQ &6
+RET

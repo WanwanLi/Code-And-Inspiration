@@ -1,0 +1,39 @@
+import java.awt.*;
+import java.applet.*;
+public class LSKoch extends Applet
+{
+	public void paint(Graphics g)
+	{
+		String S="F";
+		String LS="F+F--F+F";
+		for(int i=0;i<5;i++)S=LSGrammar(S,"F",LS);
+		X=300;
+		Y=100;
+		L=1;
+		w=PI/3;
+		for(a=0;a<2*PI;a+=PI/3)LSGrammar(S,g);
+	}
+	public String LSGrammar(String S,String F,String LS)
+	{
+		return S.replaceAll(F,LS);
+	}
+	private double X=0;
+	private double Y=0;
+	private double L=0;
+	private double a=0;
+	private double w=0;
+	private double PI=3.1415926; 
+	public void LSGrammar(String S,Graphics g)
+	{
+		for(int i=0;i<S.length();i++)
+		{
+			switch(S.charAt(i))
+			{
+				case 'F':double x=X+L*Math.cos(a);double y=Y+L*Math.sin(a);g.drawLine((int)X,(int)Y,(int)x,(int)				y);X=x;Y=y;break;
+				case 'f':X+=L*Math.cos(a);Y+=L*Math.sin(a);break;
+				case '+':a+=w;if(a>2*PI)a-=2*PI;if(a<0)a+=2*PI;break;
+				case '-':a-=w;if(a>2*PI)a-=2*PI;if(a<0)a+=2*PI;break;
+			}
+		}
+	}	
+}

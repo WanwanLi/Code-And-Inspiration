@@ -1,0 +1,507 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Teapot</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script src="webgl-object.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 coordinate;
+			attribute vec4 color;
+			attribute vec4 normal;
+			attribute vec2 texCoord;
+			varying vec3 fragNormal;
+			varying vec2 fragTexCoord;
+			uniform mat4 modelViewMatrix;
+			uniform mat4 coordinateMatrix;
+			uniform mat4 normalMatrix;
+			void main(void)
+			{
+				gl_Position=coordinateMatrix*coordinate;
+				vec4 glNormal=normalMatrix*normal;
+				fragNormal=normalize(glNormal.xyz);
+				fragTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			vec3 fragLightColor;
+			vec3 fragDiffuseColor;
+			vec3 fragSpecularColor;
+			vec3 fragAmbientColor;
+			varying vec3 fragNormal;
+			varying vec2 fragTexCoord;
+			uniform sampler2D fragSampler2D;
+			uniform vec3 lightColor;
+			uniform vec3 lightDirection;
+			uniform vec3 viewDirection;
+			uniform vec3 diffuseColor;
+			uniform vec3 specularColor;
+			uniform vec3 ambientColor;
+			uniform float shininess;
+			uniform int isImage;
+			uniform int isBackFace;
+			vec4 blurTexture2D(sampler2D sampler,vec2 texCoord,float dx,float dy,float w,float h)
+			{
+				float x=texCoord.x,y=texCoord.y;
+				vec2 t00=vec2((x-dx)/w,(y-dy)/h);
+				vec2 t01=vec2((x-dx)/w,(y+dy)/h);
+				vec2 t11=vec2((x+dx)/w,(y+dy)/h);
+				vec2 t10=vec2((x+dx)/w,(y-dy)/h);
+				vec4 c00=texture2D(sampler,t00);
+				vec4 c01=texture2D(sampler,t01);
+				vec4 c11=texture2D(sampler,t11);
+				vec4 c10=texture2D(sampler,t10);
+				return (c00+c01+c11+c10)/4.0;
+			}
+			vec4 blurTexture1D_x(sampler2D sampler,vec2 texCoord,float d,float w,float h)
+			{
+				vec4 c=vec4(0.0);
+				float x=texCoord.x;
+				float y=texCoord.y;
+				for(int i=0;i<20;i++)
+				{
+					vec2 t=vec2((x+float(i-10)*d)/w,y/h);
+					c+=texture2D(sampler,t);
+				}
+				return c/20.0;
+			}
+			vec4 blurTexture1D_y(sampler2D sampler,vec2 texCoord,float d,float w,float h)
+			{
+				vec4 c=vec4(0.0);
+				float x=texCoord.x;
+				float y=texCoord.y;
+				for(int i=0;i<20;i++)
+				{
+					vec2 t=vec2(x/w,(y+float(i-10)*d)/h);
+					c+=texture2D(sampler,t);
+				}
+				return c/20.0;
+			}
+			void main(void)
+			{
+				float w=1024.0,h=1024.0,dx=5.0,dy=dx;
+				if(isImage==0)
+				{
+					gl_FragColor=vec4(diffuseColor,1);
+					return;
+				}
+				if(isImage==1)
+				{
+					gl_FragColor=blurTexture1D_x(fragSampler2D,gl_FragCoord.xy,dx,w,h);
+					return;
+				}
+				if(isImage==2)
+				{
+					gl_FragColor=blurTexture1D_y(fragSampler2D,gl_FragCoord.xy,dy,w,h);
+					return;
+				}
+				if(isImage==3)
+				{
+					gl_FragColor=texture2D(fragSampler2D,gl_FragCoord.xy/vec2(w,h));
+					return;
+				}
+				vec3 normalDirection=normalize(fragNormal);
+				float nDotV=max(dot(normalDirection,viewDirection*-1.0),0.0);
+				vec3 fragColor=lightColor*pow(nDotV,shininess)+diffuseColor*0.2;
+				gl_FragColor=vec4(fragColor,1);
+			}
+		</script>
+		<script>
+			var canvas=null;
+			var gl=null;
+			var glProgram=null;
+			var glVertexShader=null;
+			var glFragmentShader=null;
+			function main()
+			{
+				canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					glInitShaders();
+					glCreateObjects();
+					glCreateTextures();
+					glAddEventListener();
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				glVertexShader=glCreateShader(gl.VERTEX_SHADER);
+				glFragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				glProgram=gl.createProgram();
+				gl.attachShader(glProgram,glVertexShader);
+				gl.attachShader(glProgram,glFragmentShader);
+				gl.linkProgram(glProgram);
+				if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(glProgram);
+				glProgram.coordinate=gl.getAttribLocation(glProgram,"coordinate");
+				glProgram.color=gl.getAttribLocation(glProgram,"color");
+				glProgram.normal=gl.getAttribLocation(glProgram,"normal");
+				glProgram.texCoord=gl.getAttribLocation(glProgram,"texCoord");
+				gl.enableVertexAttribArray(glProgram.coordinate);
+				gl.enableVertexAttribArray(glProgram.normal);
+				gl.enableVertexAttribArray(glProgram.texCoord);
+				glProgram.fragSampler2D=gl.getUniformLocation(glProgram,"fragSampler2D");
+				glProgram.modelViewMatrix=gl.getUniformLocation(glProgram,"modelViewMatrix");
+				glProgram.coordinateMatrix=gl.getUniformLocation(glProgram,"coordinateMatrix");
+				glProgram.normalMatrix=gl.getUniformLocation(glProgram,"normalMatrix");
+				glProgram.lightColor=gl.getUniformLocation(glProgram,"lightColor");
+				glProgram.lightDirection=gl.getUniformLocation(glProgram,"lightDirection");
+				glProgram.viewDirection=gl.getUniformLocation(glProgram,"viewDirection");
+				glProgram.eyePosition=gl.getUniformLocation(glProgram,"eyePosition");
+				glProgram.diffuseColor=gl.getUniformLocation(glProgram,"diffuseColor");
+				glProgram.specularColor=gl.getUniformLocation(glProgram,"specularColor");
+				glProgram.ambientColor=gl.getUniformLocation(glProgram,"ambientColor");
+				glProgram.shininess=gl.getUniformLocation(glProgram,"shininess");
+				glProgram.isImage=gl.getUniformLocation(glProgram,"isImage");
+				glProgram.isBackFace=gl.getUniformLocation(glProgram,"isBackFace");
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var Teapot_obj=null,Quad_obj=null;
+			function glCreateObjects()
+			{
+				glLoadObject("Teapot");
+				Quad_obj=QuadObject(1.0);
+			}
+			function glLoadObject(fileName)
+			{
+				var request=new XMLHttpRequest();
+				request.onreadystatechange=function()
+				{
+					if(request.readyState==4)
+					{
+						var text=request.responseText;
+						Teapot_obj=new FileObject(gl,fileName,text);
+					}
+				}
+				request.open("GET", fileName+".obj", true);
+				request.send();
+			}
+			var viewDistance=2.0;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var eyeX=0.0,eyeY=0.0,eyeZ=viewDistance,centerX=0.0,centerY=0.0,centerZ=0.0,upX=0,upY=1,upZ=0;
+			var eyePosition=new Vector3([eyeX,eyeY,eyeZ]);
+			function glDisplayFunc()
+			{
+				glLight();
+				glMaterial();
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0,0,0,0.0);
+				gl.viewport(0,0,canvas.width,canvas.height);
+				glAnimation();
+			}
+			var rotY=0,axisX=0,axisY=1,axisZ=0,angle=1,scaleX=0.03,scaleY=scaleX,scaleZ=scaleX,k=25;
+			function glAnimation()
+			{
+				requestAnimationFrame(glAnimation,canvas);
+
+				gl.bindFramebuffer(gl.FRAMEBUFFER,
+				glFramebuffer[image_ObjectFramebuffer]);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				gluPerspective(30,canvas.width/canvas.height,1,100);
+				glUpdateViewPoint();
+				gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				rotY+=angle;
+				glScale(scaleX,scaleY,scaleZ);
+				glRotate(rotY,axisX,axisY,axisZ);
+				glUniformMatrix();
+				diffuseColor=new Vector3([0,1,0]);
+				glMaterial();
+				gl.uniform1i(glProgram.isImage,-1);
+				glDrawElements(Teapot_obj);
+				gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+				gl.bindFramebuffer(gl.FRAMEBUFFER,
+				glFramebuffer[image_GlowFramebuffer]);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				gluPerspective(30,canvas.width/canvas.height,1,100);
+				glUpdateViewPoint();
+				gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				rotY+=angle;
+				glScale(scaleX,scaleY,scaleZ);
+				glRotate(rotY,axisX,axisY,axisZ);
+				glUniformMatrix();
+				diffuseColor=new Vector3([0,1,0]);
+				glMaterial();
+				gl.uniform1i(glProgram.isImage,0);
+				glDrawElements(Teapot_obj);
+				gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+				gl.bindFramebuffer(gl.FRAMEBUFFER,
+				glFramebuffer[image_BlurFramebuffer]);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				glUniformMatrix();
+				glActiveTexture(image_GlowFramebuffer);
+				gl.uniform1i(glProgram.isImage,1);
+				glDrawElements(Quad_obj);
+				gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				glUniformMatrix();
+
+				glActiveTexture(image_ObjectFramebuffer);
+				gl.uniform1i(glProgram.isImage,3);
+				glDrawElements(Quad_obj);
+
+				gl.disable(gl.DEPTH_TEST);
+				gl.enable(gl.BLEND);
+				gl.blendFunc(gl.ONE, gl.ONE);
+				glActiveTexture(image_BlurFramebuffer);
+				gl.uniform1i(glProgram.isImage,2);
+				glDrawElements(Quad_obj);
+				gl.disable(gl.BLEND);
+				gl.enable(gl.DEPTH_TEST);
+
+			}
+			function glDrawElements(object)
+			{
+				if(object==null)return;
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.coordinatesBuffer);
+				gl.vertexAttribPointer(glProgram.coordinate,object.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.normalsBuffer);
+				gl.vertexAttribPointer(glProgram.normal,object.normalsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.texCoordsBuffer);
+				gl.vertexAttribPointer(glProgram.texCoord,object.texCoordsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,object.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glLight()
+			{
+				var lightColor=new Vector3([1.0,1.0,1.0]);
+				var lightDirection=new Vector3([0.5,3.0,4.0]);
+				lightDirection.normalize();
+				gl.uniform3fv(glProgram.lightColor,lightColor.elements);
+				gl.uniform3fv(glProgram.lightDirection,lightDirection.elements);
+			}
+			var ambientColor=new Vector3([0,0,0.05]);
+			var diffuseColor=new Vector3([0,1,0.05]);
+			var specularColor=new Vector3([0.5,0.5,0.5]);
+			var shininess=10.0;
+			function glMaterial()
+			{
+				gl.uniform3fv(glProgram.ambientColor,ambientColor.elements);
+				gl.uniform3fv(glProgram.diffuseColor,diffuseColor.elements);
+				gl.uniform3fv(glProgram.specularColor,specularColor.elements);
+				gl.uniform1f(glProgram.shininess,shininess);
+			}
+			var image_ObjectFramebuffer="object.gif";
+			var image_GlowFramebuffer="glow.gif";
+			var image_BlurFramebuffer="blur.gif";
+			var glTexture=[];
+			function glCreateTextures()
+			{
+				glCreateFramebufferTexture(image_ObjectFramebuffer,1024,1024);
+				glCreateFramebufferTexture(image_GlowFramebuffer,1024,1024);
+				glCreateFramebufferTexture(image_BlurFramebuffer,1024,1024);
+			}
+			function glCreateTexture2D(imageName)
+			{
+				var texture=gl.createTexture();
+				texture.image=new Image();
+				texture.image.onload=function(){glLoadTexture(texture);}
+				texture.image.src=imageName;
+				glTexture[imageName]=texture;
+			}
+			function glLoadTexture(texture)
+			{
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+				gl.generateMipmap(gl.TEXTURE_2D);
+			}
+			function glActiveTexture(imageName)
+			{
+				var texture=glTexture[imageName];
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+			}
+			glFramebuffer=[];
+			function glCreateFramebufferTexture(textureName,imageWidth,imageHeight)
+			{
+				var framebuffer=gl.createFramebuffer();
+				gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
+				framebuffer.width=imageWidth;
+				framebuffer.height=imageHeight;
+				var texture=gl.createTexture();
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+			//	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.generateMipmap(gl.TEXTURE_2D);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,framebuffer.width,framebuffer.height,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+				var renderbuffer=gl.createRenderbuffer();
+				gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
+				gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, framebuffer.width, framebuffer.height);
+				gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+				gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
+				gl.bindTexture(gl.TEXTURE_2D, null);
+				gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+				gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+				glFramebuffer[textureName]=framebuffer;
+				glTexture[textureName]=texture;
+			}
+			var glLookAtMatrix=null;
+			var glTransformMatrix=null;
+			var glTransformMatrixStack=[];
+			var glNormalMatrix=null;
+			var glNormalMatrixStack=[];
+			var glProjectionMatrix=null;
+			function glLoadIdentity()
+			{
+				glLookAtMatrix=new Matrix4();
+				glTransformMatrix=new Matrix4();
+				glNormalMatrix=new Matrix4();
+				glProjectionMatrix=new Matrix4();
+			}
+			function gluPerspective(fieldOfView,widthHeightRatio,near,far)
+			{
+				glProjectionMatrix.setPerspective(fieldOfView,widthHeightRatio,near,far);
+			}
+			function gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				glLookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+			}
+			function glTranslate(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setTranslate(x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+			}
+			function glRotate(angle,x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setRotate(angle,x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+				glNormalMatrix.multiply(transformMatrix);
+			}
+			function glScale(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setScale(x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+			}
+			function glPushMatrix()
+			{
+				var transformMatrix=new Matrix4(glTransformMatrix);
+				glTransformMatrixStack.push(transformMatrix);
+				var normalMatrix=new Matrix4(glNormalMatrix);
+				glNormalMatrixStack.push(normalMatrix);
+			}
+			function glPopMatrix()
+			{
+				glTransformMatrix=glTransformMatrixStack.pop();
+				glNormalMatrix=glNormalMatrixStack.pop();
+			}
+			function glUniformMatrix()
+			{
+				var glCoordinateMatrix=new Matrix4(glProjectionMatrix);
+				glCoordinateMatrix.multiply(glLookAtMatrix);
+				glCoordinateMatrix.multiply(glTransformMatrix);
+				gl.uniformMatrix4fv(glProgram.coordinateMatrix,false,glCoordinateMatrix.elements);
+				gl.uniformMatrix4fv(glProgram.normalMatrix,false,glNormalMatrix.elements);
+			}
+			var currentMouseX=0,currentMouseY=0,currentMouseZ=0,mouseIsDown=false;
+			var translateMouseX=0,translateMouseY=0,translateMouseZ=0;
+			function glTransformViewPoint()
+			{
+				var k=-0.01;
+				eyeX+=viewDirection.x()*k*translateMouseZ;
+				eyeY+=viewDirection.y()*k*translateMouseZ;
+				eyeZ+=viewDirection.z()*k*translateMouseZ;
+				centerX=eyeX+viewDirection.x()*viewDistance;
+				centerY=eyeY+viewDirection.y()*viewDistance;
+				centerZ=eyeZ+viewDirection.z()*viewDistance;
+			}
+			function glUpdateViewPoint()
+			{
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+				gl.uniform3fv(glProgram.viewDirection,viewDirection.elements);
+				gl.uniform3fv(glProgram.eyePosition,eyePosition.elements);
+			}
+			function glRotateViewDirection()
+			{
+				var k=0.2;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				upX=viewUpDirection.x();
+				upY=viewUpDirection.y();
+				upZ=viewUpDirection.z();
+			}
+			function glAddEventListener()
+			{
+				canvas.onmousemove=mouseDragged;
+				canvas.onmousedown=mouseDown;
+				canvas.onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				glRotateViewDirection();
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e){}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="680">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</body>
+</html>

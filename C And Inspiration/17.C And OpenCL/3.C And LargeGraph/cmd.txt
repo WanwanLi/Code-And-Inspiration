@@ -1,0 +1,17 @@
+For copy source code:
+cd d: 
+cd Code\ And\ Inspiration/C\ And\ Inspiration/20.C\ And\ OpenCL/3.C\ And\ LargeGraph/
+scp CAndLargeGraph.c wanwan@10.173.215.229:CAndOpenCL/3.CAndLargeGraph/CAndLargeGraph.c 
+wa448855
+scp graph-kernel.cl wanwan@10.173.215.229:CAndOpenCL/3.CAndLargeGraph/graph-kernel.cl
+wa448855
+
+
+ssh wanwan@10.173.215.229
+wa448855
+cd CAndOpenCL/3.CAndLargeGraph
+
+To Complie the code:
+gcc -I /home/wanwan/AMDAPPSDK-3.0-0-Beta/include -L/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64 -o CAndLargeGraph CAndLargeGraph.c -Wl,-rpath,/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64 -lOpenCL
+
+

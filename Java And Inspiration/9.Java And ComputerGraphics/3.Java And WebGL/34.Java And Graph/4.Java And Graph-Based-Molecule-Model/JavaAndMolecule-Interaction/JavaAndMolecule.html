@@ -1,0 +1,501 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Molecule</title>
+		<style>
+			body{ background-color:white;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script src="webgl-object.js"></script>
+		<script src="webgl-molecule.js"></script>
+		<script src="Molecule.js"></script>
+		<script id="atom-shader" type="x-shader/x-atom">
+			attribute vec4 coordinate;
+			attribute vec4 color;
+			attribute vec4 normal;
+			attribute vec2 texCoord;
+			varying vec3 fragPosition;
+			varying vec3 fragNormal;
+			varying vec2 fragTexCoord;
+			uniform mat4 modelViewMatrix;
+			uniform mat4 coordinateMatrix;
+			uniform mat4 normalMatrix;
+			void main(void)
+			{
+				gl_Position=coordinateMatrix*coordinate;
+				fragPosition=gl_Position.xyz;
+				vec4 glNormal=normalMatrix*normal;
+				fragNormal=normalize(glNormal.xyz);
+				fragTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			vec3 fragDiffuseColor;
+			vec3 fragTexColor;
+			vec3 fragSpecularColor;
+			vec3 fragAmbientColor;
+			varying vec3 fragPosition;
+			varying vec3 fragNormal;
+			varying vec2 fragTexCoord;
+			uniform sampler2D fragSampler2D;
+			uniform vec3 lightColor;
+			uniform vec3 lightPosition;
+			uniform vec3 lightDirection;
+			uniform float lightAngle;
+			uniform vec3 viewDirection;
+			uniform vec3 diffuseColor;
+			uniform vec3 specularColor;
+			uniform vec3 ambientColor;
+			uniform float shininess;
+			void main(void)
+			{
+
+				vec3 fragLightDirection=normalize(lightPosition-fragPosition);
+				float cosAngle=max(dot(lightDirection*-1.0,fragLightDirection),0.0);
+				float cosLightAngle=cos(lightAngle);
+				float lightIntensity=max((cosAngle-cosLightAngle)/(1.0-cosLightAngle),0.0);
+				vec4 texColor=texture2D(fragSampler2D,fragTexCoord);
+				vec3 normalDirection=fragNormal;
+				float nDotL=dot(normalDirection,fragLightDirection);
+				vec3 reflectedLightDirection=fragLightDirection*-1.0+normalDirection*(nDotL*2.0);
+				float rDotV=max(dot(reflectedLightDirection,viewDirection*-1.0),0.0);
+				vec3 fragLightColor=lightColor*lightIntensity;
+				fragDiffuseColor=fragLightColor*diffuseColor*nDotL;
+				fragTexColor=fragLightColor*texColor.rgb*nDotL;
+				fragSpecularColor=fragLightColor*specularColor*pow(rDotV,shininess);
+				fragAmbientColor=ambientColor;
+				vec3 fragColor=fragDiffuseColor;
+				fragColor+=fragSpecularColor;
+				fragColor+=fragAmbientColor;
+				fragColor+=fragTexColor;
+				gl_FragColor=vec4(fragColor,1);
+			}
+		</script>
+		<script>
+			var canvas=null;
+			var selects=[];
+			var request=null;
+			var gl=null;
+			var glTexture=null;
+			var glProgram=null;
+			var glatomshader=null;
+			var glFragmentShader=null;
+			function main()
+			{
+				selects["select1"]=document.getElementById("select1");
+				selects["select1"].addEventListener("change", onChanged_select1);
+				canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					glInitShaders();
+					glCreateObjects();
+					glAddEventListener();
+					glCreateTexture2D("moon.gif");
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				glatomshader=glCreateShader(gl.VERTEX_SHADER);
+				glFragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				glProgram=gl.createProgram();
+				gl.attachShader(glProgram,glatomshader);
+				gl.attachShader(glProgram,glFragmentShader);
+				gl.linkProgram(glProgram);
+				if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(glProgram);
+				glProgram.coordinate=gl.getAttribLocation(glProgram,"coordinate");
+				glProgram.normal=gl.getAttribLocation(glProgram,"normal");
+				glProgram.texCoord=gl.getAttribLocation(glProgram,"texCoord");
+				gl.enableVertexAttribArray(glProgram.coordinate);
+				gl.enableVertexAttribArray(glProgram.normal);
+				gl.enableVertexAttribArray(glProgram.texCoord);
+				glProgram.fragSampler2D=gl.getUniformLocation(glProgram,"fragSampler2D");
+				gl.uniform1i(glProgram.fragSampler2D,0);
+				glProgram.modelViewMatrix=gl.getUniformLocation(glProgram,"modelViewMatrix");
+				glProgram.coordinateMatrix=gl.getUniformLocation(glProgram,"coordinateMatrix");
+				glProgram.normalMatrix=gl.getUniformLocation(glProgram,"normalMatrix");
+				glProgram.lightColor=gl.getUniformLocation(glProgram,"lightColor");
+				glProgram.lightPosition=gl.getUniformLocation(glProgram,"lightPosition");
+				glProgram.lightDirection=gl.getUniformLocation(glProgram,"lightDirection");
+				glProgram.lightAngle=gl.getUniformLocation(glProgram,"lightAngle");
+				glProgram.viewDirection=gl.getUniformLocation(glProgram,"viewDirection");
+				glProgram.diffuseColor=gl.getUniformLocation(glProgram,"diffuseColor");
+				glProgram.specularColor=gl.getUniformLocation(glProgram,"specularColor");
+				glProgram.ambientColor=gl.getUniformLocation(glProgram,"ambientColor");
+				glProgram.shininess=gl.getUniformLocation(glProgram,"shininess");
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('atom-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var glMolecules=[];
+			function glCreateObjects()
+			{
+				var molecule=new Molecule(Molecule_H2O);
+				glMolecules.push(molecule);
+			}
+			var coordinatesBuffer=null,colorsBuffer=null,normalsBuffer=null,texCoordsBuffer=null;
+			var indicesBuffer=null;	
+			function glCreateGeometryInfo()
+			{
+				var coordinates=Teapot.coordinates;
+				var normals=Teapot.normals;
+				var texCoords=Teapot.texCoords;
+				var indices=Teapot.indices;
+				coordinatesBuffer=glCreateFloat32ArrayBuffer(coordinates,3);
+				glEnableAtomAttribute("coordinate",coordinatesBuffer);
+				normalsBuffer=glCreateFloat32ArrayBuffer(normals,3);
+				glEnableAtomAttribute("normal",normalsBuffer);
+				texCoordsBuffer=glCreateFloat32ArrayBuffer(texCoords,2);
+				glEnableAtomAttribute("texCoord",texCoordsBuffer);
+				indicesBuffer=glCreateUint16ArrayBuffer(indices);
+				indicesBuffer.numItems=indices.length;
+			}
+			var viewDistance=2.0;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var eyeX=0.0,eyeY=0.0,eyeZ=viewDistance,centerX=0.0,centerY=0.0,centerZ=0.0,upX=0,upY=1,upZ=0;
+			function glDisplayFunc()
+			{
+				glLight();
+				glMaterial();
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,1.0);
+				gl.viewport(0,0,canvas.width,canvas.height);
+				glAnimation();
+			}
+			function glAnimation()
+			{
+				requestAnimationFrame(glAnimation,canvas);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				gluPerspective(30,canvas.width/canvas.height,1,100);
+				glUpdateViewPoint();
+				gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				glDrawMolecules();
+			}
+			function glDrawMolecules()
+			{
+				for(var i=0;i<glMolecules.length;i++)
+				{
+					var molecule=glMolecules[i];
+					for(var j=0;j<molecule.length;j++)
+					{
+						var atom=molecule.atoms[j];
+						if(atom.R==0)continue;
+						glPushMatrix();
+						glTranslate(atom.x,atom.y,atom.z);
+						glScale(atom.R,atom.R,atom.R);
+						glUniformMatrix();
+						gl.uniform3fv(glProgram.diffuseColor,atom.C);
+						glDrawElements(molecule.object.atom);
+						glPopMatrix();
+					}
+					var edges=molecule.edgeList;
+					for(var j=0;j<edges.length;j+=2)
+					{
+						var atom0=molecule.atoms[edges[j+0]];
+						var atom1=molecule.atoms[edges[j+1]];
+						if(atom0.R==0||atom1.R==0)continue;
+						var x0=atom0.x,x1=atom1.x;
+						var y0=atom0.y,y1=atom1.y;
+						var z0=atom0.z,z1=atom1.z;
+						var dx=x1-x0,dy=y1-y0,dz=z1-z0;
+						var dr=Math.sqrt(dx*dx+dy*dy+dz*dz);
+						var e01=[dx,dy,dz];
+						var eUp=[0.0,1.0,0.0];
+						var v01=new Vector3(e01);
+						v01.normalize();
+						var vUp=new Vector3(eUp);
+						var vAx=new Vector3();
+						vAx.cross(vUp,v01);
+						var axis=vAx.elements;
+						var angle=Math.acos(v01.dot(v01,vUp));
+						glPushMatrix();
+						glTranslate(x0,y0,z0);
+						glRotate(angle*180/Math.PI,axis[0],axis[1],axis[2]);
+						glScale(1,dr,1);
+						glUniformMatrix();
+						gl.uniform3fv(glProgram.diffuseColor,[1,1,1]);
+						glDrawElements(molecule.object.edge);
+						glPopMatrix();
+					}
+					molecule.animate();
+				}
+			}
+			function glDrawElements(object)
+			{
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.coordinatesBuffer);
+				gl.vertexAttribPointer(glProgram.coordinate,object.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.normalsBuffer);
+				gl.vertexAttribPointer(glProgram.normal,object.normalsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.texCoordsBuffer);
+				gl.vertexAttribPointer(glProgram.texCoord,object.texCoordsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,object.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			var lightAngle=Math.PI/2;
+			var lightX=0.5,lightY=3.0,lightZ=4.0;
+			function glLight()
+			{
+				var lightPosition=new Vector3([lightX,lightY,lightZ]);
+				var lightDirection=new Vector3([-lightX,-lightY,-lightZ]);
+				var lightColor=new Vector3([1.0,1.0,1.0]);
+				lightDirection.normalize();
+				gl.uniform3fv(glProgram.lightColor,lightColor.elements);
+				gl.uniform3fv(glProgram.lightDirection,lightDirection.elements);
+				gl.uniform3fv(glProgram.lightPosition,lightPosition.elements);
+				gl.uniform1f(glProgram.lightAngle,lightAngle);
+			}
+			function glMaterial()
+			{
+				var ambientColor=new Vector3([0,0,0.05]);
+				var diffuseColor=new Vector3([0,1,0.05]);
+				var specularColor=new Vector3([0.5,0.5,0.5]);
+				var shininess=20.0;
+				gl.uniform3fv(glProgram.ambientColor,ambientColor.elements);
+				gl.uniform3fv(glProgram.diffuseColor,diffuseColor.elements);
+				gl.uniform3fv(glProgram.specularColor,specularColor.elements);
+				gl.uniform1f(glProgram.shininess,shininess);
+			}
+			function glCreateTexture2D(imageName)
+			{
+				glTexture=gl.createTexture();
+				glTexture.image=new Image();
+				glTexture.image.onload=function(){glLoadTexture(glTexture);}
+				glTexture.image.src=imageName;
+			}
+			function glLoadTexture(texture)
+			{
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+			}
+			var glLookAtMatrix=null;
+			var glTransformMatrix=null;
+			var glTransformMatrixStack=[];
+			var glNormalMatrix=null;
+			var glNormalMatrixStack=[];
+			var glProjectionMatrix=null;
+			function glLoadIdentity()
+			{
+				glLookAtMatrix=new Matrix4();
+				glTransformMatrix=new Matrix4();
+				glNormalMatrix=new Matrix4();
+				glProjectionMatrix=new Matrix4();
+			}
+			function gluPerspective(fieldOfView,widthHeightRatio,near,far)
+			{
+				glProjectionMatrix.setPerspective(fieldOfView,widthHeightRatio,near,far);
+			}
+			function gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				glLookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+			}
+			function glTranslate(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setTranslate(x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+			}
+			function glRotate(angle,x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setRotate(angle,x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+				glNormalMatrix.multiply(transformMatrix);
+			}
+			function glScale(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setScale(x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+			}
+			function glPushMatrix()
+			{
+				var transformMatrix=new Matrix4(glTransformMatrix);
+				glTransformMatrixStack.push(transformMatrix);
+				var normalMatrix=new Matrix4(glNormalMatrix);
+				glNormalMatrixStack.push(normalMatrix);
+			}
+			function glPopMatrix()
+			{
+				glTransformMatrix=glTransformMatrixStack.pop();
+				glNormalMatrix=glNormalMatrixStack.pop();
+			}
+			function glUniformMatrix()
+			{
+				var glCoordinateMatrix=new Matrix4(glProjectionMatrix);
+				glCoordinateMatrix.multiply(glLookAtMatrix);
+				glCoordinateMatrix.multiply(glTransformMatrix);
+				gl.uniformMatrix4fv(glProgram.coordinateMatrix,false,glCoordinateMatrix.elements);
+				gl.uniformMatrix4fv(glProgram.normalMatrix,false,glNormalMatrix.elements);
+			}
+			var currentMouseX=0,currentMouseY=0,currentMouseZ=0,mouseIsDown=false;
+			var translateMouseX=0,translateMouseY=0,translateMouseZ=0;
+			function glTransformViewPoint()
+			{
+				var k=-0.01;
+				eyeX+=viewDirection.x()*k*translateMouseZ;
+				eyeY+=viewDirection.y()*k*translateMouseZ;
+				eyeZ+=viewDirection.z()*k*translateMouseZ;
+				centerX=eyeX+viewDirection.x()*viewDistance;
+				centerY=eyeY+viewDirection.y()*viewDistance;
+				centerZ=eyeZ+viewDirection.z()*viewDistance;
+			}
+			function glUpdateViewPoint()
+			{
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+				gl.uniform3fv(glProgram.viewDirection,viewDirection.elements);
+			}
+			function glRotateViewDirection()
+			{
+				var k=0.8;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				upX=viewUpDirection.x();
+				upY=viewUpDirection.y();
+				upZ=viewUpDirection.z();
+			}
+			function glAddEventListener()
+			{
+				canvas.onmousemove=mouseDragged;
+				canvas.onmousedown=mouseDown;
+				canvas.onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				glRotateViewDirection();
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)
+				{
+					var a=Math.PI/50;
+					var sina=Math.sin(a),cosa=Math.cos(a);
+					var x=lightX*cosa-lightZ*sina;
+					var z=lightX*sina+lightZ*cosa;
+					lightX=x;lightZ=z;
+					var lightPosition=new Vector3([lightX,lightY,lightZ]);
+					var lightDirection=new Vector3([-lightX,-lightY,-lightZ]);
+					lightDirection.normalize();
+					gl.uniform3fv(glProgram.lightDirection,lightDirection.elements);
+					gl.uniform3fv(glProgram.lightPosition,lightPosition.elements);
+				}
+				else if(e.keyCode==KEY_RIGHT)
+				{
+					var a=-Math.PI/50;
+					var sina=Math.sin(a),cosa=Math.cos(a);
+					var x=lightX*cosa-lightZ*sina;
+					var z=lightX*sina+lightZ*cosa;
+					lightX=x;lightZ=z;
+					var lightPosition=new Vector3([lightX,lightY,lightZ]);
+					var lightDirection=new Vector3([-lightX,-lightY,-lightZ]);
+					lightDirection.normalize();
+					gl.uniform3fv(glProgram.lightDirection,lightDirection.elements);
+					gl.uniform3fv(glProgram.lightPosition,lightPosition.elements);
+				}
+				else if(e.keyCode==KEY_UP)
+				{
+					if(lightAngle>=Math.PI/2)return;
+					lightAngle+=0.01*Math.PI;
+					gl.uniform1f(glProgram.lightAngle,lightAngle);
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					if(lightAngle<=0)return;
+					lightAngle-=0.01*Math.PI;
+					gl.uniform1f(glProgram.lightAngle,lightAngle);
+				}
+			}
+			function onChanged_select1()
+			{
+				var selectedValue=selects["select1"].value;
+				var molecule=null;
+				switch(selectedValue)
+				{
+					case "H2O":molecule=new Molecule(Molecule_H2O);break;
+					case "NH3":molecule=new Molecule(Molecule_NH3);break;
+					case "CH4":molecule=new Molecule(Molecule_CH4);break;
+					case "C2H4":molecule=new Molecule(Molecule_C2H4);break;
+					case "C6H6":molecule=new Molecule(Molecule_C6H6);break;
+				}
+				glMolecules[0]=molecule;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+	<center>
+		<h1>Sample Rendering</h1>
+		<div><Canvas Id="canvas1" Width=550 Height=400>
+			Your browser does not support the HTML5 canvas element.
+		</canvas></div>
+		<div>
+			Molecule Name:
+			<select id="select1">
+				<option value="H2O">H2O</option>
+				<option value="NH3">NH3</option>  
+				<option value="CH4">CH4</option>
+				<option value="C2H4">C2H4</option>
+				<option value="C6H6">C6H6</option>
+			</select>
+		</div>
+		------------------------------------------------------------------------------------------------------------------------
+		<div>if( you want to rotate the camera )please drag this bull with your mouse.leftButton;</div>
+		<div>if( you want to rotate the spotlight)please press right or left key;</div>
+		<div>if( you want to change the angle of spotlight)please press up or down key;</div>
+		------------------------------------------------------------------------------------------------------------------------
+	</center>
+	</body>
+</html>

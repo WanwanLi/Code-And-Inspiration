@@ -1,0 +1,101 @@
+11
+func
+16
+0
+1
+16
+1
+3
+16
+Test8
+5
+26
+0
+0
+24
+12
+6
+p=
+ s=
+k=
+a
+s
+f
+13
+5
+1.35
+1.1
+2.2
+3.3
+4.4
+0
+26
+68
+INT &1
+DEQ &1
+DOU &2
+MOV &2,#5
+DEQ &2
+INT &3
+DEQ &3
+STR &4
+MOV &4,$6
+DEQ &4
+DOU &5
+MOV &5,#6
+DEQ &5
+STR &14
+MOV &14,$7
+ADD $7,$0,+&3,+$1,+&4
+PRINT &14
+STR &15
+MOV &15,$8
+ADD $8,$2,+&5
+PRINT &15
+DOU &16
+MOV &16,#7
+ADD #7,&1,+&2
+ENQ &16
+RET
+INT &8
+MOV &8, 10
+DOU &9
+MOV &9,#0
+ARY &10
+MOV &10, 17
+LEN 1,&10, 3
+MOV &17, 2
+MOV &18, 4
+MOV &19, 6
+ARY &11
+MOV &11, 9
+LEN 3,&11, 3
+MOV $9,$3
+MOV $10,$4
+MOV $11,$5
+ARY &12
+MOV &12, 8
+LEN 16,&12, 4
+MOV #8,#1
+MOV #9,#2
+MOV #10,#3
+MOV #11,#4
+DOU &13
+ENQ &8
+ENQ &9
+INT &21
+ADD &21, 1,+ 17
+ENQ @21
+INT &22
+ADD &22, 2,+ 9
+ENQ ~22
+INT &23
+ADD &23, 3,+ 8
+ENQ ^23
+CALL 0
+DOU &20
+MOV &20,#12
+DEQ &20
+MOV &13,&20
+PRINT &13
+EXIT

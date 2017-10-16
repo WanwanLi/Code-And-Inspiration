@@ -1,0 +1,476 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And RayTracing</title>
+		<style>
+			body{ background-color:black;}
+		</style>
+		<script src="webcl-matrix.js"></script>
+		<script id="webcl-kernel" type="x-kernel">
+			__constant float MaxError=0.001,MaxDistance=10000.0;
+			__constant float3 directionalLightColor=(float3)(1.0,1.0,1.0);
+			__constant float sphereRadius1=3.0;
+			__constant float sphereRadius2=3.0;
+			__constant float sphereRadius3=3.0;
+			__constant float3 sphereCenter1=(float3)(-6.0,0.0,0.0);
+			__constant float3 sphereCenter2=(float3)(0.0,0.0,0.0);
+			__constant float3 sphereCenter3=(float3)(6.0,0.0,0.0);
+			__constant float3 sphereColor1=(float3)(1.0,0.0,0.0);
+			__constant float3 sphereColor2=(float3)(0.0,1.0,0.0);
+			__constant float3 sphereColor3=(float3)(0.0,0.0,1.0);
+			__constant float8 plane1=(float8)(0.0,1.0,-0.0, 0.0,-3.0,0.0, 0,0);
+			__constant float3 planeColor1=(float3)(1.0,1.0,1.0);
+			inline float intersectSphere(float3 center,float radius,float3 origin,float3 direction)
+			{
+				float3 connection=center-origin;
+				float b=dot(connection,direction);
+				float c=dot(connection,connection);
+				float delta=b*b-c+radius*radius;
+				if(delta<0.0)return MaxDistance;
+				float distance=b-sqrt(delta);
+				if(distance<=MaxError)return MaxDistance;
+				return distance;
+			}
+			inline float3 reflect(float3 L,float3 N)
+			{
+				return L-2.0*dot(L,N)*N;
+			}
+			inline float intersectPlane(float8 plane,float3 origin,float3 direction)
+			{
+				float3 normal=normalize(plane.s012),center=plane.s345,connection=center-origin;
+				float delta=sign(dot(normal,connection))*0.000001;
+				float distance=(dot(normal,connection)+delta)/(dot(normal,direction)+delta);
+				if(distance<=MaxError)distance=MaxDistance;
+				return distance;
+			}
+			inline float viewCoord(uint coord,uint size,float scale)
+			{
+				return ((coord+0.0)/(size-1.0)-0.5)*2.0*scale;
+			}
+			inline float8 getViewPoint(float16 viewInfo,float2 lensInfo,uint row,uint col,uint2 imageSize)
+			{
+				float3 eyePosition=viewInfo.s012;
+				float3 viewDirection=viewInfo.s345;
+				float3 upDirection=viewInfo.s678;
+				float3 rightDirection=viewInfo.s9ab;
+				float viewHeight=viewInfo.sc,viewWidth=viewInfo.sd;
+				float viewDistance=viewInfo.se,viewFocus=viewInfo.sf;
+				uint imageHeight=imageSize.s0,imageWidth=imageSize.s1;
+				float upDistance=viewCoord(row,imageHeight,viewHeight);
+				float rightDistance=viewCoord(col,imageWidth,viewWidth);
+				float3 direction=viewDirection;
+				direction+=upDistance*upDirection;
+				direction+=rightDistance*rightDirection;
+				float u=lensInfo.s0,v=lensInfo.s1;
+				float3 focalCenter=eyePosition+viewDirection*viewFocus;
+				float8 focalPlane=(float8)(focalCenter,viewDirection,0,0);
+				float3 focalPoint=eyePosition+direction*viewFocus;
+				float3 lensPoint=eyePosition+direction+u*upDirection+v*rightDirection;
+				return (float8)(lensPoint,normalize(focalPoint-lensPoint),0,0);
+			}
+			inline float3 lightColor(float3 lightDirection,float3 normalDirection,float3 viewDirection,float3 color)
+			{
+				float shininess=20.0;
+				float3 L=lightDirection,N=normalDirection;
+				float3 R=reflect(-L,N),V=viewDirection;
+				float L_N=dot(L,N),R_V=max(dot(R,-V),0.0);
+				float reflectance=0.8*pow(R_V,shininess);
+				return clamp(L_N*color+reflectance*directionalLightColor,0.0,1.0);
+			}
+			inline float16 intersectScene(float3 origin,float3 direction)
+			{
+				float3 position,normal,color=(float3)(0);float intersection=0.0;
+				float d1=intersectSphere(sphereCenter1,sphereRadius1,origin,direction);
+				float d2=intersectSphere(sphereCenter2,sphereRadius2,origin,direction);
+				float d3=intersectSphere(sphereCenter3,sphereRadius3,origin,direction);
+				float d4=intersectPlane(plane1,origin,direction);
+				if(d1<MaxDistance&&d1<d2&&d1<d3&&d1<d4)
+				{
+					intersection=1.0;
+					position=origin+d1*direction;
+					normal=normalize(position-sphereCenter1);
+					color=sphereColor1;
+				}
+				else if(d2<MaxDistance&&d2<d3&&d2<d4)
+				{
+					intersection=1.0;
+					position=origin+d2*direction;
+					normal=normalize(position-sphereCenter2);
+					color=sphereColor2;
+				}
+				else if(d3<MaxDistance&&d3<d4)
+				{
+					intersection=1.0;
+					position=origin+d3*direction;
+					normal=normalize(position-sphereCenter3);
+					color=sphereColor3;
+				}
+				else if(d4<MaxDistance)
+				{
+					intersection=1.0;
+					position=origin+d4*direction;
+					normal=plane1.s012;
+					color=planeColor1;
+				}
+				return (float16)(intersection,position,normal,color,0,0,0,0,0,0);
+			}
+			inline float isOnShadow(float3 position,float3 lightDirection)
+			{
+				float16 intersection=intersectScene(position,lightDirection);
+				return intersection.s0;
+			}
+			inline uchar4 pixelColor(float3 color)
+			{
+				uint r=(uint)(255.0*color.s0);
+				uint g=(uint)(color.s1*255);
+				uint b=(uint)(color.s2*255);
+				return (uchar4)(r,g,b,255);
+			}
+			__kernel void main(float3 renderInfo,__global uchar4* pixels,__global float* reds, __global float* greens, __global float* blues, float16 viewInfo,float8 lightInfo,uint2 imageSize)
+			{
+				uint height=imageSize.s0,width=imageSize.s1;
+				uint row=get_global_id(0),col=get_global_id(1);
+				uint pixelIndex=(height-1-row)*width+col;
+				if(row>=height||col>=width)return;
+				float time=renderInfo.s0;
+				if(time==0.0)
+				{
+					pixels[pixelIndex]=(uchar4)(0,0,0,255);
+					reds[pixelIndex]=0.0;
+					greens[pixelIndex]=0.0;
+					blues[pixelIndex]=0.0;
+				}
+				float2 lensInfo=renderInfo.s12;float shadowDecay=1.0;
+				float8 viewPoint=getViewPoint(viewInfo,lensInfo,row,col,imageSize);
+				float3 eyePosition=viewPoint.s012,viewDirection=viewPoint.s345;
+				float3 lightDirection=lightInfo.s012,position,normal,color,viewColor=(float3)(0);
+				float16 intersection=intersectScene(eyePosition,viewDirection);
+				if(intersection.s0)
+				{
+					position=intersection.s123;
+					normal=intersection.s456;
+					color=intersection.s789;
+					if(isOnShadow(position,lightDirection))shadowDecay=0.5;
+					viewColor=lightColor(lightDirection,normal,viewDirection,color);
+				}
+				float3 viewPixelColor=viewColor*shadowDecay;
+				reds[pixelIndex]+=viewPixelColor.s0;
+				greens[pixelIndex]+=viewPixelColor.s1;
+				blues[pixelIndex]+=viewPixelColor.s2;
+				viewPixelColor.s0=reds[pixelIndex];
+				viewPixelColor.s1=greens[pixelIndex];
+				viewPixelColor.s2=blues[pixelIndex];
+				pixels[pixelIndex]=pixelColor(viewPixelColor/(time+1.0));
+			}
+		</script>
+		<script>
+			var cl=null,g=null;
+			var kernel_id="webcl-kernel";
+			var canvas_id="webcl-canvas";
+			function main()
+			{
+				clInitDevices(true);
+				clCreateKernels([kernel_id]);
+				clCreateCanvas(canvas_id,1150,600);
+				clAddEventListener();
+				clUpdateViewDirection();
+				clUpdateViewInfo();
+				clDisplayFunc();
+			}
+			function clInitDevices(useGPU)
+			{
+				if(typeof(webcl)=="undefined")alert("Webcl is undefined");
+				if(webcl===null){alert("No webcl object available");return;}
+				cl=webcl.createContext();cl.canvas=[];
+				cl.platforms=webcl.getPlatforms();
+				if(cl.platforms.length==0){alert("No platforms available");return;}
+				if(useGPU)cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_GPU);
+				else cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_CPU);
+			}
+			function clCreateKernels(ids)
+			{
+				if(cl.devices.length==0){alert("No devices available");return;}
+				var device=cl.devices[0];cl.kernels=[];
+				for(var i=0;i<ids.length;i++)
+				{
+					var id=ids[i],kernelSource=clGetKernelSource(id);
+					var program=cl.createProgram(kernelSource);
+					program.build([device]);
+					cl.kernels[id]=program.createKernel("main");
+					cl.kernels[id].commandQueue=cl.createCommandQueue(device,null);
+				}
+			}
+			function clCreateCanvas(id,width,height)
+			{
+				var canvas=document.getElementById(id);
+				canvas.width=width;canvas.height=height;
+				canvas.element=document.createElement('canvas');
+				canvas.element.setAttribute("id",id);
+				canvas.element.setAttribute("width",width);
+				canvas.element.setAttribute("height",height);
+				canvas.appendChild(canvas.element);
+				canvas.context=canvas.element.getContext("2d");
+				canvas.image=canvas.context.createImageData(width,height);
+				canvas.pixelBuffer=cl.createBuffer(webcl.MEM_WRITE_ONLY,height*width*4);
+				canvas.redBuffer=cl.createBuffer(webcl.MEM_READ_WRITE,height*width*Float32Array.BYTES_PER_ELEMENT);
+				canvas.greenBuffer=cl.createBuffer(webcl.MEM_READ_WRITE,height*width*Float32Array.BYTES_PER_ELEMENT);
+				canvas.blueBuffer=cl.createBuffer(webcl.MEM_READ_WRITE,height*width*Float32Array.BYTES_PER_ELEMENT);
+				canvas.redBuffer.length=height*width*Float32Array.BYTES_PER_ELEMENT;
+				canvas.greenBuffer.length=height*width*Float32Array.BYTES_PER_ELEMENT;
+				canvas.blueBuffer.length=height*width*Float32Array.BYTES_PER_ELEMENT;
+				canvas.sizeArray=new Uint32Array([height,width]);
+				canvas.pixelBuffer.length=height*width*4;
+				canvas.viewSize=[1,width/height];
+				cl.canvas[id]=canvas;
+			}
+			var viewDistance=12.0,viewFocus=12.0;
+			var viewDirection=new Vector3( [ 0.675,0.027,-0.737]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([ 0.737,0,0.675]);
+			var viewInfoArray=new Float32Array([0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0,0]);
+			var eyeX=0,eyeY=0,eyeZ=viewDistance,translateMouseX=0,translateMouseY=0;
+			var currentMouseX=0,currentMouseY=0,mouseIsDown=false;
+			function clUpdateViewDirection()
+			{
+				var k=0.5;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+			}
+			function clUpdateViewInfo()
+			{
+				var eyePositionInfo=[eyeX,eyeY,eyeZ];
+				var viewDirectionInfo=viewDirection.elements;
+				var viewUpDirectionInfo=viewUpDirection.elements;
+				var viewRightDirectionInfo=viewRightDirection.elements;
+				viewInfoArray[0]=eyePositionInfo[0];
+				viewInfoArray[1]=eyePositionInfo[1];
+				viewInfoArray[2]=eyePositionInfo[2];
+				viewInfoArray[3]=viewDirectionInfo[0];
+				viewInfoArray[4]=viewDirectionInfo[1];
+				viewInfoArray[5]=viewDirectionInfo[2];
+				viewInfoArray[6]=viewUpDirectionInfo[0];
+				viewInfoArray[7]=viewUpDirectionInfo[1];
+				viewInfoArray[8]=viewUpDirectionInfo[2];
+				viewInfoArray[9]=viewRightDirectionInfo[0];
+				viewInfoArray[10]=viewRightDirectionInfo[1];
+				viewInfoArray[11]=viewRightDirectionInfo[2];
+				viewInfoArray[12]=cl.canvas[canvas_id].viewSize[0];
+				viewInfoArray[13]=cl.canvas[canvas_id].viewSize[1];
+				viewInfoArray[14]=viewDistance;
+				viewInfoArray[15]=viewFocus;
+			}
+			var lightColor=new Vector3([1,1,1]);
+			var lightDirection=new Vector3([0.383,0.604,0.698]);
+			var lightUpDirection=new Vector3([0,1,0]);
+			var lightRightDirection=new Vector3([0.876,0,-0.481]);
+			var lightInfoArray=new Float32Array([0.383,0.604,0.698, 1,1,1, 20.0, 0.5]);
+			var translateUpDown=0,translateRightLeft=0,translateMouseZ=0;
+			function clUpdateLightDirection()
+			{
+				var k=1.2;
+				var rotUp=k*translateRightLeft;
+				var rotRight=-k*translateUpDown;
+				lightDirection.rotate(lightUpDirection,rotUp);
+				lightRightDirection.rotate(lightUpDirection,rotUp);
+				lightDirection.rotate(lightRightDirection,rotRight);
+			}
+			function clUpdateLightInfo()
+			{
+				var lightDirectionInfo=lightDirection.elements;
+				lightInfoArray[0]=lightDirectionInfo[0];
+				lightInfoArray[1]=lightDirectionInfo[1];
+				lightInfoArray[2]=lightDirectionInfo[2];
+			}
+			function clDisplayFunc()
+			{
+				var canvas=cl.canvas[canvas_id];
+				var sizeArray=canvas.sizeArray;
+				var pixelBuffer=canvas.pixelBuffer;
+				var redBuffer=canvas.redBuffer;
+				var greenBuffer=canvas.greenBuffer;
+				var blueBuffer=canvas.blueBuffer;
+				var renderInfo=new Float32Array([0,0,0]);
+				var args=[renderInfo,pixelBuffer,redBuffer,greenBuffer,blueBuffer,viewInfoArray,lightInfoArray,sizeArray];
+				var lensRadius=0.4,row=4,col=4,t=0;
+				var dx=2/(col-1),dy=2/(row-1);
+				for(var i=0;i<row;i++)
+				{
+					var y=-1+i*dy;
+					for(var j=0;j<col;j++)
+					{
+						var x=-1+j*dx;
+						renderInfo[0]=t++;
+						var xy=clConcentricMap(x,y);
+						renderInfo[1]=xy[0]*lensRadius;
+						renderInfo[2]=xy[1]*lensRadius;
+						clSetKernelArgs(kernel_id,args);
+						clExecuteKernelProgram(kernel_id);
+					}
+				}
+				clReadKernelBuffer(kernel_id,canvas.image.data,pixelBuffer,pixelBuffer.length);
+				canvas.context.putImageData(canvas.image,0,0);
+			}
+			function clConcentricMap(x,y)
+			{
+				if(x==0&&y==0)return [0,0];
+				var r=0,p=0,PI=3.1415926;
+				if(x*x>y*y){r=x;p=y/x*PI/4;}
+				else{r=y;p=PI/2-x/y*PI/4;}
+				return [r*Math.cos(p),r*Math.sin(p)];
+			}
+			function clGetKernelSource(id)
+			{
+				var kernelSource=document.getElementById(id);
+				if(kernelSource===null)return null;
+				if(kernelSource.type!="x-kernel")return null;
+				return kernelSource.firstChild.textContent;
+			}
+			function clWriteKernelBuffer(id,inputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueWriteBuffer(kernelBuffer,true,0,length,inputData);
+			}
+			function clSetKernelArgs(id,args)
+			{
+				var kernel=cl.kernels[id];
+				kernel.args=args;
+				for(var i=0;i<args.length;i++)
+				{
+					kernel.setArg(i,args[i]);
+				}
+				kernel.workDim=args[args.length-1].length;
+				kernel.localWorkSize=clGetLocalWorkSize(id,kernel.workDim);
+				kernel.globalWorkSize=clGetGlobalWorkSize(id,kernel.localWorkSize);
+			}
+			function clExecuteKernelProgram(id)
+			{
+				var kernel=cl.kernels[id];
+				var queue=kernel.commandQueue;
+				var workDim=kernel.workDim,globalWorkOffset=kernel.globalWorkOffset;
+				var globalWorkSize=kernel.globalWorkSize,localWorkSize=kernel.localWorkSize;
+				queue.enqueueNDRangeKernel(kernel,workDim,globalWorkOffset,globalWorkSize,localWorkSize);
+			}
+			function clReadKernelBuffer(id,outputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueReadBuffer(kernelBuffer,true,0,length,outputData);
+			}
+			function clGetLocalWorkSize(id,workDim)
+			{	
+				var GROUP_SIZE=webcl.KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE;
+				var groupSize=cl.kernels[id].getWorkGroupInfo(cl.devices[0],GROUP_SIZE);
+				switch(workDim)
+				{
+					case 1: return [groupSize];
+					case 2: return dim2(groupSize);
+					case 3: return dim3(groupSize);
+				}
+			}
+			function clGetGlobalWorkSize(id,localWorkSize)
+			{
+				var globalWorkSize=[];
+				var args=cl.kernels[id].args;
+				var workSize=args[args.length-1];
+				for(var i=0;i<localWorkSize.length;i++)
+				{
+					var k=Math.ceil(workSize[i]/localWorkSize[i]);
+					globalWorkSize[i]=k*localWorkSize[i];
+				}
+				return globalWorkSize;
+			}
+			function dim2(size)
+			{
+				var xSize=pow2(Math.floor(Math.sqrt(size)));
+				return [xSize, Math.floor(size/xSize)];
+			}
+			function dim3(size)
+			{
+				var xSize=pow2(Math.floor(Math.pow(size,1/3)));
+				var ySize=pow2(Math.floor(Math.sqrt(size/xSize)));
+				return [xSize, ySize, Math.floor(size/(xSize*ySize))];
+			}
+			function pow2(x){return isPowerOfTwo(x)?x:nextHighestPowerOfTwo(x);}
+			function isPowerOfTwo(x){return (x&(x-1))==0;}
+			function nextHighestPowerOfTwo(x)
+			{
+				--x;
+				for(var i=1;i<32;i<<= 1)x=x|x>>i;
+				return x+1;
+			}
+			function clAddEventListener()
+			{
+				cl.canvas[canvas_id].onmousemove=mouseDragged;
+				cl.canvas[canvas_id].onmousedown=mouseDown;
+				cl.canvas[canvas_id].onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				clUpdateViewDirection();
+				clUpdateViewInfo();
+				clDisplayFunc();
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)
+				{
+					translateRightLeft=-1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_RIGHT)
+				{
+					translateRightLeft=1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_UP)
+				{
+					translateUpDown=1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					translateUpDown=-1;
+					clUpdateLightDirection();
+					clUpdateLightInfo();
+					clDisplayFunc();
+				}
+				translateRightLeft=0;
+				translateUpDown=0;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<center><div id="webcl-canvas"></div></center>
+	</body>
+</html>

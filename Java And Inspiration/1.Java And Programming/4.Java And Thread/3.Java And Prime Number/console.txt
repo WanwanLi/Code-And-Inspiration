@@ -1,0 +1,39 @@
+C:\Java And Inspiration\1.Java And Programming\4.Java And Thread\3.Java And Prime Number>javac JavaAndPrimeNumber.java
+
+C:\Java And Inspiration\1.Java And Programming\4.Java And Thread\3.Java And Prime Number>java JavaAndPrimeNumber
+0 : 4,10000003
+1 : 10000003,20000002
+2 : 20000002,30000001
+3 : 30000001,40000000
+4 : 40000000,49999999
+5 : 49999999,59999998
+6 : 59999998,69999997
+7 : 69999997,79999996
+8 : 79999996,89999995
+9 : 89999995,100000000
+Total Count is: 5761455
+Total Sum is: 279209790387276
+Prime Number[5761455] is: 99999989
+Prime Number[5761454] is: 99999971
+Prime Number[5761453] is: 99999959
+Prime Number[5761452] is: 99999941
+Prime Number[5761451] is: 99999931
+Prime Number[5761450] is: 99999847
+Prime Number[5761449] is: 99999839
+Prime Number[5761448] is: 99999827
+Prime Number[5761447] is: 99999821
+Prime Number[5761446] is: 99999787
+It has taken : 281 sec...
+Run time[0] is 270 sec...
+Run time[1] is 258 sec...
+Run time[2] is 265 sec...
+Run time[3] is 269 sec...
+Run time[4] is 271 sec...
+Run time[5] is 269 sec...
+Run time[6] is 277 sec...
+Run time[7] is 278 sec...
+Run time[8] is 280 sec...
+Run time[9] is 281 sec...
+Output file : output.txt is created...
+
+C:\Java And Inspiration\1.Java And Programming\4.Java And Thread\3.Java And Prime Number>

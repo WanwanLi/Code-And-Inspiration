@@ -1,0 +1,17 @@
+For copy source code:
+cd d: 
+cd Code\ And\ Inspiration/C\ And\ Inspiration/20.C\ And\ OpenCL/1.C\ And\ Matrix/
+scp CAndMatrix.c wanwan@10.173.215.229:CAndOpenCL/1.CAndMatrix/CAndMatrix.c 
+wa448855
+scp matrix-kernel.cl wanwan@10.173.215.229:CAndOpenCL/1.CAndMatrix/matrix-kernel.cl
+wa448855
+
+
+ssh wanwan@10.173.215.229
+wa448855
+cd CAndOpenCL/1.CAndMatrix
+
+To Complie the code:
+gcc -I /home/wanwan/AMDAPPSDK-3.0-0-Beta/include -L/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64 -o CAndMatrix CAndMatrix.c -Wl,-rpath,/home/wanwan/AMDAPPSDK-3.0-0-Beta/lib/x86_64 -lOpenCL
+
+

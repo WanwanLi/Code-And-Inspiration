@@ -1,0 +1,75 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=13
+integerNumber=15
+integerTableLength=14
+integerTable[0]=2
+integerTable[1]=0
+integerTable[2]=0
+integerTable[3]=1
+integerTable[4]=2
+integerTable[5]=0
+integerTable[6]=0
+integerTable[7]=0
+integerTable[8]=237
+integerTable[9]=291
+integerTable[10]=0
+integerTable[11]=2
+integerTable[12]=0
+integerTable[13]=2
+doubleNumber=28
+doubleTableLength=6
+doubleTable[0]=0.500000
+doubleTable[1]=0.500000
+doubleTable[2]=0.400000
+doubleTable[3]=0.400000
+doubleTable[4]=0.400000
+doubleTable[5]=0.400000
+stringNumber=1
+stringTableLength=1
+stringTable[0]=JavaAndOpenGL
+vectorNumber=3
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=37
+0: MOV #6,@1
+1: MOV #7,@2
+2: NEG @14,@3
+3: MOV #8,@14
+4: LIGHT @0,~6
+5: MOV %2, 9
+6: MOV %3, 10
+7: MOV #11,^2
+8: MUL #14,^2,*^3
+9: MOV #12,#14
+10: MOV #13,^3
+11: MOV \0,~11
+12: MOV %6, 15
+13: MOV #15,@4
+14: MUL #19,^6,*^2
+15: MOV #16,#19
+16: ADD #20,^2,+^3
+17: MOV #17,#20
+18: MUL #21,^6,*^3
+19: MOV #18,#21
+20: MOV \1,~16
+21: ADD #22,^2,-^3
+22: MOV #23,^2
+23: MOV #24,^3
+24: MOV #25,@5
+25: MOV \2,~23
+26: COLORS \1,9,10,@6,#0,@7,#1,12,21
+27: TEXTURE $0,@8,@9
+28: TEXCOORDS \2,9,10,@10,@11,@12,@13,22,26
+29: TEXCOORD
+30: TEXTURE0
+31: TEXCOORD0
+32: COLORS0
+33: NEG #26,#2
+34: NEG #27,#4
+35: SURF \0,9,10,#26,#3,#27,#5,7,12
+36: EXIT

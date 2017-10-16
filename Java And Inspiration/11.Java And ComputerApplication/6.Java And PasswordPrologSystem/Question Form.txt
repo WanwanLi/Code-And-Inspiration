@@ -1,0 +1,42 @@
+Personal Info	15
+First name	Wei	1
+Last name	Lingzhi	1
+Sex	male	2
+Mother name	Rubby	1
+First pet name	Candy	2
+High School name	ShiYan	3
+No. of siblings	3	3
+Father name	Piggy	1
+First dog name	Bubble	2
+First Colledge name	HIT	3
+No. of sisters	3	3
+Favorite Food	Crab	3
+Favorite Book	Bible	2
+Favorite Sport	Ping-Pong	2
+Favorite Game	San-Guo-Sha	2
+Usage	12
+Job title	C++ Programmer	1
+Home directory	10110 Mason Rd.	1
+Last day to login	6-16-2017	2
+Boss name	Josha	1
+Security clearance	0	2
+Office number	4456	1
+Office directory	Hub	2
+Office Floor	4	2
+Office Hour	2pm-4pm	2
+Programming Language	C++	3
+Part-time job	Cello player	2
+Salary	1000$	2
+Presence	12
+Season	Summer	1
+Time of Day	2:02pm	1
+Yesterday weather	Sunny	2
+Month of last big storm	Mar	1
+Randomly generated riddle	0	2
+Captcha	Good	1
+Month of last big rain	Feb	1
+Month of last big snow	Jan	2
+Month of last big wind	Apr	1
+Today’s weather	Rainny	2
+Randomly generated number	3.1415	2
+Randomly generated string	abcdefg	1

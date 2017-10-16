@@ -1,0 +1,71 @@
+3
+Test9
+5
+0
+1
+1
+Test10
+14
+8
+5
+asdf
+asdf
+cde
+def
+Test10.func=
+13
+8
+3.14
+2.0
+3.14
+5.6
+1.2
+2.3
+1.2
+2.3
+0
+0
+43
+INT &2
+ENQ  2
+ENQ #0
+ENQ $0
+NEW 0
+MOV &2, 5
+INT &6
+ADD &6, 2,+ 10
+ENQ &6
+DOU &8
+MOV &8,#9
+ADD #9,#2,+#3
+DOU &7
+MOV &7,#8
+MUL #8,#1,*&8
+ENQ &7
+STR &10
+MOV &10,$6
+ADD $6,$2,+$3
+STR &9
+MOV &9,$5
+ADD $5,$1,+&10
+ENQ &9
+OBJECT 0,0
+MUL #10,#4,* -1
+ENQ #10
+MUL #11,#5,* -1
+ENQ #11
+METHOD 1,func
+DOU &11
+DEQ &11
+PRINT &11
+ENQ #6
+MUL #12,#7,* -1
+ENQ #12
+METHOD 0,func
+DOU &13
+DEQ &13
+STR &12
+MOV &12,$7
+ADD $7,$4,+&13
+PRINT &12
+EXIT

@@ -1,0 +1,9 @@
+﻿  glsw.c
+  bstrlib.c
+  glew.c
+  Generating Code...
+  Windows.c
+  Fluid.c
+c:\code and inspiration\c and inspiration\14.c and opengl\c and opengl\candfluid2d\fluid.c(482): warning C4305: 'argument': truncation from 'double' to 'float'
+  Fluid.vcxproj -> C:\Code And Inspiration\C And Inspiration\14.C And OpenGL\C And OpenGL\CAndFluid2D\vs2015\Debug\Fluid.exe
+  Fluid.vcxproj -> C:\Code And Inspiration\C And Inspiration\14.C And OpenGL\C And OpenGL\CAndFluid2D\vs2015\Debug\Fluid.pdb (Full PDB)

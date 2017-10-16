@@ -1,0 +1,19 @@
+﻿VS2010: 新建→Win32→下一步→DLL+空项目→完成  然后编译生成：DLL.cpp文件
+
+在VS项目的release文件夹下的DLL.dll文件拷贝到CAndDLL.cpp文件夹下：
+
+在控制台中运行：
+
+____________________________________________________________________________________________________________________________________________________
+
+D:\Code And Inspiration\C And Inspiration\3.C And DLL\VS2010,DLL>gcc CAndDLL.c -o CAndDLL
+
+D:\Code And Inspiration\C And Inspiration\3.C And DLL\VS2010,DLL>CAndDLL.exe
+DLL.Name=CAndDLL        DLL.ID=1
+C AND DLL!
+ADD:15
+SUB:5
+
+D:\Code And Inspiration\C And Inspiration\3.C And DLL\VS2010,DLL>
+
+____________________________________________________________________________________________________________________________________________________

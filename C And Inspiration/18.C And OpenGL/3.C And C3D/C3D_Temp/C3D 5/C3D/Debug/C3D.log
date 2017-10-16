@@ -1,0 +1,32 @@
+﻿生成启动时间为 2014/5/5 1:42:24。
+     1>项目“E:\C And OpenGL\CAndC3D\C3D\C3D\C3D.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在对“Debug\C3D.unsuccessfulbuild”执行 Touch 任务。
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D C3D_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt C3D.cpp
+         C3D.cpp
+     1>e:\c and opengl\candc3d\c3d\c3d\c3d.cpp(99): warning C4554: “&”: 检查运算符优先级可能存在的错误；使用圆括号阐明优先级
+     1>e:\c and opengl\candc3d\c3d\c3d\c3d.cpp(101): warning C4554: “&”: 检查运算符优先级可能存在的错误；使用圆括号阐明优先级
+     1>e:\c and opengl\candc3d\c3d\c3d\c3d.cpp(103): warning C4554: “&”: 检查运算符优先级可能存在的错误；使用圆括号阐明优先级
+       ManifestResourceCompile:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\C3D.dll.embed.manifest.res" Debug\C3D_manifest.rc 
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\C3D.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.lib" /MACHINE:X86 /DLL Debug\C3D.dll.embed.manifest.res
+         Debug\C3D.obj
+            正在创建库 E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.lib 和对象 E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.exp
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\C3D.dll.embed.manifest" /manifest Debug\C3D.dll.intermediate.manifest
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\C3D.dll.embed.manifest.res" Debug\C3D_manifest.rc 
+       LinkEmbedManifest:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\C3D.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.lib" /MACHINE:X86 /DLL Debug\C3D.dll.embed.manifest.res
+         Debug\C3D.obj
+            正在创建库 E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.lib 和对象 E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.exp
+         C3D.vcxproj -> E:\C And OpenGL\CAndC3D\C3D\Debug\C3D.dll
+       FinalizeBuildStatus:
+         正在删除文件“Debug\C3D.unsuccessfulbuild”。
+         正在对“Debug\C3D.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\C And OpenGL\CAndC3D\C3D\C3D\C3D.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.99

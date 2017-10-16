@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Mandelbrot</title>
+		<style>
+			body{ background-color:black;}
+		</style>
+		<script id="mandelbrot-kernel" type="x-kernel">
+			inline float mag2(float x,float y){return x*x+y*y;}
+			inline float dif2(float x,float y){return x*x-y*y;}
+			inline uchar4 mandelbrotColor(float x,float y)
+			{
+				int nIters=0,maxIters=40;
+				float newX=0.,newY=0.;
+				while(mag2(newX,newY)<=4.&&nIters<maxIters)
+				{
+					float sqx = dif2(newX,newY);
+					float sqy = 2.0*newX*newY;
+					newY = y+sqy;
+					newX = x+sqx;
+					nIters++;
+				}
+				uint val =(uint)(255.0*nIters/maxIters);
+				return (uchar4)(0,val,0,255);
+			}
+			__kernel void main(__global uchar4* pixels,float4 bounds,uint2 imageSize)
+			{
+				uint height=imageSize.s0,width=imageSize.s1;
+				uint row=get_global_id(0),col=get_global_id(1);
+				if(row>=height||col>=width)return;
+				float x = bounds.s0 + col*(bounds.s2-bounds.s0)/width;
+				float y = bounds.s1 + (height-1-row)*(bounds.s3-bounds.s1)/height;
+				pixels[row*width+col]=mandelbrotColor(x,y);
+			}
+		</script>
+		<script>
+			var cl=null,g=null;
+			var kernel_id="mandelbrot-kernel";
+			var canvas_id="mandelbrot-canvas";
+			function main()
+			{
+				clInitDevices(true);
+				clCreateKernels([kernel_id]);
+				clCreateCanvas(canvas_id,1150,600);
+				clComputeFunc();
+			}
+			function clInitDevices(useGPU)
+			{
+				if(typeof(webcl)=="undefined")alert("Webcl is undefined");
+				if(webcl===null){alert("No webcl object available");return;}
+				cl=webcl.createContext();cl.canvas=[];
+				cl.platforms=webcl.getPlatforms();
+				if(cl.platforms.length==0){alert("No platforms available");return;}
+				if(useGPU)cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_GPU);
+				else cl.devices=cl.platforms[0].getDevices(webcl.DEVICE_TYPE_CPU);
+			}
+			function clCreateKernels(ids)
+			{
+				if(cl.devices.length==0){alert("No devices available");return;}
+				var device=cl.devices[0];cl.kernels=[];
+				for(var i=0;i<ids.length;i++)
+				{
+					var id=ids[i],kernelSource=clGetKernelSource(id);
+					var program=cl.createProgram(kernelSource);
+					program.build([device]);
+					cl.kernels[id]=program.createKernel("main");
+					cl.kernels[id].commandQueue=cl.createCommandQueue(device,null);
+				}
+			}
+			function clCreateCanvas(id,width,height)
+			{
+				var canvas=document.getElementById(id);
+				canvas.width=width;canvas.height=height;
+				canvas.element=document.createElement('canvas');
+				canvas.element.setAttribute("id",id);
+				canvas.element.setAttribute("width",width);
+				canvas.element.setAttribute("height",height);
+				canvas.appendChild(canvas.element);
+				canvas.context=canvas.element.getContext("2d");
+				canvas.image=canvas.context.createImageData(width,height);
+				cl.canvas[id]=canvas;
+			}
+			function clComputeFunc()
+			{
+				var canvas=cl.canvas[canvas_id],row=canvas.height,col=canvas.width;
+				var pixelBuffer=cl.createBuffer(webcl.MEM_WRITE_ONLY,row*col*4);
+				var imageSize=[row,col],sizeArray=new Uint32Array(imageSize);
+				var boundsArray=new Float32Array([-2.0,-1.0,2.0,1.0]);
+				var args=[pixelBuffer,boundsArray,sizeArray];
+				clSetKernelArgs(kernel_id,args);
+				clExecuteKernelProgram(kernel_id);
+				clReadKernelBuffer(kernel_id,canvas.image.data,pixelBuffer,row*col*4);
+				canvas.context.putImageData(canvas.image,0,0);
+			}
+			function clGetKernelSource(id)
+			{
+				var kernelSource=document.getElementById(id);
+				if(kernelSource===null)return null;
+				if(kernelSource.type!="x-kernel")return null;
+				return kernelSource.firstChild.textContent;
+			}
+			function clWriteKernelBuffer(id,inputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueWriteBuffer(kernelBuffer,true,0,length,inputData);
+			}
+			function clSetKernelArgs(id,args)
+			{
+				var kernel=cl.kernels[id];
+				kernel.args=args;
+				for(var i=0;i<args.length;i++)
+				{
+					kernel.setArg(i,args[i]);
+				}
+				kernel.workDim=args[args.length-1].length;
+				kernel.localWorkSize=clGetLocalWorkSize(id,kernel.workDim);
+				kernel.globalWorkSize=clGetGlobalWorkSize(id,kernel.localWorkSize);
+			}
+			function clExecuteKernelProgram(id)
+			{
+				var kernel=cl.kernels[id];
+				var queue=kernel.commandQueue;
+				var workDim=kernel.workDim,globalWorkOffset=kernel.globalWorkOffset;
+				var globalWorkSize=kernel.globalWorkSize,localWorkSize=kernel.localWorkSize;
+				queue.enqueueNDRangeKernel(kernel,workDim,globalWorkOffset,globalWorkSize,localWorkSize);
+			}
+			function clReadKernelBuffer(id,outputData,kernelBuffer,length)
+			{
+				var queue=cl.kernels[id].commandQueue;
+				queue.enqueueReadBuffer(kernelBuffer,true,0,length,outputData);
+			}
+			function clGetLocalWorkSize(id,workDim)
+			{	
+				var GROUP_SIZE=webcl.KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE;
+				var groupSize=cl.kernels[id].getWorkGroupInfo(cl.devices[0],GROUP_SIZE);
+				switch(workDim)
+				{
+					case 1: return [groupSize];
+					case 2: return dim2(groupSize);
+					case 3: return dim3(groupSize);
+				}
+			}
+			function clGetGlobalWorkSize(id,localWorkSize)
+			{
+				var globalWorkSize=[];
+				var args=cl.kernels[id].args;
+				var workSize=args[args.length-1];
+				for(var i=0;i<localWorkSize.length;i++)
+				{
+					var k=Math.ceil(workSize[i]/localWorkSize[i]);
+					globalWorkSize[i]=k*localWorkSize[i];
+				}
+				return globalWorkSize;
+			}
+			function dim2(size)
+			{
+				var xSize=pow2(Math.floor(Math.sqrt(size)));
+				return [xSize, Math.floor(size/xSize)];
+			}
+			function dim3(size)
+			{
+				var xSize=pow2(Math.floor(Math.pow(size,1/3)));
+				var ySize=pow2(Math.floor(Math.sqrt(size/xSize)));
+				return [xSize, ySize, Math.floor(size/(xSize*ySize))];
+			}
+			function pow2(x){return isPowerOfTwo(x)?x:nextHighestPowerOfTwo(x);}
+			function isPowerOfTwo(x){return (x&(x-1))==0;}
+			function nextHighestPowerOfTwo(x)
+			{
+				--x;
+				for(var i=1;i<32;i<<= 1)x=x|x>>i;
+				return x+1;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<center><div id="mandelbrot-canvas"></div></center>
+	</body>
+</html>

@@ -1,0 +1,41 @@
+For copy source code:
+cd c:
+cd Java\ And\ Inspiration/8.Java\ And\ ComputerGraphics/1.Java\ And\ Java2D/8.Java\ And\ Hadoop/4.Java\ And\ MandelbrotSet/
+scp JavaAndMandelbrotSet.java wa448855@maverick.tacc.xsede.org:hadoop/JavaAndMandelbrotSet.java
+RhinoEiton@126.com
+
+scp JavaAndImageTextFile.java wa448855@maverick.tacc.xsede.org:hadoop/JavaAndImageTextFile.java
+RhinoEiton@126.com
+
+To log on to the maverick server:
+ssh wa448855@maverick.tacc.xsede.org
+RhinoEiton@126.com
+cd hadoop
+chmod u+rwx input/*
+
+Change in conf/hadoop-env.sh is:
+export JAVA_HOME=/usr/java/jdk1.8.0_51
+
+mkdir JavaAndMandelbrotSet
+chmod u+rwx JavaAndMandelbrotSet.java
+
+To complie the code :
+javac -classpath hadoop-0.20.0/hadoop-0.20.0-core.jar  -d JavaAndMandelbrotSet JavaAndMandelbrotSet.java
+
+To create a jar :
+jar -cvf JavaAndMandelbrotSet.jar -C JavaAndMandelbrotSet/ .
+
+To run the job:
+rm -r output/ && ./hadoop-0.20.0/bin/hadoop jar JavaAndMandelbrotSet.jar JavaAndMandelbrotSet input output
+
+Create the input text file:
+javac JavaAndImageTextFile.java
+java JavaAndImageTextFile -txt input file 1250 750
+
+javac -classpath hadoop-0.20.0/hadoop-0.20.0-core.jar  -d JavaAndMandelbrotSet JavaAndMandelbrotSet.java
+jar -cvf JavaAndMandelbrotSet.jar -C JavaAndMandelbrotSet/ .
+rm -r output/ && ./hadoop-0.20.0/bin/hadoop jar JavaAndMandelbrotSet.jar JavaAndMandelbrotSet input output
+java JavaAndImageTextFile -img output part-r-00000 1250 750
+
+scp wa448855@maverick.tacc.xsede.org:hadoop/output/part-r-00000.jpg  result.jpg
+RhinoEiton@126.com

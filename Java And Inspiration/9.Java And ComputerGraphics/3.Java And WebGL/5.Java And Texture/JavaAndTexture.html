@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Texture</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 coordinate;
+			attribute vec4 color;
+			attribute vec4 normal;
+			attribute vec2 texCoord;
+			varying vec4 fragColor;
+			varying vec2 fragTexCoord;
+			uniform mat4 modelViewMatrix;
+			uniform vec3 lightColor;
+			uniform vec3 lightDirection;
+			void main(void)
+			{
+				gl_Position=modelViewMatrix*coordinate;
+				vec3 normalDirection=normalize(normal.xyz);
+				float nDotL=max(dot(lightDirection,normalDirection),0.0);
+				vec3 diffuseColor=lightColor*color.rgb*nDotL;
+				fragColor=vec4(lightColor*nDotL,color.a);
+				fragTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			varying highp vec4 fragColor;
+			varying highp vec2 fragTexCoord;
+			uniform sampler2D fragSampler2D;
+			void main(void)
+			{
+				highp vec4 texColor=texture2D(fragSampler2D,fragTexCoord);
+				highp vec3 newTexColor=fragColor.rgb*texColor.rgb;
+				gl_FragColor=vec4(newTexColor,texColor.a);
+			}
+		</script>
+		<script>
+			var canvas=null;
+			var gl=null;
+			var glTexture=null;
+			var glProgram=null;
+			var glVertexShader=null;
+			var glFragmentShader=null;
+			function main()
+			{
+				canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					glInitShaders();
+					glCreateGeometryInfo();
+					glCreateTexture2D("texture.gif");
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				glVertexShader=glCreateShader(gl.VERTEX_SHADER);
+				glFragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				glProgram=gl.createProgram();
+				gl.attachShader(glProgram,glVertexShader);
+				gl.attachShader(glProgram,glFragmentShader);
+				gl.linkProgram(glProgram);
+				if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(glProgram);
+				glProgram.samplerUniform=gl.getUniformLocation(glProgram,"fragSampler2D");
+				gl.uniform1i(glProgram.samplerUniform,0);
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var coordinatesBuffer=null,colorsBuffer=null,normalsBuffer=null,texCoordsBuffer=null;
+			var indicesBuffer=null;	
+			function glCreateGeometryInfo()
+			{
+				var coordinates=
+				[
+					-1.0, -1.0,1.0,	1.0, -1.0,1.0,	1.0,1.0,1.0,	-1.0,1.0,1.0,
+					-1.0, -1.0, -1.0,	-1.0,1.0,-1.0,	1.0,1.0,-1.0,	1.0, -1.0,-1.0,
+					-1.0,1.0, -1.0,	-1.0,1.0,1.0,	1.0,1.0,1.0,	1.0,1.0, -1.0,
+					-1.0, -1.0, -1.0,	1.0, -1.0, -1.0,	1.0, -1.0,1.0,	-1.0, -1.0,1.0,
+					1.0, -1.0, -1.0,	1.0,1.0, -1.0,	1.0,1.0,1.0,	1.0, -1.0,1.0,
+					-1.0, -1.0, -1.0,	-1.0, -1.0,1.0,	-1.0,1.0,1.0,	-1.0,1.0, -1.0,
+				];
+				coordinatesBuffer=glCreateFloat32ArrayBuffer(coordinates,3);
+				glEnableVertexAttribute("coordinate",coordinatesBuffer);
+				var colors=
+				[ 	
+					1, 0, 0,	1, 0, 0,	1, 0, 0,	1, 0, 0,
+					1, 0, 0,	 1, 0, 0, 	1, 0, 0,	1, 0, 0,
+					1, 0, 0,	1, 0, 0,	1, 0, 0,	1, 0, 0,
+					1, 0, 0,	1, 0, 0,	1, 0, 0,	1, 0, 0,
+					1, 0, 0,	1, 0, 0,	1, 0, 0,	1, 0, 0,
+					1, 0, 0,	1, 0, 0,	1, 0, 0,	1, 0, 0
+				];
+				colorsBuffer=glCreateFloat32ArrayBuffer(colors,3);
+				glEnableVertexAttribute("color",colorsBuffer);
+				var normals=
+				[
+					0.0, 0.0, 1.0, 	0.0, 0.0, 1.0, 	0.0, 0.0, 1.0, 	0.0, 0.0, 1.0,
+					1.0, 0.0, 0.0, 	1.0, 0.0, 0.0, 	1.0, 0.0, 0.0, 	1.0, 0.0, 0.0,
+					0.0, 1.0, 0.0, 	0.0, 1.0, 0.0, 	0.0, 1.0, 0.0, 	0.0, 1.0, 0.0,
+					-1.0, 0.0, 0.0,	-1.0, 0.0, 0.0,	-1.0, 0.0, 0.0,	-1.0, 0.0, 0.0,
+					0.0,-1.0, 0.0,	0.0,-1.0, 0.0, 	0.0,-1.0, 0.0, 	0.0,-1.0, 0.0, 
+					0.0, 0.0,-1.0, 	0.0, 0.0,-1.0, 	0.0, 0.0,-1.0, 	0.0, 0.0,-1.0  
+				];
+				normalsBuffer=glCreateFloat32ArrayBuffer(normals,3);
+				glEnableVertexAttribute("normal",normalsBuffer);
+				var texCoords=
+				[
+					0.0, 0.0,	1.0, 0.0,	1.0, 1.0,	0.0, 1.0,
+					1.0, 0.0,	1.0, 1.0,	0.0, 1.0,	0.0, 0.0,
+					0.0, 1.0,	0.0, 0.0,	1.0, 0.0,	1.0, 1.0,
+					1.0, 1.0,	0.0, 1.0,	0.0, 0.0,	1.0, 0.0,
+					1.0, 0.0,	1.0, 1.0,	0.0, 1.0,	0.0, 0.0,
+					0.0, 0.0,	1.0, 0.0,	1.0, 1.0,	0.0, 1.0
+				];
+				texCoordsBuffer=glCreateFloat32ArrayBuffer(texCoords,2);
+				glEnableVertexAttribute("texCoord",texCoordsBuffer);
+				var indices=
+				[
+					0, 1, 2,	0, 2, 3,
+					4, 5, 6, 	4, 6, 7,
+					8, 9,10, 	8,10,11,
+					12,13,14,	12,14,15,
+					16,17,18,	16,18,19,
+					20,21,22,	20,22,23
+				];
+				indicesBuffer=glCreateUint8ArrayBuffer(indices);
+				indicesBuffer.numItems=indices.length;
+			}
+			function glDisplayFunc()
+			{
+				glLight();
+				glModelView();
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,1.0);
+				gl.viewport(0,0,canvas.width,canvas.height);
+				glAnimation();
+			}
+			function glAnimation()
+			{
+				requestAnimationFrame(glAnimation,canvas);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				gl.drawElements(gl.TRIANGLES,indicesBuffer.numItems,gl.UNSIGNED_BYTE,0);
+			}
+			function glLight()
+			{
+ 				var lightColor=gl.getUniformLocation(glProgram,'lightColor');
+				gl.uniform3f(lightColor,1.0,1.0,1.0);
+				var lightDirection=gl.getUniformLocation(glProgram,'lightDirection');
+				var newLightDirection=new Vector3([0.5,3.0,4.0]);
+				newLightDirection.normalize();
+				gl.uniform3fv(lightDirection, newLightDirection.elements);
+			}
+			function glModelView()
+			{
+				var modelViewMatrix=gl.getUniformLocation(glProgram,'modelViewMatrix');
+				var projectionMatrix=new Matrix4();
+				projectionMatrix.setPerspective(30,canvas.width/canvas.height,1,100);
+				projectionMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
+				gl.uniformMatrix4fv(modelViewMatrix,false,projectionMatrix.elements);
+			}
+			function glCreateTexture2D(imageName)
+			{
+				glTexture=gl.createTexture();
+				glTexture.image=new Image();
+				glTexture.image.onload=function(){glLoadTexture(glTexture);}
+				glTexture.image.src=imageName;
+			}
+			function glLoadTexture(texture)
+			{
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			}
+			function glEnableVertexAttribute(attributeName,verticesBuffer)
+			{
+				var vertexAttribute=gl.getAttribLocation(glProgram,attributeName);
+				gl.enableVertexAttribArray(vertexAttribute);
+				gl.bindBuffer(gl.ARRAY_BUFFER,verticesBuffer);
+				gl.vertexAttribPointer(vertexAttribute,verticesBuffer.itemSize,gl.FLOAT,false,0,0);
+			}
+			function glCreateFloat32ArrayBuffer(float32Array,itemSize)
+			{
+				var newBuffer=gl.createBuffer();
+				gl.bindBuffer(gl.ARRAY_BUFFER,newBuffer);
+				gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(float32Array),gl.STATIC_DRAW);
+				newBuffer.itemSize=itemSize;
+				return newBuffer;	
+			}
+			function glCreateUint8ArrayBuffer(uint8Array)
+			{
+				var newBuffer=gl.createBuffer();
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,newBuffer);
+				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint8Array(uint8Array),gl.STATIC_DRAW);
+				return newBuffer;	
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="750">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</body>
+</html>

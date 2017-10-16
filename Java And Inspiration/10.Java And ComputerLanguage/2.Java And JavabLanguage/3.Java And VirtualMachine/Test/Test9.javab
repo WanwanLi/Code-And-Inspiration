@@ -1,0 +1,10 @@
+class Test10;
+public Test9()
+{
+	int a;
+	new Test10(2,3.14,"asdf");
+	a=5;
+	Test10 test10_1=new Test10(2+10,2.0*(3.14+5.6),"asdf"+("cde"+"def"));
+	this.println(test10_1.func(-1.2,-2.3));
+	this.println("Test10.func="+Test10.func(1.2,-2.3));
+}

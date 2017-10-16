@@ -1,0 +1,18 @@
+For copy source code:
+cd c:
+cd Code\ And\ Inspiration/Java\ And\ Inspiration/8.Java\ And\ ComputerGraphics/1.Java\ And\ Java2D/7.Java\ And\ RayTracer/3.Java\ And\ ImageOutput/
+scp JavaAndRayTracer.java wa448855@maverick.tacc.xsede.org:image/JavaAndRayTracer.java
+FluidSimulation@126.com
+
+To log on to the maverick server:
+ssh wa448855@maverick.tacc.xsede.org
+FluidSimulation@126.com
+cd image && ls
+chmod u+rwx JavaAndRayTracer.java 
+
+javac JavaAndRayTracer.java
+java JavaAndRayTracer
+
+
+scp wa448855@maverick.tacc.xsede.org:image/result-700x700.jpg result-700x700.jpg
+FluidSimulation@126.com

@@ -1,0 +1,19 @@
+Color color;
+public Mirror(Color c)
+{
+	color=c;
+}
+void addMirror(Vector v)
+{
+	setColor(color);
+	translate(v);
+	setTransparency(0.2);
+	setStep(100);
+	double w=10;
+	func(x,y) mirror=<x,0,y>,colors=<0,0,square(w*x)*square(w*y)>;
+	setColors(colors,0:2.0PI,0:2.0PI);
+	rotX(0.1PI);
+	[
+		addSurface(mirror,-2:2,-2:2);
+	]
+}

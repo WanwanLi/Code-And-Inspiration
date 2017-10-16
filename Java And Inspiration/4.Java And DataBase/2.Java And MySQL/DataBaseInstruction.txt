@@ -1,0 +1,240 @@
+控制面板 系统和安全 系统 高级系统设置 环境变量 
+	Path:
+		C:\Program Files\MySQL\MySQL Server 5.1\bin;
+	ClassPath：
+		C:\Program Files\Java\jdk1.6.0_21\lib\dt.jar;
+		C:\Program Files\Java\jdk1.6.0_21\lib\tools.jar;
+		C:\Users\ASUS\java\Java And Inspiration\3.Java And DataBase\2.Java And MySQL\mysql-connector-java-5.1.20-bin.jar;
+	*如果重新更改了环境变量则需要重启控制台
+	*对于Resin服务器的MySQL的配置如下：C:\resin-3.1.6\ext-webapp-lib中添加：mysql-connector-java-5.1.20-bin.jar后重新启动Resin即可。
+___________________________________________________________________________________________________________________________________
+import java.sql.*;
+public class JavaAndDataBase
+{
+	public static void main(String[] args)
+	{
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection Connection1=DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/database1","root","11235813");
+			ResultSet ResultSet1=Connection1.createStatement().executeQuery("SELECT * FROM Table1");
+			while(ResultSet1.next())System.out.println("Key:"+ResultSet1.getString("Key"));
+			ResultSet1.close();
+			Connection1.close();
+		}
+		catch(Exception e){}		
+	}
+}
+
+___________________________________________________________________________________________________________________________________
+Select Key,Data1,Data2 From Table1
+Select Key,Data2,Data2*0.1 As Data4 From Table1
+Select Key,Data2 From Table1 Where Data2>=60
+Select Key,Data2 From Table1 Where Data2 Like '5%'
+Select Key,Data2 From Table1 Where Data2 Like '[1-3,5-7]%'
+Select Key,Data2 From Table1 Where Data2 Not Like '5%'
+Select Key,Data2 From Table1 Where Data2 Between 90 And 60
+Select Key,Data2 From Table1 Where Data2 Not In (50,70,90)
+Select Key,Data2 From Table1 Where Key>2 And Data2>=60
+Select Key,Data2 From Table1 Where Data2<60 Or Key<2
+Select Key,Data2 From Table1 Order By Data2
+Insert Into Table1 (Key,Data1,Data2) Values (11,'String11',0)
+Delete * From Table1 Where Data1='String11'
+Update Table1  Set Data2=0 Where Data1='String10'
+Create Table Table2(K int,Data1 text,Data2 int,Data3 char(10),Data4 money,Data5 datetime,Data8 float,Data9 image,Primary key(K));
+Select Table1.Key,Table1.Data1,Table1.Data2 From Table1,Table2 Where Table1.Data2=Table2.Data2
+Select Key,Data1,Data2 From Table1 Where Data1 In (Select Data1 From Table2 Where Data2=40)
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Avg(Data2) From Table2 )
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Max(Data2) From Table2 )
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Min(Data2) From Table2 )
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Count(*)*10 From Table2 )
+(Select Data1,Data2 From Table1 ) Union (Select Data1,Data2 From Table2 )
+Drop Table Table2
+
+
+______________________________________________________________________________________________________________________________________
+C:\Java And Inspiration\2.Java And DataBase>javac JavaAndDataBase.java
+
+C:\Java And Inspiration\2.Java And DataBase>java JavaAndDataBase
+Select Key,Data1,Data2 From Table1
+Row:1 Key:0  Data1:String0  Data2:100
+Row:2 Key:1  Data1:String1  Data2:90
+Row:3 Key:2  Data1:String2  Data2:80
+Row:4 Key:3  Data1:String3  Data2:70
+Row:5 Key:4  Data1:String4  Data2:60
+Row:6 Key:5  Data1:String5  Data2:50
+Row:7 Key:6  Data1:String6  Data2:40
+Row:8 Key:7  Data1:String7  Data2:30
+Row:9 Key:8  Data1:String8  Data2:20
+Row:10 Key:9  Data1:String9  Data2:10
+Row:11 Key:10  Data1:String10  Data2:0
+Select * From Table1
+CollumnClassName:java.lang.Integer  ColumnName:Key getColumnTypeName:INTEGER
+CollumnClassName:java.lang.String  ColumnName:Data1 getColumnTypeName:VARCHAR
+CollumnClassName:java.lang.Integer  ColumnName:Data2 getColumnTypeName:INTEGER
+CollumnClassName:java.lang.Integer  ColumnName:Data3 getColumnTypeName:INTEGER
+Select Key,Data2,Data2*0.1 As Data4 From Table1
+Key:0  Data2:100  Data4:10.0
+Key:1  Data2:90  Data4:9.0
+Key:2  Data2:80  Data4:8.0
+Key:3  Data2:70  Data4:7.0
+Key:4  Data2:60  Data4:6.0
+Key:5  Data2:50  Data4:5.0
+Key:6  Data2:40  Data4:4.0
+Key:7  Data2:30  Data4:3.0
+Key:8  Data2:20  Data4:2.0
+Key:9  Data2:10  Data4:1.0
+Key:10  Data2:0  Data4:.0
+Select Key,Data2 From Table1 Where Data2>=60
+Key:0  Data2:100
+Key:1  Data2:90
+Key:2  Data2:80
+Key:3  Data2:70
+Key:4  Data2:60
+Select Key,Data2 From Table1 Where Data2 Like '5%'
+Key:5  Data2:50
+Select Key,Data2 From Table1 Where Data2 Like '[1-3,5-7]%'
+Key:0  Data2:100
+Key:3  Data2:70
+Key:4  Data2:60
+Key:5  Data2:50
+Key:7  Data2:30
+Key:8  Data2:20
+Key:9  Data2:10
+Select Key,Data2 From Table1 Where Data2 Not Like '5%'
+Key:0  Data2:100
+Key:1  Data2:90
+Key:2  Data2:80
+Key:3  Data2:70
+Key:4  Data2:60
+Key:6  Data2:40
+Key:7  Data2:30
+Key:8  Data2:20
+Key:9  Data2:10
+Key:10  Data2:0
+Select Key,Data2 From Table1 Where Data2 Between 90 And 60
+Key:1  Data2:90
+Key:2  Data2:80
+Key:3  Data2:70
+Key:4  Data2:60
+Select Key,Data2 From Table1 Where Data2 Not In (50,70,90)
+Key:0  Data2:100
+Key:2  Data2:80
+Key:4  Data2:60
+Key:6  Data2:40
+Key:7  Data2:30
+Key:8  Data2:20
+Key:9  Data2:10
+Key:10  Data2:0
+Select Key,Data2 From Table1 Where Key>2 And Data2>=60
+Key:3  Data2:70
+Key:4  Data2:60
+Select Key,Data2 From Table1 Where Data2<60 Or Key<2
+Key:0  Data2:100
+Key:1  Data2:90
+Key:5  Data2:50
+Key:6  Data2:40
+Key:7  Data2:30
+Key:8  Data2:20
+Key:9  Data2:10
+Key:10  Data2:0
+Select Key,Data2 From Table1 Order By Data2
+Key:10  Data2:0
+Key:9  Data2:10
+Key:8  Data2:20
+Key:7  Data2:30
+Key:6  Data2:40
+Key:5  Data2:50
+Key:4  Data2:60
+Key:3  Data2:70
+Key:2  Data2:80
+Key:1  Data2:90
+Key:0  Data2:100
+Insert Into Table1 (Key,Data1,Data2) Values (11,'String11',0)
+Select Key,Data1,Data2 From Table1
+Key:0  Data1:String0  Data2:100
+Key:1  Data1:String1  Data2:90
+Key:2  Data1:String2  Data2:80
+Key:3  Data1:String3  Data2:70
+Key:4  Data1:String4  Data2:60
+Key:5  Data1:String5  Data2:50
+Key:6  Data1:String6  Data2:40
+Key:7  Data1:String7  Data2:30
+Key:8  Data1:String8  Data2:20
+Key:9  Data1:String9  Data2:10
+Key:10  Data1:String10  Data2:0
+Key:11  Data1:String11  Data2:0
+Delete * From Table1 Where Data1='String11'
+Select Key,Data1,Data2 From Table1
+Key:0  Data1:String0  Data2:100
+Key:1  Data1:String1  Data2:90
+Key:2  Data1:String2  Data2:80
+Key:3  Data1:String3  Data2:70
+Key:4  Data1:String4  Data2:60
+Key:5  Data1:String5  Data2:50
+Key:6  Data1:String6  Data2:40
+Key:7  Data1:String7  Data2:30
+Key:8  Data1:String8  Data2:20
+Key:9  Data1:String9  Data2:10
+Key:10  Data1:String10  Data2:0
+Update Table1  Set Data2=0 Where Data1='String10'
+Select Key,Data1,Data2 From Table1
+Key:0  Data1:String0  Data2:100
+Key:1  Data1:String1  Data2:90
+Key:2  Data1:String2  Data2:80
+Key:3  Data1:String3  Data2:70
+Key:4  Data1:String4  Data2:60
+Key:5  Data1:String5  Data2:50
+Key:6  Data1:String6  Data2:40
+Key:7  Data1:String7  Data2:30
+Key:8  Data1:String8  Data2:20
+Key:9  Data1:String9  Data2:10
+Key:10  Data1:String10  Data2:0
+Create Table Table2(K int,Data1 text,Data2 int,Data3 char(10),Data4 money,Data5 datetime,Data8 float,Data9 image,Primary key(K));
+Select * From Table2
+CollumnClassName:java.lang.Integer  ColumnName:K getColumnTypeName:INTEGER
+CollumnClassName:java.lang.String  ColumnName:Data1 getColumnTypeName:VARCHAR
+CollumnClassName:java.lang.Integer  ColumnName:Data2 getColumnTypeName:INTEGER
+CollumnClassName:java.lang.String  ColumnName:Data3 getColumnTypeName:CHAR
+CollumnClassName:java.math.BigDecimal  ColumnName:Data4 getColumnTypeName:CURRENCY
+CollumnClassName:java.sql.Timestamp  ColumnName:Data5 getColumnTypeName:DATETIME
+CollumnClassName:java.lang.Double  ColumnName:Data8 getColumnTypeName:DOUBLE
+CollumnClassName:[B  ColumnName:Data9 getColumnTypeName:LONGBINARY
+Insert Into Table2 (K,Data1,Data2) Values (1,'String11',30)
+Insert Into Table2 (K,Data1,Data2) Values (2,'String10',40)
+Insert Into Table2 (K,Data1,Data2) Values (3,'String9',50)
+Select K,Data1,Data2 From Table2
+K:1  Data1:String11  Data2:30
+K:2  Data1:String10  Data2:40
+K:3  Data1:String9  Data2:50
+Select Table1.Key,Table1.Data1,Table1.Data2 From Table1,Table2 Where Table1.Data2=Table2.Data2
+Key:5  Data1:String5  Data2:50
+Key:6  Data1:String6  Data2:40
+Key:7  Data1:String7  Data2:30
+Select Key,Data1,Data2 From Table1 Where Data1 In (Select Data1 From Table2 Where Data2=40)
+Key:10  Data1:String10  Data2:0
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Avg(Data2) From Table2 )
+Key:6  Data1:String6  Data2:40
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Max(Data2) From Table2 )
+Key:5  Data1:String5  Data2:50
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Min(Data2) From Table2 )
+Key:7  Data1:String7  Data2:30
+Select Key,Data1,Data2 From Table1 Where Data2 In (Select Count(*)*10 From Table2 )
+Key:7  Data1:String7  Data2:30
+(Select Data1,Data2 From Table1 ) Union (Select Data1,Data2 From Table2 )
+Data1:String0  Data2:100
+Data1:String1  Data2:90
+Data1:String10  Data2:0
+Data1:String10  Data2:40
+Data1:String11  Data2:30
+Data1:String2  Data2:80
+Data1:String3  Data2:70
+Data1:String4  Data2:60
+Data1:String5  Data2:50
+Data1:String6  Data2:40
+Data1:String7  Data2:30
+Data1:String8  Data2:20
+Data1:String9  Data2:10
+Data1:String9  Data2:50
+Drop Table Table2
+Input any integer and continue ...

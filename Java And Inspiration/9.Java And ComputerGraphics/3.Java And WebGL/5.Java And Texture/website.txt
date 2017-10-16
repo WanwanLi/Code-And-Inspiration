@@ -1,0 +1,7 @@
+If you want to open the webpage with loding texture from other files,  
+there are two options:
+1. Run the code on the local website server: for example resin
+http://127.0.0.1:8080/JavaAndTexture/JavaAndCube.html
+2. Open Chrome.exe with cmd
+cd C:\Program Files\Google\Chrome\Application
+chrome.exe --allow-file-access-from-files

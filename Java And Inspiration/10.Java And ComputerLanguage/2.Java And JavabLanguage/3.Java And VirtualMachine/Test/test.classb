@@ -1,0 +1,121 @@
+0
+2
+test3
+test2
+2
+add
+86
+sub
+94
+59
+7
+4
+t=
+m=
+a[
+]=
+0
+0
+102
+INT &16
+MUL &16, 1,* 4
+INT &15
+ADD &15, 3,+&16
+ENQI &15
+ENQI  5
+NEW 1
+INT &3
+ENQI  2
+ENQI  10
+METHOD 1,power
+INT &18
+DEQI &18
+INT &17
+ADD &17, 1,+&18
+MOV &3,&17
+STR &19
+MOV &19,$4
+ADD $4,$0,+&3
+PRINT &19
+INT &6
+MOV &6, 1
+INT &7
+INT &8
+MUL &20, 3,* -1
+MUL &22,&6,* -1
+INT &23
+ADD &23,&22,+ 5
+INT &21
+MUL &21,&20,*&23
+MOV &8,&21
+STR &24
+MOV &24,$5
+ADD $5,$1,+&8
+PRINT &24
+ARY &9
+MOV &9, 25
+LEN &9, 9
+INT &34
+ADD &34, 1,+ 2
+INT &35
+MUL &35,&34,*&6
+MOV &25,&35
+MOV &26, 2
+MOV &27, 3
+MOV &28, 2
+MOV &29, 5
+MOV &30, 4
+MOV &31, 3
+MOV &32, 2
+MOV &33, 1
+INT &36
+MUL &36,&6,* 3
+INT &37
+ADD &37,&36,+ 25
+INT &38
+ADD &38, 0,+ 25
+INT &40
+ADD &40, 2,+ 25
+INT &39
+MUL &39,@38,*@40
+INT &41
+ADD &41,&39,- 2
+INT &42
+ADD &42,&41,+ 25
+MOV @37,@42
+INT &43
+MOVLEN &43,&9
+MOV &7,&43
+INT &11
+MOV &11, 0
+INT &44
+LT &44,&11,&7
+JZ &44,82
+INT &46
+ADD &46,&11,+ 25
+STR &45
+MOV &45,$6
+ADD $6,$2,+&11,+$3,+@46
+PRINT &45
+INC &11
+JMP 72
+ARY &12
+MOV &12, 47
+LEN &12, 10
+EXIT
+INT &9
+DEQI &9
+INT &6
+DEQI &6
+INT &57
+ADD &57,&9,+&6
+ENQI &57
+RET
+INT &9
+DEQI &9
+INT &6
+DEQI &6
+INT &58
+ADD &58,&9,-&6
+ENQI &58
+RET

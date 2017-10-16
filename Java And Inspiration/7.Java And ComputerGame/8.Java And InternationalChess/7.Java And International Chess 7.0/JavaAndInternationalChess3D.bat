@@ -1,0 +1,2 @@
+javac JavaAndInternationalChess3D.java
+java -Xms40m -Xmx400m JavaAndInternationalChess3D

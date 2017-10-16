@@ -1,0 +1,51 @@
+
+		ColorSpace_RGB To ColorSpace_HSB
+______________________________________________________________________________________________________
+double[] HSB(int red,int green,int blue)
+{
+	high=max(red,green,blue);
+	low=min(red,green,blue);
+	range=high-low;
+	if(range<1e-15)hue=-6;
+	else
+	{
+		if(red==high)hue=(green-blue)/range+0;
+		else if(green==high)hue=(blue-red)/range+2;
+		else if(blue==high)hue=(red-green)/range+4;
+		if(hue<0)hue+=6;
+	}
+	hue/=6;
+	if(high>0)saturation=range/high;
+	else saturation=0;
+	brightness=high/255;
+	HSB[0]=hue;
+	HSB[1]=saturation;
+	HSB[2]=brightness;
+}
+______________________________________________________________________________________________________
+
+		ColorSpace_HSB To ColorSpace_RGB
+______________________________________________________________________________________________________
+int[] RGB(double hue,double saturation,double brightness)
+{
+	range=saturation*brightness;
+	high=brightness;
+	low=brightness-range;
+	H=6*hue%6;
+	n=(int)H;
+	h=H-n;
+	mid=(n%2==0?low+h*range:low+(1-h)*range);
+	switch(n)
+	{
+		case 0:red=high;green=mid;blue=low;break;
+		case 1:red=mid;green=high;blue=low;break;
+		case 2:red=low;green=high;blue=mid;break;
+		case 3:red=low;green=mid;blue=high;break;
+		case 4:red=mid;green=low;blue=high;break;
+		case 5:red=high;green=low;blue=mid;break;
+	}
+	RGB[0]=(int)(255*red);
+	RGB[1]=(int)(255*green);
+	RGB[2]=(int)(255*blue);
+}
+______________________________________________________________________________________________________

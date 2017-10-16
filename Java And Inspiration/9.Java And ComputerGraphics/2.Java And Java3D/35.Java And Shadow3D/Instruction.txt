@@ -1,0 +1,13 @@
+Projection:
+	
+projectionCoordinate=  coordinate+a*lightDirection
+
+projectionCoordinate = (x,planeHeight,z)
+
+=>coordinate.y+a*lightDirection.y=planeHeight
+
+	planeHeight-coordinate.y
+=>a=！！！！！！！！！！！！！！！！！！
+	        lightDirection.y
+
+=>projectionCoordinate = (coordinate.x+a*lightDirection.x,planeHeight,coordinate.z+a*lightDirection.z)

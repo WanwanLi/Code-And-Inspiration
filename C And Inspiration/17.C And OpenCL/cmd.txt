@@ -1,0 +1,31 @@
+https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/25623
+
+For copy source code:
+cd c:
+cd Code\ And\ Inspiration/C\ And\ Inspiration/20.C\ And\ OpenCL/6.C\ And\ FluidSimulation/
+scp CAndFluidSimulation.c wa448855@maverick.tacc.xsede.org:liwanwan/CAndFluidSimulation.c
+RhinoEiton@126.com
+scp fluid-kernel.cl wa448855@maverick.tacc.xsede.org:liwanwan/fluid-kernel.cl
+RhinoEiton@126.com
+FluidSimulation@126.com
+
+For copy output file: 
+scp  wa448855@maverick.tacc.xsede.org:CAndOpenCL/5.CAndGraphFile/GraphFile.txt GraphFile.txt
+RhinoEiton@126.com
+
+To log on to the maverick server:
+ssh wa448855@maverick.tacc.xsede.org
+RhinoEiton@126.com
+cd CAndOpenCL/5.CAndGraphFile
+
+To complie the code:
+module load cuda
+gcc -I $TACC_CUDA_DIR/include -lOpenCL -o CAndFluidSimulation CAndFluidSimulation.c
+
+To run this code under Interactive Development mode:
+idev
+./CAndGraphFile
+
+
+FluidSimulation@126.com
+FluidSimulation@126.com

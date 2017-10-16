@@ -1,0 +1,233 @@
+objectNumber=0
+classNumber=0
+identifierNumber=16
+integerNumber=50
+integerTableLength=27
+integerTable[0]=1
+integerTable[1]=1
+integerTable[2]=1
+integerTable[3]=2
+integerTable[4]=2
+integerTable[5]=4
+integerTable[6]=1
+integerTable[7]=2
+integerTable[8]=3
+integerTable[9]=2
+integerTable[10]=2
+integerTable[11]=2
+integerTable[12]=0
+integerTable[13]=1
+integerTable[14]=2
+integerTable[15]=10
+integerTable[16]=10
+integerTable[17]=5
+integerTable[18]=1
+integerTable[19]=1
+integerTable[20]=5
+integerTable[21]=5
+integerTable[22]=2
+integerTable[23]=4
+integerTable[24]=6
+integerTable[25]=8
+integerTable[26]=10
+stringNumber=46
+stringTableLength=26
+stringTable[0]=n=
+stringTable[1]=null
+stringTable[2]=Two
+stringTable[3]=Four
+stringTable[4]=Six
+stringTable[5]=Eight
+stringTable[6]=name=
+stringTable[7]=
+stringTable[8]=Ten
+stringTable[9]=M
+stringTable[10]=O
+stringTable[11]=V
+stringTable[12]=ADD
+stringTable[13]=a=
+stringTable[14]=b=
+stringTable[15]=a=
+stringTable[16]=b=
+stringTable[17]=a=
+stringTable[18]=b=
+stringTable[19]=5!=
+stringTable[20]=OK
+stringTable[21]=Thanks!
+stringTable[22]=Bye!
+stringTable[23]=MOV
+stringTable[24]=ADD
+stringTable[25]=JMP
+doubleNumber=0
+doubleTableLength=0
+declarationsLength=0
+beginInstructionPointer=71
+instructionsLength=168
+0: MOV %1, 27
+1: DEQ @27
+2: ADD $26,$0,+&1
+3: OUT $26
+4: EQ @28,&1,@0
+5: JZ @28,7
+6: RET
+7: ADD @29,&1,-@1
+8: ENQ @29
+9: PUSH @29
+10: CALL 0
+11: POP @29
+12: RET
+13: MOV %1, 30
+14: DEQ @30
+15: MOV %4, 31
+16: MOV @31,@2
+17: MOV %5, 32
+18: MOV @32,@3
+19: LE @33,&5,&1
+20: JZ @33,24
+21: PRO &4,*&5
+22: INC &5
+23: JMP 19
+24: ENQ &4
+25: RET
+26: MOV %7, 34
+27: DEQ @34
+28: MOV %8, 35
+29: DEQ @35
+30: ACC &7,+&8
+31: ADD @36,&7,-&8
+32: MOV &8,@36
+33: ACC &7,-&8
+34: RET
+35: MOV %5, 37
+36: DEQ @37
+37: MOV %10, 27
+38: MOV $27,$1
+39: SWITCH &5,40,40,@4,42,42,@5,44,45,@38,47,48,@39,~53
+40: MOV *10,$2
+41: JMP 55
+42: ENQ $3
+43: RET
+44: ADD @38,@6,+@7,+@8
+45: ENQ $4
+46: RET
+47: MUL @39,@9,*@10,*@11
+48: MOV *10,$5
+49: ADD $28,$6,+*10
+50: OUT $28
+51: ENQ $7
+52: RET
+53: ENQ $8
+54: RET
+55: ENQ *10
+56: RET
+57: MOV %10, 29
+58: DEQ $29
+59: MOV %12, 40
+60: MOV @40,@12
+61: SWITCH *10,62,63,$30,65,65,$12,~67
+62: ADD $30,$9,+$10,+$11
+63: MOV &12,@13
+64: JMP 69
+65: MOV &12,@14
+66: JMP 69
+67: ENQ @15
+68: RET
+69: ENQ &12
+70: RET
+71: MOV %7, 41
+72: MOV @41,@16
+73: MOV %8, 42
+74: MOV @42,@17
+75: ENQ &7
+76: ENQ &8
+77: PUSH &7,&8
+78: CALL 26
+79: POP &8,&7
+80: ADD $31,$13,+&7
+81: OUT $31
+82: ADD $32,$14,+&8
+83: OUT $32
+84: ENQ &7
+85: ENQ &8
+86: CALL 26
+87: ADD $33,$15,+&7
+88: OUT $33
+89: ADD $34,$16,+&8
+90: OUT $34
+91: ADD @43,&7,+@18
+92: ENQ @43
+93: ADD @44,&8,+@19
+94: ENQ @44
+95: PUSH @43,@44
+96: CALL 26
+97: POP @44,@43
+98: ADD $35,$17,+&7
+99: OUT $35
+100: ADD $36,$18,+&8
+101: OUT $36
+102: ENQ @20
+103: PUSH @20
+104: CALL 13
+105: POP @20
+106: DEQ @45
+107: ADD $37,$19,+@45
+108: OUT $37
+109: ENQ @21
+110: PUSH @21
+111: CALL 0
+112: POP @21
+113: MOV %14, 38
+114: IN $39
+115: EQ @46,$39,$20
+116: CMOV $40,@46,$21,$22
+117: MOV $38,$40
+118: OUT *14
+119: ENQ @22
+120: PUSH @22
+121: CALL 35
+122: POP @22
+123: DEQ $41
+124: OUT $41
+125: ENQ @23
+126: PUSH @23
+127: CALL 35
+128: POP @23
+129: DEQ $42
+130: OUT $42
+131: ENQ @24
+132: PUSH @24
+133: CALL 35
+134: POP @24
+135: DEQ $43
+136: OUT $43
+137: ENQ @25
+138: PUSH @25
+139: CALL 35
+140: POP @25
+141: DEQ $44
+142: OUT $44
+143: ENQ @26
+144: PUSH @26
+145: CALL 35
+146: POP @26
+147: DEQ $45
+148: OUT $45
+149: ENQ $23
+150: PUSH $23
+151: CALL 57
+152: POP $23
+153: DEQ @47
+154: OUT @47
+155: ENQ $24
+156: PUSH $24
+157: CALL 57
+158: POP $24
+159: DEQ @48
+160: OUT @48
+161: ENQ $25
+162: PUSH $25
+163: CALL 57
+164: POP $25
+165: DEQ @49
+166: OUT @49
+167: EXIT

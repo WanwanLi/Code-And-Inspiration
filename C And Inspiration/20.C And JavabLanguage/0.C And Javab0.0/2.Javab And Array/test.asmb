@@ -1,0 +1,196 @@
+objectNumber=0
+classNumber=0
+identifierNumber=7
+integerNumber=107
+integerTableLength=43
+integerTable[0]=5
+integerTable[1]=1
+integerTable[2]=1
+integerTable[3]=2
+integerTable[4]=3
+integerTable[5]=4
+integerTable[6]=0
+integerTable[7]=1
+integerTable[8]=0
+integerTable[9]=0
+integerTable[10]=0
+integerTable[11]=1
+integerTable[12]=0
+integerTable[13]=1
+integerTable[14]=0
+integerTable[15]=0
+integerTable[16]=0
+integerTable[17]=0
+integerTable[18]=3
+integerTable[19]=0
+integerTable[20]=1
+integerTable[21]=2
+integerTable[22]=0
+integerTable[23]=1
+integerTable[24]=2
+integerTable[25]=0
+integerTable[26]=1
+integerTable[27]=1
+integerTable[28]=2
+integerTable[29]=2
+integerTable[30]=2
+integerTable[31]=1
+integerTable[32]=1
+integerTable[33]=0
+integerTable[34]=0
+integerTable[35]=0
+integerTable[36]=1
+integerTable[37]=0
+integerTable[38]=1
+integerTable[39]=0
+integerTable[40]=1
+integerTable[41]=0
+integerTable[42]=1
+stringNumber=42
+stringTableLength=24
+stringTable[0]=a[0]=
+stringTable[1]=a[1]=
+stringTable[2]=a[
+stringTable[3]=]=
+stringTable[4]=a[
+stringTable[5]=]=
+stringTable[6]=a[
+stringTable[7]=]=
+stringTable[8]=b[0]=
+stringTable[9]=b[1]=
+stringTable[10]=b[2]=
+stringTable[11]=abc
+stringTable[12]=123
+stringTable[13]=2
+stringTable[14]=c[0]*c[1]=
+stringTable[15]=c[1]/c[2]=
+stringTable[16]=c[2]=
+stringTable[17]=c[1]=
+stringTable[18]=c[0]=
+stringTable[19]=c[1]=
+stringTable[20]=1.5
+stringTable[21]=0.05
+stringTable[22]=b[0]=
+stringTable[23]=b[1]=
+doubleNumber=6
+doubleTableLength=3
+doubleTable[0]=6.283185
+doubleTable[1]=0.500000
+doubleTable[2]=0.000010
+declarationsLength=2
+declarations[0]=0
+declarations[1]=3
+beginInstructionPointer=3
+instructionsLength=112
+0: MOV %0, 43
+1: ADD @44,@0,+@1
+2: MOV @43,@44
+3: MOV %2, 45
+4: MOV @45, 5
+5: MOV @46, 2
+6: MOV @47, 3
+7: MOV @48, 4
+8: MOV @49, 5
+9: MOV @51,&0
+10: MOV @50, 51
+11: ADD @52, 46,+@6
+12: ADD $24,$0,+:52
+13: OUT $24
+14: ADD @53, 46,+@7
+15: ADD $25,$1,+:53
+16: OUT $25
+17: ADD @55, 46,+@8
+18: ADD @54, 46,+:55
+19: ADD @58, 46,+@9
+20: ADD @57, 46,+:58
+21: ADD @56, 46,+:57
+22: ADD $26,$2,+:54,+$3,+:56
+23: OUT $26
+24: ADD @59, 46,+@10
+25: ADD @61, 46,+@11
+26: ADD @60,:59,+:61
+27: ADD @63, 46,+@12
+28: ADD @65, 46,+@13
+29: ADD @64,:63,+:65
+30: ADD @62, 46,+@64
+31: ADD $27,$4,+@60,+$5,+:62
+32: OUT $27
+33: ADD @67, 46,+@14
+34: ADD @69, 46,+@15
+35: ADD @68,:67,+:69
+36: ADD @66,&0,-@68
+37: ADD @72, 46,+@16
+38: ADD @74, 46,+@17
+39: ADD @73,:72,+:74
+40: ADD @71,&0,-@73
+41: ADD @70, 46,+@71
+42: ADD $28,$6,+@66,+$7,+:70
+43: OUT $28
+44: MOV %4, 75
+45: MOV @75, 3
+46: MOV @76, 3
+47: MOV @77, 4
+48: MOV @78, 5
+49: ADD @79, 76,+@19
+50: MOV !79,#0
+51: ADD @80, 76,+@20
+52: MOV !80,#1
+53: ADD @81, 76,+@21
+54: MOV !81,#2
+55: ADD @82, 76,+@22
+56: ADD $29,$8,+!82
+57: OUT $29
+58: ADD @83, 76,+@23
+59: ADD $30,$9,+!83
+60: OUT $30
+61: ADD @84, 76,+@24
+62: ADD $31,$10,+!84
+63: OUT $31
+64: MOV %6, 85
+65: MOV @85, 3
+66: MOV @86, 11
+67: MOV @87, 12
+68: MOV @88, 13
+69: ADD @89, 86,+@25
+70: ADD @90, 86,+@26
+71: MUL $33,?89,*?90
+72: ADD $32,$14,+$33
+73: OUT $32
+74: ADD @91, 86,+@27
+75: ADD @92, 86,+@28
+76: MUL $35,?91,/?92
+77: ADD $34,$15,+$35
+78: OUT $34
+79: ADD @93, 86,+@29
+80: INC ?93
+81: ADD @94, 86,+@30
+82: ADD $36,$16,+?94
+83: OUT $36
+84: ADD @95, 86,+@31
+85: DEC ?95
+86: ADD @96, 86,+@32
+87: ADD $37,$17,+?96
+88: OUT $37
+89: ADD @97, 86,+@33
+90: ADD @98, 76,+@34
+91: ACC ?97,+!98
+92: ADD @99, 86,+@35
+93: ADD $38,$18,+?99
+94: OUT $38
+95: ADD @100, 86,+@36
+96: ADD @101, 76,+@37
+97: ACC ?100,-!101
+98: ADD @102, 86,+@38
+99: ADD $39,$19,+?102
+100: OUT $39
+101: ADD @103, 76,+@39
+102: PRO !103,*$20
+103: ADD @104, 76,+@40
+104: PRO !104,/$21
+105: ADD @105, 76,+@41
+106: ADD $40,$22,+!105
+107: OUT $40
+108: ADD @106, 76,+@42
+109: ADD $41,$23,+!106
+110: OUT $41
+111: EXIT

@@ -1,0 +1,381 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And RayTracing</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script src="webgl-molecule.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			uniform mat4 viewMatrix;
+			uniform mat4 lookAtMatrix;
+			attribute vec3 coordinate;
+			varying vec3 fragPosition;
+			void main(void)
+			{
+				gl_Position=viewMatrix*vec4(coordinate,1.0);
+				fragPosition=(lookAtMatrix*vec4(coordinate,1.0)).xyz;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			varying vec3 fragPosition;
+			uniform vec3 eyePosition;
+			uniform vec3 lightDirection;
+			float shininess=20.0;
+			vec3 directionalLightColor=vec3(1.0,1.0,1.0);
+			float MaxError=0.001,MaxDistance=10000.0;
+			struct sphere
+			{
+				float radius;
+				vec3 center;
+				vec3 color;
+			};
+			const int MaxAtomNum=20;
+			uniform sphere molecule[MaxAtomNum];
+			bool intersectSphere(vec3 center,float radius,vec3 origin,vec3 direction,out float distance)
+			{
+				vec3 connection=center-origin;
+				float b=dot(connection,direction);
+				float c=dot(connection,connection);
+				float delta=b*b-c+radius*radius;
+				if(delta<0.0){distance=MaxDistance;return false;}
+				distance=b-sqrt(delta);
+				if(distance<=MaxError){distance=MaxDistance;return false;}
+				return true;
+			}
+			bool intersectScene(vec3 origin,vec3 direction,out vec3 position,out vec3 normal, out vec3 color)
+			{
+				float minDistance=MaxDistance,distance;
+				for(int i=0;i<MaxAtomNum;i++)
+				{
+					float radius=molecule[i].radius;
+					if(radius<0.0)break;
+					vec3 center=molecule[i].center;
+					bool b=intersectSphere(center,radius,origin,direction,distance);
+					if(b&&distance<minDistance)
+					{
+						position=origin+distance*direction;
+						normal=normalize(position-center);
+						color=molecule[i].color;
+						minDistance=distance;
+					}
+				}
+				return minDistance<MaxDistance;
+			}
+			bool isOnShadow(vec3 position)
+			{
+				vec3 newPosition,normal,color;
+				return  intersectScene(position,lightDirection,newPosition,normal,color);
+			}
+			vec3 lightColor(vec3 normalDirection,vec3 viewDirection,vec3 color)
+			{
+				vec3 L=lightDirection,N=normalDirection;
+				vec3 R=reflect(-L,N),V=viewDirection;
+				float L_N=dot(L,N),R_V=max(dot(R,-V),0.0);
+				float reflectance=0.8*pow(R_V,shininess);
+				return clamp(L_N*color+reflectance*directionalLightColor,0.0,1.0);
+			}
+			void main(void)
+			{
+				vec3 viewDirection=normalize(fragPosition-eyePosition);
+				vec3 position,normal,color,viewColor=vec3(0.0);
+				if(intersectScene(eyePosition,viewDirection,position,normal,color))
+				{
+					viewColor=lightColor(normal,viewDirection,color);
+				}
+				gl_FragColor=vec4(viewColor,1.0);
+			}
+		</script>
+		<script>
+			var gl=null;
+			function main()
+			{
+				var canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					gl.canvas=canvas;
+					gl.MaxAtomNum=20;
+					gl.moleculeDir="molecule/";
+					glInitShaders();
+					glUniformMolecule("H2O");
+					glCreateGeometryInfo()
+					glCreateElementsBuffer();
+					glAddEventListener()
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				gl.vertexShader=glCreateShader(gl.VERTEX_SHADER);
+				gl.fragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				gl.program=gl.createProgram();
+				gl.attachShader(gl.program,gl.vertexShader);
+				gl.attachShader(gl.program,gl.fragmentShader);
+				gl.linkProgram(gl.program);
+				if(!gl.getProgramParameter(gl.program,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(gl.program);
+				gl.program.viewMatrix=gl.getUniformLocation(gl.program,"viewMatrix");
+				gl.program.lookAtMatrix=gl.getUniformLocation(gl.program,"lookAtMatrix");
+				gl.program.eyePosition=gl.getUniformLocation(gl.program,"eyePosition");
+				gl.program.coordinate=gl.getAttribLocation(gl.program,"coordinate");
+				gl.enableVertexAttribArray(gl.program.coordinate);
+				gl.program.molecule=glGetUniformLocations("molecule",["radius","center","color"],gl.MaxAtomNum);
+				gl.program.lightDirection=gl.getUniformLocation(gl.program,"lightDirection");
+			}
+			function glGetUniformLocations(uniform,elements,number)
+			{
+				var uniformLocations=[];
+				for(var i=0;i<number;i++)
+				{
+					uniformLocations[i]=[];
+					for(var j=0;j<elements.length;j++)
+					{
+						var elementName=uniform+"["+i+"]."+elements[j];
+						var elementLocation=gl.getUniformLocation(gl.program,elementName);
+						uniformLocations[i][elements[j]]=elementLocation;
+					}
+				}
+				return uniformLocations;
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}	
+			function glUniformMolecule(moleculeName)
+			{
+				var moleculeData=getMoleculeData(gl.moleculeDir+moleculeName);
+				var size=moleculeData.indexData.length,scale=0.2;
+				for(var i=0;i<size;i++)
+				{
+					var index=moleculeData.indexData[i];
+					var radius=moleculeData.radiusData[index]*scale;
+					var x=moleculeData.centerData[i*3+0]*scale
+					var y=moleculeData.centerData[i*3+1]*scale;
+					var z=moleculeData.centerData[i*3+2]*scale;
+					var r=moleculeData.colorData[index*3+0];
+					var g=moleculeData.colorData[index*3+1];
+					var b=moleculeData.colorData[index*3+2];
+					gl.uniform1f(gl.program.molecule[i].radius,radius);
+					gl.uniform3fv(gl.program.molecule[i].center,[x,y,z]);
+					gl.uniform3fv(gl.program.molecule[i].color,[r,g,b]);
+				}
+				gl.uniform1f(gl.program.molecule[size].radius,-1.0);
+			}
+			function glCreateGeometryInfo()
+			{
+				var geometryInfo=[],f=-1.0;
+				geometryInfo.coordinates=
+				[
+					-1, -1, f,
+					 1,  -1, f,
+					 1,   1,  f,
+					-1,   1,  f
+				];
+				geometryInfo.indices=[0,1,2,2,3,0];
+				gl.geometryInfo=geometryInfo;
+			}
+			function glCreateElementsBuffer()
+			{
+				var coordinates=gl.geometryInfo.coordinates;
+				var indices=gl.geometryInfo.indices;
+				var coordinatesData=new Float32Array(coordinates);
+				var indicesData=new Uint16Array(indices);
+				gl.coordinatesBuffer=gl.createBuffer();
+				gl.indicesBuffer=gl.createBuffer();
+				glBindBufferData(gl.ARRAY_BUFFER,gl.coordinatesBuffer,coordinatesData,3);
+				glBindBufferData(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer,indicesData,1);
+			}
+			function glBindBufferData(gl_ARRAY_BUFFER,buffer,data,itemSize)
+			{
+				gl.bindBuffer(gl_ARRAY_BUFFER,buffer);
+				gl.bufferData(gl_ARRAY_BUFFER,data,gl.STATIC_DRAW);
+				buffer.itemSize=itemSize;
+				buffer.numItems=data.length/itemSize;
+			}
+			function glDrawElements()
+			{
+				gl.bindBuffer(gl.ARRAY_BUFFER,gl.coordinatesBuffer);
+				gl.vertexAttribPointer(gl.program.coordinate,gl.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,gl.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glDisplayFunc()
+			{
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,0.0);
+				gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+				glDrawElements();
+				glAnimation();
+			}
+			var screenDistance=0.3;
+			function glAnimation()
+			{
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				glUpdateViewPoint();
+				gluPerspective(30,gl.canvas.width/gl.canvas.height,1,100);
+				gluLookAt(0,0,screenDistance,0,0,0,0,1,0);
+				gl.uniform3fv(gl.program.lightDirection,lightDirection.elements);
+				glUniformLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				gl.uniformMatrix4fv(gl.program.viewMatrix,false,gl.viewMatrix.elements);
+				gl.drawElements(gl.TRIANGLES,gl.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glLoadIdentity()
+			{
+				gl.viewMatrix=new Matrix4();
+			}
+			function gluPerspective(fieldOfView,widthHeightRatio,near,far)
+			{
+				gl.viewMatrix.setPerspective(fieldOfView,widthHeightRatio,near,far);
+			}
+			function gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				var lookAtMatrix=new Matrix4();
+				lookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				gl.viewMatrix.multiply(lookAtMatrix);
+			}
+			function glUniformLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				var lookAtMatrix=new Matrix4();
+				lookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				lookAtMatrix.invert();
+				gl.uniformMatrix4fv(gl.program.lookAtMatrix,false,lookAtMatrix.elements);
+			}
+			var viewDistance=3.0;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var eyeX=0.0,eyeY=0.0,eyeZ=viewDistance,centerX=0.0,centerY=0.0,centerZ=0.0,upX=0,upY=1,upZ=0;
+			var currentMouseX=0,currentMouseY=0,currentMouseZ=0,mouseIsDown=false;
+			var translateMouseX=0,translateMouseY=0,translateMouseZ=0;
+			function glTransformViewPoint()
+			{
+				var k=-0.01;
+				eyeX+=viewDirection.x()*k*translateMouseZ;
+				eyeY+=viewDirection.y()*k*translateMouseZ;
+				eyeZ+=viewDirection.z()*k*translateMouseZ;
+				centerX=eyeX+viewDirection.x()*viewDistance;
+				centerY=eyeY+viewDirection.y()*viewDistance;
+				centerZ=eyeZ+viewDirection.z()*viewDistance;
+			}
+			function glUpdateViewPoint()
+			{
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+				gl.uniform3fv(gl.program.eyePosition,[eyeX,eyeY,eyeZ]);
+			}
+			function glRotateViewDirection()
+			{
+				var k=0.5;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				upX=viewUpDirection.x();
+				upY=viewUpDirection.y();
+				upZ=viewUpDirection.z();
+			}
+			var lightDistance=2.0;
+			var lightDirection=new Vector3([0.383,0.604,0.698]);
+			var lightUpDirection=new Vector3([0,1,0]);
+			var lightRightDirection=new Vector3([0.876,0,-0.481]);
+			var lightX=0,lightY=0,lightZ=lightDistance,lightCenterX=0,lightCenterY=0,lightCenterZ=0;
+			var rotLight=0,lightR=1,lightG=1,lightB=1,lightAngle=Math.PI/4;
+			var translateUpDown=0,translateRightLeft=0,translateMouseZ=0;
+			function glRotateLightDirection()
+			{
+				var k=1.2;
+				var rotUp=k*translateRightLeft;
+				var rotRight=-k*translateUpDown;
+				lightDirection.rotate(lightUpDirection,rotUp);
+				lightRightDirection.rotate(lightUpDirection,rotUp);
+				lightDirection.rotate(lightRightDirection,rotRight);
+				requestAnimationFrame(glAnimation,gl.canvas);
+			}
+			function glAddEventListener()
+			{
+				gl.canvas.onmousemove=mouseDragged;
+				gl.canvas.onmousedown=mouseDown;
+				gl.canvas.onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				glRotateViewDirection();
+				requestAnimationFrame(glAnimation,gl.canvas);
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)
+				{
+					translateRightLeft=-1;
+					glRotateLightDirection();
+				}
+				else if(e.keyCode==KEY_RIGHT)
+				{
+					translateRightLeft=1;
+					glRotateLightDirection();
+				}
+				else if(e.keyCode==KEY_UP)
+				{
+					translateUpDown=1;
+					glRotateLightDirection();
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					translateUpDown=-1;
+					glRotateLightDirection();
+				}
+				translateRightLeft=0;
+				translateUpDown=0;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="620">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</body>
+</html>

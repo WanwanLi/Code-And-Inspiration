@@ -1,0 +1,875 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Teapot</title>
+		<style>
+			body{ background-color:grey;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script src="webgl-object.js"></script>
+		<script src="webgl-color.js"></script>
+		<script src="webgl-metal.js"></script>
+		<script src="SkyTexture.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			attribute vec3 coordinate;
+			attribute vec3 color;
+			attribute vec3 normal;
+			attribute vec2 texCoord;
+			varying vec3 fragPosition;
+			varying vec3 fragNormal;
+			varying vec2 fragTexCoord;
+			uniform mat4 modelViewMatrix;
+			uniform mat4 coordinateMatrix;
+			uniform mat4 normalMatrix;
+			void main(void)
+			{
+				vec4 glPosition=coordinateMatrix*vec4(coordinate,1.0);
+				gl_Position=modelViewMatrix*glPosition;
+				fragPosition=glPosition.xyz;
+				vec4 glNormal=normalMatrix*vec4(normal,0.0);
+				fragNormal=normalize(glNormal.xyz);
+				fragTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			vec3 fragDiffuseColor;
+			vec3 fragTexColor;
+			vec3 fragTexCubeColor;
+			vec3 fragTexSphereColor;
+			vec3 fragSpecularColor;
+			vec3 fragAmbientColor;
+			varying vec3 fragPosition;
+			varying vec3 fragNormal;
+			varying vec2 fragTexCoord;
+			uniform sampler2D fragSampler2D;
+			uniform samplerCube fragSamplerCube;
+			uniform vec3 viewDirection;
+			uniform vec3 diffuseColor;
+			uniform vec3 specularColor;
+			uniform vec3 ambientColor;
+			uniform float shininess;
+			struct light
+			{
+				vec3 color;
+				vec3 position;
+				vec3 direction;
+				float angle;
+				mat4 positionMatrix;
+				mat4 directionMatrix;
+			};
+			uniform light spotLight;
+			vec4 textureSphere(sampler2D sampler,vec3 directionVector)
+			{
+				float x=directionVector.x;
+				float y=directionVector.y;
+				float z=directionVector.z;
+				float w=sqrt(x*x+y*y+(z+1.0)*(z+1.0));
+				float s=x/w*0.5+0.5;
+				float t=-y/w*0.5+0.5;
+				return texture2D(sampler,vec2(s,t));
+			}
+			float sig(float x)
+			{
+				return x>=0.0?1.0:-1.0;
+			}
+			vec4 textureMap(sampler2D sampler,vec3 directionVector)
+			{
+				float PI=3.1415926;
+				float x=directionVector.x;
+				float y=directionVector.y;
+				float z=directionVector.z;
+				float r=sqrt(x*x+z*z);
+				float s=(z>=0.0?acos(x/r):2.0*PI-acos(x/r))/(2.0*PI);
+				float t=acos(y)/PI;
+				return texture2D(sampler,vec2(s,t));
+			}
+			const int SpectralLength=9,SpectralLevel=3;
+			uniform sampler2D spectralSampler2D[SpectralLevel];
+			struct ColorMatchFunction
+			{
+				float X[SpectralLength];
+				float Y[SpectralLength];
+				float Z[SpectralLength];
+			};
+			uniform ColorMatchFunction colorMatchFunction;
+			uniform float colorSystem[8];
+			vec3 getRGBfromXYZ(vec3 xyz)
+			{
+				float xRed=colorSystem[0];
+				float yRed=colorSystem[1];
+				float xGreen=colorSystem[2];
+				float yGreen=colorSystem[3];
+				float xBlue=colorSystem[4];
+				float yBlue=colorSystem[5];
+				float xWhite=colorSystem[6];
+				float yWhite=colorSystem[7];
+
+				float x=xyz.x,y=xyz.y,z=xyz.z;
+				float xr=xRed,yr=yRed,zr=1.0-(xr + yr);
+				float xg=xGreen,yg=yGreen,zg=1.0-(xg + yg);
+				float xb=xBlue,yb=yBlue,zb=1.0-(xb + yb);
+				float xw=xWhite,yw=yWhite,zw=1.0-(xw + yw);
+
+				float rx=(yg * zb)-(yb * zg),ry=(xb * zg)-(xg * zb),rz=(xg * yb)-(xb * yg);
+				float gx=(yb * zr)-(yr * zb),gy=(xr * zb)-(xb * zr),gz=(xb * yr)-(xr * yb);
+				float bx=(yr * zg)-(yg * zr),by=(xg * zr)-(xr * zg),bz=(xr * yg)-(xg * yr);
+
+				float rw=((rx * xw) + (ry * yw) + (rz * zw)) / yw;
+				float gw=((gx * xw) + (gy * yw) + (gz * zw)) / yw;
+				float bw=((bx * xw) + (by * yw) + (bz * zw)) / yw;
+
+				rx=rx / rw;  ry=ry / rw;  rz=rz / rw;
+				gx=gx / gw;  gy=gy / gw;  gz=gz / gw;
+				bx=bx / bw;  by=by / bw;  bz=bz / bw;
+
+				float r=(rx*x) + (ry*y) + (rz*z);
+				float g=(gx*x) + (gy*y) + (gz*z);
+				float b=(bx*x) + (by*y) + (bz*z);
+				return vec3(r,g,b);
+			}
+			float gammaCorrect(float c)
+			{
+				float cc = 0.018;
+				if(c<cc)return c*(1.099*pow(cc,0.45)-0.099)/cc;
+				else return 1.099*pow(c,0.45)-0.099;
+			}
+			vec3 constrainRGB(vec3 rgb)
+			{
+				float r=rgb.r;
+				float g=rgb.g;
+				float b=rgb.b;
+				float w=0.0;
+				w=r<w?r:w;
+				w=g<w?g:w;
+				w=b<w?b:w;
+				if(w<0.0)rgb=rgb-w;
+				return rgb;
+			}
+			vec3 normalizeRGB(vec3 rgb)
+			{
+				float r=rgb.r,g=rgb.g,b=rgb.b;
+				float a=max(r,max(g,b));
+				return rgb/a;
+			}
+			vec3 getSpectralColor(float spectralValues[SpectralLength])
+			{
+				float r=0.0,g=0.0,b=0.0;
+				float X=0.0,Y=0.0,Z=0.0;
+				for(int i=0;i<SpectralLength;i++)
+				{
+					X+=spectralValues[i]*colorMatchFunction.X[i];
+					Y+=spectralValues[i]*colorMatchFunction.Y[i];
+					Z+=spectralValues[i]*colorMatchFunction.Z[i];
+				}
+				float W=X+Y+Z;
+				vec3 xyz=vec3(X/W,Y/W,Z/W);
+				vec3 rgb=getRGBfromXYZ(xyz);
+				rgb=vec3
+				(
+					gammaCorrect(rgb.r),
+					gammaCorrect(rgb.g),
+					gammaCorrect(rgb.b)
+				);
+				rgb=constrainRGB(rgb);
+				rgb=normalizeRGB(rgb);
+				return rgb;
+			}
+			vec4 spectralMap(vec3 directionVector)
+			{
+				float PI=3.1415926;
+				float x=directionVector.x;
+				float y=directionVector.y;
+				float z=directionVector.z;
+				float r=sqrt(x*x+z*z);
+				float s=(z>=0.0?acos(x/r):2.0*PI-acos(x/r))/(2.0*PI);
+				float t=acos(y)/PI;
+				float spectralValues[SpectralLength];
+				for(int i=0;i<SpectralLevel;i++)
+				{
+					vec2 texCoord=vec2(s,t);
+					vec4 texColor=texture2D(spectralSampler2D[i],texCoord);
+					spectralValues[i*3+0]=texColor.r;
+					spectralValues[i*3+1]=texColor.g;
+					spectralValues[i*3+2]=texColor.b;
+				}
+				return vec4(getSpectralColor(spectralValues),1);
+			}
+			struct metal
+			{
+				float n[SpectralLength];
+				float k[SpectralLength];
+			};
+			uniform metal textureMetal;
+			float Fresnel(float n,float k,float cosa)
+			{
+				float r2=n*n+k*k;
+				float cosa2=cosa*cosa;
+				float p2=(r2*cosa2-2.0*n*cosa+1.0);
+				p2=p2/(r2*cosa2+2.0*n*cosa+1.0);
+				float v2=(r2+cosa2-2.0*n*cosa);
+				v2=v2/(r2+cosa2+2.0*n*cosa);
+				return (p2+v2)/2.0;
+			}
+			vec4 metalMap(vec3 directionVector,vec3 normalDirection)
+			{
+				float PI=3.1415926;
+				float x=directionVector.x;
+				float y=directionVector.y;
+				float z=directionVector.z;
+				float r=sqrt(x*x+z*z);
+				float s=(z>=0.0?acos(x/r):2.0*PI-acos(x/r))/(2.0*PI);
+				float t=acos(y)/PI;
+				float spectralValues[SpectralLength];
+				float cosa=dot(directionVector,normalDirection);
+				for(int i=0;i<SpectralLevel;i++)
+				{
+					vec2 texCoord=vec2(s,t);
+					vec4 texColor=texture2D(spectralSampler2D[i],texCoord);
+					float n0=textureMetal.n[i*3+0],k0=textureMetal.k[i*3+0];
+					float n1=textureMetal.n[i*3+1],k1=textureMetal.k[i*3+1];
+					float n2=textureMetal.n[i*3+2],k2=textureMetal.k[i*3+2];
+					spectralValues[i*3+0]=Fresnel(n0,k0,cosa)*texColor.r;
+					spectralValues[i*3+1]=Fresnel(n1,k1,cosa)*texColor.g;
+					spectralValues[i*3+2]=Fresnel(n2,k2,cosa)*texColor.b;
+				}
+				return vec4(getSpectralColor(spectralValues),1);
+			}
+			void main(void)
+			{
+				vec3 lightColor=spotLight.color;
+				vec3 lightPosition=(spotLight.positionMatrix*vec4(spotLight.position,1.0)).xyz;
+				vec3 lightDirection=(spotLight.directionMatrix*vec4(spotLight.direction,1.0)).xyz;
+				float lightAngle=spotLight.angle;
+				vec3 fragLightDirection=normalize(lightPosition-fragPosition);
+				float cosAngle=max(dot(lightDirection*-1.0,fragLightDirection),0.0);
+				float cosLightAngle=cos(lightAngle);
+				float lightIntensity=max((cosAngle-cosLightAngle)/(1.0-cosLightAngle),0.0);
+				vec4 texColor=texture2D(fragSampler2D,fragTexCoord);
+				vec3 normalDirection=fragNormal;
+				float nDotL=dot(normalDirection,fragLightDirection);
+				vec3 reflectedLightDirection=fragLightDirection*-1.0+normalDirection*(nDotL*2.0);
+				reflectedLightDirection=reflect(fragLightDirection*-1.0,normalDirection);
+				reflectedLightDirection=normalize(reflectedLightDirection);
+				float rDotV=max(dot(reflectedLightDirection,viewDirection*-1.0),0.0);
+				nDotL=max(nDotL,0.0);
+				vec3 fragLightColor=lightColor*lightIntensity;
+				fragDiffuseColor=fragLightColor*diffuseColor*nDotL;
+				fragTexColor=fragLightColor*texColor.rgb*nDotL;
+				float nDotV=dot(normalDirection,viewDirection*-1.0);
+				vec3 reflectedViewDirection=viewDirection+normalDirection*(nDotV*2.0);
+				reflectedViewDirection=reflect(viewDirection,normalDirection);
+				reflectedViewDirection=normalize(reflectedViewDirection);
+				reflectedViewDirection.y*=-1.0;normalDirection.y*=-1.0;
+			//	fragTexCubeColor=textureCube(fragSamplerCube,reflectedViewDirection).rgb;
+			//	fragTexCubeColor=textureCube(fragSamplerCube,normalDirection).rgb;
+			//	fragTexSphereColor=textureSphere(fragSampler2D,normalDirection).rgb;
+			//	fragTexSphereColor=textureSphere(fragSampler2D,reflectedViewDirection).rgb;
+			//	fragTexSphereColor=textureMap(fragSampler2D,normalDirection).rgb;
+			//	fragTexSphereColor=textureMap(fragSampler2D,reflectedViewDirection).rgb;
+			//	fragTexSphereColor=spectralMap(reflectedViewDirection).rgb;
+				fragTexSphereColor=metalMap(reflectedViewDirection,normalDirection).rgb;
+				fragSpecularColor=fragLightColor*specularColor*pow(rDotV,shininess);
+				fragAmbientColor=ambientColor;
+				vec3 fragColor=fragDiffuseColor;
+				fragColor+=fragSpecularColor;
+				fragColor+=fragAmbientColor;
+				fragColor+=fragTexColor;
+				fragColor+=fragTexCubeColor;
+			//	gl_FragColor=vec4(fragLightColor*pow(rDotV,shininess),1.0);
+			//	gl_FragColor+=vec4(fragTexCubeColor,1.0);
+			//	gl_FragColor+=vec4(fragTexSphereColor*pow(rDotV,shininess),1.0);
+			//	gl_FragColor+=vec4(fragTexSphereColor*nDotL*0.3,1.0);
+				gl_FragColor+=vec4(fragTexSphereColor,1.0);
+			}
+		</script>
+		<script>
+			var canvas=null;
+			var request=null;
+			var gl=null;
+			var glProgram=null;
+			var glVertexShader=null;
+			var glFragmentShader=null;
+			function main()
+			{
+				canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					glInitShaders();
+					glCreateObjects();
+					glAddEventListener();
+					glCreateTextures();
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				glVertexShader=glCreateShader(gl.VERTEX_SHADER);
+				glFragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				glProgram=gl.createProgram();
+				gl.attachShader(glProgram,glVertexShader);
+				gl.attachShader(glProgram,glFragmentShader);
+				gl.linkProgram(glProgram);
+				if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(glProgram);
+				glProgram.coordinate=gl.getAttribLocation(glProgram,"coordinate");
+				glProgram.color=gl.getAttribLocation(glProgram,"color");
+				glProgram.normal=gl.getAttribLocation(glProgram,"normal");
+				glProgram.texCoord=gl.getAttribLocation(glProgram,"texCoord");
+				gl.enableVertexAttribArray(glProgram.coordinate);
+			//	gl.enableVertexAttribArray(glProgram.color);
+				gl.enableVertexAttribArray(glProgram.normal);
+				gl.enableVertexAttribArray(glProgram.texCoord);
+				glProgram.fragSampler2D=gl.getUniformLocation(glProgram,"fragSampler2D");
+				glProgram.fragSamplerCube=gl.getUniformLocation(glProgram,"fragSamplerCube");
+				gl.uniform1i(glProgram.fragSampler2D,0);
+				gl.uniform1i(glProgram.fragSamplerCube,1);
+				glProgram.modelViewMatrix=gl.getUniformLocation(glProgram,"modelViewMatrix");
+				glProgram.coordinateMatrix=gl.getUniformLocation(glProgram,"coordinateMatrix");
+				glProgram.normalMatrix=gl.getUniformLocation(glProgram,"normalMatrix");
+				glProgram.lightColor=gl.getUniformLocation(glProgram,"lightColor");
+				glProgram.lightPosition=gl.getUniformLocation(glProgram,"lightPosition");
+				glProgram.lightDirection=gl.getUniformLocation(glProgram,"lightDirection");
+				glProgram.lightAngle=gl.getUniformLocation(glProgram,"lightAngle");
+				glProgram.viewDirection=gl.getUniformLocation(glProgram,"viewDirection");
+				glProgram.diffuseColor=gl.getUniformLocation(glProgram,"diffuseColor");
+				glProgram.specularColor=gl.getUniformLocation(glProgram,"specularColor");
+				glProgram.ambientColor=gl.getUniformLocation(glProgram,"ambientColor");
+				glProgram.shininess=gl.getUniformLocation(glProgram,"shininess");
+				glProgram.spotLight=
+				{
+					color:gl.getUniformLocation(glProgram,"spotLight.color"),
+					position:gl.getUniformLocation(glProgram,"spotLight.position"),
+					direction:gl.getUniformLocation(glProgram,"spotLight.direction"),
+					angle:gl.getUniformLocation(glProgram,"spotLight.angle"),
+					positionMatrix:gl.getUniformLocation(glProgram,"spotLight.positionMatrix"),
+					directionMatrix:gl.getUniformLocation(glProgram,"spotLight.directionMatrix")
+				};
+				glProgram.spectralSampler2D=glGetUniformLocations(glProgram,"spectralSampler2D",spectralLength/3);
+				glUniform1i(glProgram.spectralSampler2D,[0,1,2]);
+				glProgram.colorMatchFunction=
+				{
+					X:glGetUniformLocations(glProgram,"colorMatchFunction.X",spectralLength),
+					Y:glGetUniformLocations(glProgram,"colorMatchFunction.Y",spectralLength),
+					Z:glGetUniformLocations(glProgram,"colorMatchFunction.Z",spectralLength)
+				};
+				glUniform1f(glProgram.colorMatchFunction.X,SkyTexture.X);
+				glUniform1f(glProgram.colorMatchFunction.Y,SkyTexture.Y);
+				glUniform1f(glProgram.colorMatchFunction.Z,SkyTexture.Z);
+				glProgram.colorSystem=glGetUniformLocations(glProgram,"colorSystem",colorSystem_SMPTE.length);
+				glUniform1f(glProgram.colorSystem,colorSystem_SMPTE);
+				glProgram.textureMetal=
+				{
+					n:glGetUniformLocations(glProgram,"textureMetal.n",spectralLength),
+					k:glGetUniformLocations(glProgram,"textureMetal.k",spectralLength)
+				};
+				glUniformTextureMetal(Metal.Au,SkyTexture.wavelength)
+			}
+			function glGetUniformLocations(glProgram,uniformName,length)
+			{
+				var uniformLocations=[];
+				for(var i=0;i<length;i++)
+				{
+					var uniformName_i=uniformName+"["+i+"]";
+					uniformLocations.push(gl.getUniformLocation(glProgram,uniformName_i));
+				}
+				return uniformLocations;
+			}
+			function glUniform1i(uniformName,array)
+			{
+				for(var i=0;i<array.length;i++)
+				{
+					gl.uniform1i(uniformName[i],array[i]);
+				}
+			}
+			function glUniform1f(uniformName,array)
+			{
+				for(var i=0;i<array.length;i++)
+				{
+					gl.uniform1f(uniformName[i],array[i]);
+				}
+			}
+			var colorSystem_SMPTE=[ 0.630,  0.340,  0.310,  0.595,  0.155,  0.070,  0.3127, 0.3291];
+			function glUniformTextureMetal(metal,wavelength)
+			{
+				for(var i=0;i<wavelength.length;i++)
+				{
+					var textureMetal_i=new MetalReflectance(metal,wavelength[i]);
+					gl.uniform1f(glProgram.textureMetal.n[i],textureMetal_i.n);
+					gl.uniform1f(glProgram.textureMetal.k[i],textureMetal_i.k);
+				}
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var Teapot_obj="Teapot";
+			var glObject=[];
+			function glCreateObjects()
+			{
+				glLoadObject(Teapot_obj);
+			}
+			function glLoadObject(fileName)
+			{
+				var request=new XMLHttpRequest();
+				request.onreadystatechange=function()
+				{
+					if(request.readyState==4)
+					{
+						var text=request.responseText;
+						glObject[fileName]=new FileObject(gl,fileName,text);
+					}
+				}
+				request.open("GET", fileName+".obj", true);
+				request.send();
+			}
+			var coordinatesBuffer=null,colorsBuffer=null,normalsBuffer=null,texCoordsBuffer=null;
+			var indicesBuffer=null;	
+			function glCreateGeometryInfo()
+			{
+				var coordinates=Teapot.coordinates;
+				var normals=Teapot.normals;
+				var texCoords=Teapot.texCoords;
+				var indices=Teapot.indices;
+				coordinatesBuffer=glCreateFloat32ArrayBuffer(coordinates,3);
+				glEnableVertexAttribute("coordinate",coordinatesBuffer);
+				normalsBuffer=glCreateFloat32ArrayBuffer(normals,3);
+				glEnableVertexAttribute("normal",normalsBuffer);
+				texCoordsBuffer=glCreateFloat32ArrayBuffer(texCoords,2);
+				glEnableVertexAttribute("texCoord",texCoordsBuffer);
+				indicesBuffer=glCreateUint16ArrayBuffer(indices);
+				indicesBuffer.numItems=indices.length;
+			}
+			var viewDistance=2.0;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var eyeX=0.0,eyeY=0.0,eyeZ=viewDistance,centerX=0.0,centerY=0.0,centerZ=0.0,upX=0,upY=1,upZ=0;
+			function glDisplayFunc()
+			{
+				glMaterial();
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,1.0);
+				gl.viewport(0,0,canvas.width,canvas.height);
+				glAnimation();
+			}
+			var rotY=0,axisX=0,axisY=1,axisZ=0,angle=1,scaleX=0.03,scaleY=scaleX,scaleZ=scaleX;
+			var rotLight=0,lightX=0.5,lightY=3.0,lightZ=4.0,lightR=1,lightG=1,lightB=1,lightAngle=Math.PI/22;
+			function glAnimation()
+			{
+				requestAnimationFrame(glAnimation,canvas);
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				gluPerspective(30,canvas.width/canvas.height,1,100);
+			//	glTransformViewPoint();
+				glUpdateViewPoint();
+				gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				glPushMatrix();
+				glRotate(rotLight,0,1,0);
+				glSpotLight(lightX,lightY,lightZ,0,0,0,lightR,lightG,lightB,lightAngle);
+				glPopMatrix();
+				rotY+=angle;
+			//	glTranslate(0.5,0,0);
+				glScale(scaleX,scaleY,scaleZ);
+				glRotate(rotY,axisX,axisY,axisZ);
+				glUniformMatrix();
+				//glActiveTexture(image_Imagebuffer);
+				glActiveMultiLevelTexture3(image_SpectralTexture);
+				glDrawElements(glObject[Teapot_obj]);
+			}
+			function glDrawElements(object)
+			{
+				if(object==null)return;
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.coordinatesBuffer);
+				gl.vertexAttribPointer(glProgram.coordinate,object.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+			//	gl.bindBuffer(gl.ARRAY_BUFFER,object.colorsBuffer);
+			//	gl.vertexAttribPointer(glProgram.color,object.colorsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.normalsBuffer);
+				gl.vertexAttribPointer(glProgram.normal,object.normalsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,object.texCoordsBuffer);
+				gl.vertexAttribPointer(glProgram.texCoord,object.texCoordsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,object.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,object.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glSpotLight(lightX,lightY,lightZ,centerX,centerY,centerZ,lightR,lightG,lightB,lightAngle)
+			{
+				var lightColor=new Vector3([lightR,lightG,lightB]);
+				var lightPosition=new Vector3([lightX,lightY,lightZ]);
+				var lightDirection=new Vector3([centerX-lightX,centerY-lightY,centerZ-lightZ]);
+				lightDirection.normalize();
+				gl.uniform3fv(glProgram.spotLight.color,lightColor.elements);
+				gl.uniform3fv(glProgram.spotLight.position,lightPosition.elements);
+				gl.uniform3fv(glProgram.spotLight.direction,lightDirection.elements);
+				gl.uniform1f(glProgram.spotLight.angle,lightAngle);
+				gl.uniformMatrix4fv(glProgram.spotLight.positionMatrix,false,glTransformMatrix.elements);
+				var normalMatrix=new Matrix4(glTransformMatrix);
+				normalMatrix.invert();
+				normalMatrix.transpose();
+			//	gl.uniformMatrix4fv(glProgram.spotLight.directionMatrix,false,glNormalMatrix.elements);
+				gl.uniformMatrix4fv(glProgram.spotLight.directionMatrix,false,normalMatrix.elements);
+
+			}
+			function glMaterial()
+			{
+				var ambientColor=new Vector3([0,0,0.05]);
+				var diffuseColor=new Vector3([0,1,0.05]);
+				var specularColor=new Vector3([0.5,0.5,0.5]);
+				var shininess=5.0;
+				gl.uniform3fv(glProgram.ambientColor,ambientColor.elements);
+				gl.uniform3fv(glProgram.diffuseColor,diffuseColor.elements);
+				gl.uniform3fv(glProgram.specularColor,specularColor.elements);
+				gl.uniform1f(glProgram.shininess,shininess);
+			}
+			var image_SpectralTexture="SkyTexture.js",spectralLength=9;
+			var image_Imagebuffer="imagebuffer.gif",glImageBuffer=null;
+			var glTexture=[];
+			function glCreateTextures()
+			{
+				glCreateImagebuffer();
+				glCreateImagebufferTexture(image_Imagebuffer,glImageBuffer);
+				glCreateSpectralTexture(image_SpectralTexture,SkyTexture,spectralLength);
+			}
+			function glCreateImageTexture(imageName)
+			{
+				var texture=gl.createTexture();
+				texture.image=new Image();
+				texture.image.onload=function(){glLoadImageTexture(texture);}
+				texture.image.src=imageName;
+				glTexture[imageName]=texture;
+			}
+			function glLoadImageTexture(texture)
+			{
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+				gl.generateMipmap(gl.TEXTURE_2D);
+				gl.bindTexture(gl.TEXTURE_2D, null);
+			}
+			function glCreateImagebuffer()
+			{
+				var width=4,height=4;
+				glImageBuffer=[];
+				var pixelsArray=[];
+				for(var i=0;i<height;i++)
+				{
+					for(var j=0;j<width;j++)
+					{
+						pixelsArray.push(255);
+						pixelsArray.push(0);
+						pixelsArray.push(0);
+					}
+				}
+				glImageBuffer.width=width;
+				glImageBuffer.height=height;
+				glImageBuffer.pixels=new Uint8Array(pixelsArray);
+			}
+			function glCreateImagebufferTexture(textureName,imageBuffer)
+			{
+				var texture=gl.createTexture();
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,imageBuffer.width,imageBuffer.height,0,gl.RGB,gl.UNSIGNED_BYTE,imageBuffer.pixels);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+				gl.generateMipmap(gl.TEXTURE_2D);
+				gl.bindTexture(gl.TEXTURE_2D, null);
+				glTexture[textureName]=texture;
+			}
+			function glActiveTexture(textureName)
+			{
+				var texture=glTexture[textureName];
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+			}
+			function glGetSpectralTextureImagebuffer(spectralTexture,spectralLength,level)
+			{
+				var imageBuffer=[],pixelsArray=[];
+				var colors=spectralTexture.spectralValue;
+				var width=spectralTexture.width;
+				var height=spectralTexture.height;
+				for(var i=0;i<height;i++)
+				{
+					for(var j=0;j<width;j++)
+					{
+						pixelsArray.push(colors[(i*width+j)*spectralLength+level*3+0]);
+						pixelsArray.push(colors[(i*width+j)*spectralLength+level*3+1]);
+						pixelsArray.push(colors[(i*width+j)*spectralLength+level*3+2]);
+					}
+				}
+				imageBuffer.width=width;
+				imageBuffer.height=height;
+				imageBuffer.pixels=new Float32Array(pixelsArray);
+				return imageBuffer;
+			}
+			function glCreateSpectralTexture(textureName,spectralTexture,spectralLength)
+			{
+				gl.getExtension("OES_texture_float");
+				var glSpectralTexture=[];
+				for(var i=0;i<spectralLength/3;i++)
+				{
+					var texture=gl.createTexture();
+					var imageBuffer=glGetSpectralTextureImagebuffer(spectralTexture,spectralLength,i);
+					gl.bindTexture(gl.TEXTURE_2D,texture);
+					gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,imageBuffer.width,imageBuffer.height,0,gl.RGB,gl.FLOAT,imageBuffer.pixels);
+					gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+					gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+					gl.generateMipmap(gl.TEXTURE_2D);
+					gl.bindTexture(gl.TEXTURE_2D,null);
+					glSpectralTexture.push(texture);
+				}
+				glTexture[textureName]=glSpectralTexture;
+			}
+			function glActiveMultiLevelTexture3(textureName)
+			{
+				var texture=glTexture[textureName];
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture[0]);
+				gl.activeTexture(gl.TEXTURE1);
+				gl.bindTexture(gl.TEXTURE_2D,texture[1]);
+				gl.activeTexture(gl.TEXTURE2);
+				gl.bindTexture(gl.TEXTURE_2D,texture[2]);
+			}
+			glFramebuffer=[];
+			function glCreateFramebufferTexture(textureName,imageWidth,imageHeight)
+			{
+				var framebuffer=gl.createFramebuffer();
+				gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
+				framebuffer.width=imageWidth;
+				framebuffer.height=imageHeight;
+				var texture=gl.createTexture();
+				gl.bindTexture(gl.TEXTURE_2D,texture);
+				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+				gl.generateMipmap(gl.TEXTURE_2D);
+				gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,framebuffer.width,framebuffer.height,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+				var renderbuffer=gl.createRenderbuffer();
+				gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
+				gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, framebuffer.width, framebuffer.height);
+				gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+				gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
+				gl.bindTexture(gl.TEXTURE_2D, null);
+				gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+				gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+				glFramebuffer[textureName]=framebuffer;
+				glTexture[textureName]=texture;
+			}
+			function glCreateCubeTexture(textureName,imageFormat)
+			{
+				gl.TEXTURE_CUBE_MAP_COORD=
+				[
+					gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+					gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+					gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+					gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+					gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+					gl.TEXTURE_CUBE_MAP_POSITIVE_Z
+				];
+				var texture=gl.createTexture();
+				texture.images=[],texture.imageCount=6;
+				for(var i=0;i<6;i++)
+				{
+					var image=new Image();
+					image.src=textureName+i+imageFormat;
+					image.onload=function(){glLoadCubeTexture(texture);}
+					texture.images[i]=image;
+				}
+				glTexture[textureName]=texture;
+			}
+			function glLoadCubeTexture(texture)
+			{
+				texture.imageCount--;
+				if(texture.imageCount==0)
+				{
+					gl.bindTexture(gl.TEXTURE_CUBE_MAP,texture);
+					for(var i=0;i<6;i++)
+					{
+ 						gl.texImage2D(gl.TEXTURE_CUBE_MAP_COORD[i],0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,texture.images[i]);
+						gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);
+						gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER,gl.LINEAR_MIPMAP_LINEAR);
+						gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+						gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+						gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+					}
+					gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+					gl.bindTexture(gl.TEXTURE_CUBE_MAP,null);
+				}
+			}
+			function glActiveCubeTexture(textureName)
+			{
+				var texture=glTexture[textureName];
+				gl.activeTexture(gl.TEXTURE1);
+				gl.bindTexture(gl.TEXTURE_CUBE_MAP,texture);
+			}
+			var glProjectionMatrix=null;
+			var glLookAtMatrix=null;
+			var glTransformMatrix=null;
+			var glTransformMatrixStack=[];
+			var glNormalMatrix=null;
+			var glNormalMatrixStack=[];
+			function glLoadIdentity()
+			{
+				glLookAtMatrix=new Matrix4();
+				glTransformMatrix=new Matrix4();
+				glNormalMatrix=new Matrix4();
+				glProjectionMatrix=new Matrix4();
+			}
+			function gluPerspective(fieldOfView,widthHeightRatio,near,far)
+			{
+				glProjectionMatrix.setPerspective(fieldOfView,widthHeightRatio,near,far);
+			}
+			function gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				glLookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+			}
+			function glTranslate(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setTranslate(x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+			}
+			function glRotate(angle,x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setRotate(angle,x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+				glNormalMatrix.multiply(transformMatrix);
+			}
+			function glScale(x,y,z)
+			{
+				var transformMatrix=new Matrix4();
+				transformMatrix.setScale(x,y,z);
+				glTransformMatrix.multiply(transformMatrix);
+			}
+			function glPushMatrix()
+			{
+				var transformMatrix=new Matrix4(glTransformMatrix);
+				glTransformMatrixStack.push(transformMatrix);
+				var normalMatrix=new Matrix4(glNormalMatrix);
+				glNormalMatrixStack.push(normalMatrix);
+			}
+			function glPopMatrix()
+			{
+				glTransformMatrix=glTransformMatrixStack.pop();
+				glNormalMatrix=glNormalMatrixStack.pop();
+			}
+			function glUniformMatrix()
+			{
+				var glModelViewMatrix=new Matrix4(glProjectionMatrix);
+				glModelViewMatrix.multiply(glLookAtMatrix);
+				gl.uniformMatrix4fv(glProgram.modelViewMatrix,false,glModelViewMatrix.elements);
+				gl.uniformMatrix4fv(glProgram.coordinateMatrix,false,glTransformMatrix.elements);
+				var normalMatrix=new Matrix4(glTransformMatrix);
+				normalMatrix.invert();
+				normalMatrix.transpose();
+			//	gl.uniformMatrix4fv(glProgram.normalMatrix,false,glNormalMatrix.elements);
+				gl.uniformMatrix4fv(glProgram.normalMatrix,false,normalMatrix.elements);
+			}
+			var currentMouseX=0,currentMouseY=0,currentMouseZ=0,mouseIsDown=false;
+			var translateMouseX=0,translateMouseY=0,translateMouseZ=0;
+			function glTransformViewPoint()
+			{
+				var k=-0.01;
+				eyeX+=viewDirection.x()*k*translateMouseZ;
+				eyeY+=viewDirection.y()*k*translateMouseZ;
+				eyeZ+=viewDirection.z()*k*translateMouseZ;
+				centerX=eyeX+viewDirection.x()*viewDistance;
+				centerY=eyeY+viewDirection.y()*viewDistance;
+				centerZ=eyeZ+viewDirection.z()*viewDistance;
+			}
+			function glUpdateViewPoint()
+			{
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+				gl.uniform3fv(glProgram.viewDirection,viewDirection.elements);
+			}
+			function glRotateViewDirection()
+			{
+				var k=0.2;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				upX=viewUpDirection.x();
+				upY=viewUpDirection.y();
+				upZ=viewUpDirection.z();
+			}
+			function glAddEventListener()
+			{
+				canvas.onmousemove=mouseDragged;
+				canvas.onmousedown=mouseDown;
+				canvas.onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				glRotateViewDirection();
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)rotLight-=5;
+				else if(e.keyCode==KEY_RIGHT)rotLight+=5;
+				else if(e.keyCode==KEY_UP)
+				{
+					if(lightAngle>=Math.PI/2)return;
+					lightAngle+=0.01*Math.PI;
+					gl.uniform1f(glProgram.lightAngle,lightAngle);
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					if(lightAngle<=0)return;
+					lightAngle-=0.01*Math.PI;
+					gl.uniform1f(glProgram.lightAngle,lightAngle);
+				}
+			}
+		</script>
+	</head>
+	<body onload="main()">
+		<canvas id="canvas1" width="1250" height="685">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+
+	</body>
+</html>

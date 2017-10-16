@@ -1,0 +1,25 @@
+
+D:\Code And Inspiration\C And Inspiration\15.C And JavaFlatLanguage\1.C And Javab1.0>javab test
+a=10
+b=5
+Move disk from A to C
+Move disk from A to B
+Move disk from C to B
+Move disk from A to C
+Move disk from B to A
+Move disk from B to C
+Move disk from A to C
+5!=120
+OK
+Thanks!
+Two
+Four
+Six
+name=Eight
+
+Ten
+1
+2
+10
+
+D:\Code And Inspiration\C And Inspiration\15.C And JavaFlatLanguage\1.C And Javab1.0>

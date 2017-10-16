@@ -1,0 +1,99 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=9
+integerNumber=15
+integerTableLength=6
+integerTable[0]=1
+integerTable[1]=2
+integerTable[2]=3
+integerTable[3]=1
+integerTable[4]=1
+integerTable[5]=0
+stringNumber=19
+stringTableLength=12
+stringTable[0]=a.txt
+stringTable[1]=a.txt
+stringTable[2]=a=
+stringTable[3]=a.txt
+stringTable[4]=a.txt
+stringTable[5]=a=
+stringTable[6]=a.txt
+stringTable[7]=ABCD
+stringTable[8]=HIJK
+stringTable[9]=UVW
+stringTable[10]=a.txt
+stringTable[11]=a=
+doubleNumber=11
+doubleTableLength=5
+doubleTable[0]=1.800000
+doubleTable[1]=1.500000
+doubleTable[2]=3.400000
+doubleTable[3]=1.000000
+doubleTable[4]=1.000000
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=60
+0: OPEN $0
+1: WRITE @0
+2: WRITE @1
+3: WRITE @2
+4: NEG @6,@3
+5: WRITE @6
+6: CLOSE
+7: OPEN $1
+8: MOV %4, 7
+9: READ @8
+10: MOV @7,@8
+11: NEG @9,@4
+12: NE @10,&4,@9
+13: JZ @10,20
+14: ADD $12,$2,+&4
+15: OUT $12
+16: MOV %4, 11
+17: READ @12
+18: MOV @11,@12
+19: JMP 11
+20: CLOSE
+21: OPEN $3
+22: WRITE #0
+23: WRITE #1
+24: WRITE #2
+25: NEG #5,#3
+26: WRITE #5
+27: CLOSE
+28: OPEN $4
+29: MOV %4, 6
+30: READ #7
+31: MOV #6,#7
+32: ADD $13,$5,+^4
+33: OUT $13
+34: MOV %4, 8
+35: READ #9
+36: MOV #8,#9
+37: NEG #10,#4
+38: NE @13,^4,#10
+39: JNZ @13,32
+40: CLOSE
+41: OPEN $6
+42: WRITE $7
+43: WRITE $8
+44: WRITE $9
+45: CLOSE
+46: OPEN $10
+47: MOV %4, 14
+48: READ $15
+49: MOV $14,$15
+50: EQ @14,*4,@5
+51: JNZ @14,58
+52: ADD $16,$11,+*4
+53: OUT $16
+54: MOV %4, 17
+55: READ $18
+56: MOV $17,$18
+57: JMP 50
+58: CLOSE
+59: EXIT

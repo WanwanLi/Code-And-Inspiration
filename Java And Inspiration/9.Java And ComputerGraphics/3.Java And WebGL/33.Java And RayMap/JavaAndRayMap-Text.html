@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And Image</title>
+		<style>
+			body{ background-color:black;}
+			canvas{ background-color:black;}
+		</style>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			uniform mat4 viewMatrix;
+			attribute vec2 texCoord;
+			attribute vec3 coordinate;
+			varying vec2 glTexCoord;
+			vec3 imageSize=vec3(1.0,1.0,0.0);
+			void main(void)
+			{
+				gl_Position=vec4(coordinate*imageSize,1.0);
+				glTexCoord=texCoord;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			varying vec2 glTexCoord;
+			uniform sampler2D sampler;
+			uniform sampler2D raySampler;
+		//	vec3 screenLightPosition=vec3(0.6,0.0,0.0);
+			uniform vec3 screenLightPosition;
+			const int NUM_SAMPLES =100;
+			float NUM_SAMPLES_f =100.0;
+			float Density=0.8;
+			float Weight=0.2;
+			float Decay = 0.995; 
+			uniform vec4 rayDiffuseColor;
+			vec4 textureRay(sampler2D sampler,vec2 texCoord)
+			{
+				vec2 deltaTexCoord = (texCoord - screenLightPosition.xy);  
+				deltaTexCoord *= 1.0 / NUM_SAMPLES_f * Density;  
+				vec3 color = texture2D(sampler, texCoord).rgb;
+				float illuminationDecay = 1.0;  
+				for (int i = 0; i < NUM_SAMPLES; i++)  
+				{
+					texCoord -= deltaTexCoord;  
+					vec3 sample = texture2D(sampler, texCoord).rgb;
+					sample *= illuminationDecay * Weight;  
+					color += sample;  
+					illuminationDecay *= Decay;  
+				}
+				return vec4(color, 1.0);
+			}
+			void main(void)
+			{
+				vec4 rayColor=textureRay(raySampler,glTexCoord)*0.07;
+				vec4 coloredRayColor=rayColor*rayDiffuseColor;//vec4(1.0,0.5,0.0,1.0);
+				vec4 texRayColor=texture2D(raySampler,glTexCoord)*0.45;
+				vec4 texColor=texture2D(sampler,glTexCoord)*0.2;
+				gl_FragColor=texColor+texRayColor+coloredRayColor;
+				if(glTexCoord.x<0.005)gl_FragColor=vec4(0,0,0,0);
+				if(glTexCoord.y<0.005)gl_FragColor=vec4(0,0,0,0);
+			}
+		</script>
+		<script>
+			var gl=null;
+			function main()
+			{
+				var canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					gl.canvas=canvas;
+					glInitShaders();
+					glCreateGeometryInfo()
+					glCreateElementsBuffer();
+					glInitTexture();
+					glCreateTexture("image0.jpg",0);
+					glCreateTexture("image1.jpg",1);
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				gl.vertexShader=glCreateShader(gl.VERTEX_SHADER);
+				gl.fragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				gl.program=gl.createProgram();
+				gl.attachShader(gl.program,gl.vertexShader);
+				gl.attachShader(gl.program,gl.fragmentShader);
+				gl.linkProgram(gl.program);
+				if(!gl.getProgramParameter(gl.program,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(gl.program);
+				gl.program.viewMatrix=gl.getUniformLocation(gl.program,"viewMatrix");
+				gl.program.coordinate=gl.getAttribLocation(gl.program,"coordinate");
+				gl.program.texCoord=gl.getAttribLocation(gl.program,"texCoord");
+				gl.enableVertexAttribArray(gl.program.coordinate);
+				gl.enableVertexAttribArray(gl.program.texCoord);
+				gl.sampler=gl.getUniformLocation(gl.program,"sampler");
+				gl.uniform1i(gl.sampler,0);
+				gl.raySampler=gl.getUniformLocation(gl.program,"raySampler");
+				gl.uniform1i(gl.raySampler,1);
+				gl.rayDiffuseColor=gl.getUniformLocation(gl.program,"rayDiffuseColor");
+				gl.screenLightPosition=gl.getUniformLocation(gl.program,"screenLightPosition");
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}	
+			function glCreateGeometryInfo()
+			{
+				var geometryInfo=[];
+				geometryInfo.coordinates=
+				[
+					-1.0, -1.0,  0.0,
+					1.0, -1.0,  0.0,
+					1.0,  1.0,  0.0,
+					-1.0,  1.0,  0.0
+
+				];
+				geometryInfo.texCoords=
+				[
+					0.0, 1.0,
+					1.0, 1.0,
+					1.0, 0.0,
+					0.0, 0.0,
+				];
+				geometryInfo.indices=[0,1,2,2,3,0];
+				gl.geometryInfo=geometryInfo;
+			}
+			function glCreateElementsBuffer()
+			{
+				var coordinates=gl.geometryInfo.coordinates;
+				var texCoords=gl.geometryInfo.texCoords;
+				var indices=gl.geometryInfo.indices;
+				var coordinatesData=new Float32Array(coordinates);
+				var texCoordsData=new Float32Array(texCoords);
+				var indicesData=new Uint16Array(indices);
+				gl.coordinatesBuffer=gl.createBuffer();
+				gl.texCoordsBuffer=gl.createBuffer();
+				gl.indicesBuffer=gl.createBuffer();
+				glBindBufferData(gl.ARRAY_BUFFER,gl.coordinatesBuffer,coordinatesData,3);
+				glBindBufferData(gl.ARRAY_BUFFER,gl.texCoordsBuffer,texCoordsData,2);
+				glBindBufferData(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer,indicesData,1);
+			}
+			function glBindBufferData(gl_ARRAY_BUFFER,buffer,data,itemSize)
+			{
+				gl.bindBuffer(gl_ARRAY_BUFFER,buffer);
+				gl.bufferData(gl_ARRAY_BUFFER,data,gl.STATIC_DRAW);
+				buffer.itemSize=itemSize;
+				buffer.numItems=data.length/itemSize;
+			}
+			function glDrawElements()
+			{
+				gl.bindBuffer(gl.ARRAY_BUFFER,gl.coordinatesBuffer);
+				gl.vertexAttribPointer(gl.program.coordinate,gl.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ARRAY_BUFFER,gl.texCoordsBuffer);
+				gl.vertexAttribPointer(gl.program.texCoord,gl.texCoordsBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,gl.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			var r=1,g=0,b=1,x=0.6,y=0,clock=0,interval=5,counter=0;
+			function glDisplayFunc()
+			{
+				requestAnimationFrame(glDisplayFunc,gl.canvas);
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,0.0);
+				gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+				gl.uniform4fv(gl.rayDiffuseColor,[r,g,b,1]);
+				gl.uniform3fv(gl.screenLightPosition,[x,y,0]);
+				glDrawElements();
+				if(clock>interval)
+				{
+					x=0.5+0.2*Math.random();
+					y=0.2*Math.random();
+					if(counter%3==0)r=Math.random();
+					else if(counter%3==1)g=Math.random();
+					else if(counter%3==2)b=Math.random();
+					counter++;
+					clock=0;
+				}
+				clock++;
+			}
+			function glInitTexture()		
+			{
+
+				gl.texture=[];
+				gl.TEXTURES=[];
+				gl.TEXTURES[0]=gl.TEXTURE0;
+				gl.TEXTURES[1]=gl.TEXTURE1;
+				gl.TEXTURES[2]=gl.TEXTURE2;
+				gl.texture.number=0;
+			}
+			function glCreateTexture(imageName,textureIndex)
+			{
+				gl.texture[textureIndex]=gl.createTexture();
+				gl.texture[textureIndex].image=new Image();
+				gl.texture[textureIndex].image.onload=function(){glLoadTexture(textureIndex);}
+				gl.texture[textureIndex].image.src=imageName;
+			}
+			function glLoadTexture(textureIndex)
+			{
+				gl.texture.number++;
+				gl.activeTexture(gl.TEXTURES[textureIndex]);
+				gl.bindTexture(gl.TEXTURE_2D,gl.texture[textureIndex]);
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gl.texture[textureIndex].image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+				if(gl.texture.number==2)glDisplayFunc();
+			}
+		</script>
+	</head>
+	<body onload="main()" text=white>
+		<H1>Synaesthesia: Music Hall for the Deaf</H1>
+		<B>"Light of Tomorrow" International VELUX Award 2014 Competition Project </B><Br>
+		Match the light with the music: Acoustics¡úLight<Br>
+		[Audio Analysis]¡ú[Frequency,Intensity,Timbre]¡ú[Hue,Brightness,Saturation]¡ú[Red,Green,Blue]<Br><Br>
+		<canvas id="canvas1" width="900" height="500" >
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+</center>
+	</body>
+</html>

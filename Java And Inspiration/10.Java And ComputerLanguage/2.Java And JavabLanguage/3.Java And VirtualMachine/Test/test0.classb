@@ -1,0 +1,53 @@
+6
+b
+1
+6
+test0
+5
+19
+0
+0
+14
+5
+3
+frame.jpg
+a=
+c=
+0
+0
+4
+0
+6
+10
+19
+19
+29
+INT &0
+INT &6
+MUL &6, 3,* 5
+INT &7
+ADD &7,&6,+ 8
+MOV &0,&7
+INT &8
+ADD &8, 2,+ 8
+ENQ &8
+RET
+INT &2
+CALL 6
+INT &9
+DEQ &9
+INT &10
+MUL &10,&9,* 2
+INT &11
+ADD &11,&10,+ 1
+MOV &2,&11
+IMAGE $0, 50, 30
+STR &12
+MOV &12,$3
+ADD $3,$1,+&0
+PRINT &12
+STR &13
+MOV &13,$4
+ADD $4,$2,+&2
+PRINT &13
+EXIT

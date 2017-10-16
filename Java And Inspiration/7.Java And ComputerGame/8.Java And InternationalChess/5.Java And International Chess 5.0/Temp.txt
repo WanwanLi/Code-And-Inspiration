@@ -1,0 +1,29 @@
+
+<%@ page contentType="text/html;charset=GB2312" %>
+<HTML>
+<BODY>
+    <%!   
+     synchronized void countPeople()
+        { ServletContext  application=getServletContext(); 
+           Integer number=(Integer)application.getAttribute("Count");
+           if(number==null)
+              { number=new Integer(1);
+                application.setAttribute("Count",number); 
+              }
+         else
+              { number=new Integer(number.intValue()+1);
+                application.setAttribute("Count",number); 
+              }
+        }
+    %>
+    <% if(session.isNew())
+       {  countPeople();
+          Integer myNumber=(Integer)application.getAttribute("Count");
+          session.setAttribute("MyCount",myNumber);
+       }
+    %>
+<P><P>您是第
+   <%int a=((Integer)session.getAttribute("MyCount")).intValue();
+    %>
+    <%=a%>
+个访问本站的客户。

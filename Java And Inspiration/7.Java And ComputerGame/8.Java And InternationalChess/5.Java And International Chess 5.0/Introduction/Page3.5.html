@@ -1,0 +1,80 @@
+<Html>
+	<Head>
+		<Title>Introduction To international Chess 1.0~8.0________LiWanwan</Title>
+	</Head>
+	<Body>
+		<Table BackGround="Pictures\InternationalChess_BackGround.jpg" Width=1350 Height=750>
+			<Tr>
+				<Td>
+					<Table Width=700 Height=800>
+						<Tr>
+							<Td VAlign=Center>
+								<Font Face=Î¢ÈíÑÅºÚ Size=100 Color=White>
+									<B>Page3.5</B>
+								</Font>
+							</Td>
+						</Tr>
+						<Tr>
+							<Td><Table Width=700 Height=400><Tr><Td></Td></Tr></Table></Td>
+						</Tr>
+					</Table>
+				</Td>
+				<Td>
+
+					<Table Width=600 Height=600>
+						<Tr>
+							<Td Align=Center>
+								<Font Face=Î¢ÈíÑÅºÚ Size=40 Color=BE8E13>
+									<B>Min Max Method</B>
+								</Font>
+							</Td>
+						</Tr>
+						<Tr>
+							<Td>
+								<Font Face=Î¢ÈíÑÅºÚ Size=3 Color=BE8E13>
+									<B>private void setPositionForX()<Br>
+										{<Br>
+											&emsp;foreach(chess[i][j]=='.')<Br>
+											&emsp;{<Br>
+											&emsp;&emsp;chess[i][j]='X';nextScore=this.getMinScoreForO();<Br>
+											&emsp;&emsp;if(nextScore>maxScore)<Br>
+											&emsp;&emsp;{<Br>
+											&emsp;&emsp;&emsp;maxScore=nextScore;bestRow=i;bestColumn=j;<Br>
+											&emsp;&emsp;}<Br>
+											&emsp;&emsp;chess[i][j]='.';<Br>
+											&emsp;}<Br>
+											&emsp;chess[bestRow][bestColumn]='X';<Br>
+										}<Br>
+									</B>
+									<B>private  int getMinScoreForO()<Br>
+										{<Br>
+											&emsp;foreach(chess[i][j]=='.')<Br>
+											&emsp;{<Br>
+											&emsp;&emsp;chess[i][j]='O';nextScore=this.getMaxScoreForX();<Br>
+											&emsp;&emsp;if(nextScore&lt;minScore)minScore=nextScore;<Br>
+											&emsp;&emsp;chess[i][j]='.';<Br>
+											&emsp;}<Br>
+											&emsp;return minScore;<Br>
+										}<Br>
+									</B>
+								</Font>
+							</Td>
+						</Tr>
+						<Tr>
+							<Td Align=Right VAlign=Bottom>
+								<Form Name=Form1 Method=post Action=Page3.4.html>
+									<Input Type=Submit Value="Pre Page">
+								</Form>
+							</Td>
+							<Td Align=Right VAlign=Bottom>
+								<Form Name=Form2 Method=post Action=Page4.html>
+									<Input Type=Submit Value="Next Page">
+								</Form>
+							</Td>
+						</Tr>
+					</Table>
+				</Td>
+			</Tr>			
+		</Table>
+	</Body>
+</Html>

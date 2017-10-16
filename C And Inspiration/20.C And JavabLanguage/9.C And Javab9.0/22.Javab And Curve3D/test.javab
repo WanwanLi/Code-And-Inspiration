@@ -1,0 +1,8 @@
+public test()
+{
+	addLight(1,<0,0,-1>);
+	setColor(<0,1,1>);
+	setStep(<1000,10,1>);
+	func(t) f=[w=100.0]<t,sin(t*w),cos(t*w)>*t,g=0.01*t;
+	addCurve3D(f,0:1.25,g,0:1);
+}

@@ -1,0 +1,12 @@
+﻿  glew.c
+  bstrlib.c
+  glsw.c
+  Windows.c
+  OpenGL.c
+  Generating code
+  279 of 280 functions (99.6%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  OpenGL.vcxproj -> C:\Code And Inspiration\C And Inspiration\18.C And OpenGL\8.C And PhongShading\vs2015\Release\OpenGL.exe
+  OpenGL.vcxproj -> C:\Code And Inspiration\C And Inspiration\18.C And OpenGL\8.C And PhongShading\vs2015\Release\OpenGL.pdb (Full PDB)

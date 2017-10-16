@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/activity_main"
+	android:background="#000000"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingBottom="@dimen/activity_vertical_margin"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:paddingTop="@dimen/activity_vertical_margin"
+	tools:context="com.android.project.MainActivity">
+		
+	<TextView
+		android:id="@+id/textView1"
+		android:textSize="30dp" 
+		android:textColor="#00d00c"
+		android:text="Java And EditImage"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="20dp" />
+
+	<ImageSwitcher
+		android:id="@+id/imageSwitcher1"
+		android:src="@drawable/image_main"
+		android:layout_below="@+id/textView1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/textView1"
+		android:layout_alignRight="@+id/textView1"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="20dp" />
+
+	<EditText
+		android:id="@+id/editText1"
+		android:hint=" red  "
+		android:textSize="20dp" 
+		android:background="#eff9ee"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/textView1"
+		android:layout_below="@+id/imageSwitcher1"
+		android:layout_marginTop="20dp" />
+
+	<EditText
+		android:id="@+id/editText2"
+		android:hint="green "
+		android:textSize="20dp" 
+		android:background="#eff9ee"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBaseline="@+id/editText1"
+		android:layout_toRightOf="@+id/editText1"
+		android:layout_marginLeft="20dp" />
+
+	<EditText
+		android:id="@+id/editText3"
+		android:hint=" blue "
+		android:textSize="20dp" 
+		android:background="#eff9ee"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBaseline="@+id/editText2"
+		android:layout_toRightOf="@+id/editText2"
+		android:layout_marginLeft="20dp" />
+
+	<EditText
+		android:id="@+id/editText4"
+		android:hint="alpha"
+		android:textSize="20dp" 
+		android:background="#eff9ee"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignRight="@+id/textView1"
+		android:layout_alignBaseline="@+id/editText3"
+		android:layout_toRightOf="@+id/editText3"
+		android:layout_marginLeft="20dp" />
+
+	<Button	
+		android:id="@+id/button1"
+		android:text="Mul"
+		android:textSize="30dp" 
+		android:textColor="#eff9ee" 
+		android:background="#243b8b"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/editText1"
+		android:layout_alignLeft="@+id/textView1"
+		android:layout_marginTop="20dp" />
+
+	<Button	
+		android:id="@+id/button2"
+		android:text="Add"
+		android:textSize="30dp" 
+		android:textColor="#eff9ee" 
+		android:background="#243b8b"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBaseline="@+id/button1"
+		android:layout_toRightOf="@+id/button1"
+		android:layout_marginLeft="10dp" />
+
+	<Button	
+		android:id="@+id/button3"
+		android:text="RES"
+		android:textSize="30dp" 
+		android:textColor="#eff9ee" 
+		android:background="#243b8b"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignRight="@+id/textView1"
+		android:layout_alignBaseline="@+id/button2"
+		android:layout_toRightOf="@+id/button2"
+		android:layout_marginLeft="10dp" />
+
+	<Button	
+		android:id="@+id/button4"
+		android:text="Prev"
+		android:textSize="30dp" 
+		android:background="@drawable/image_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/button1"
+		android:layout_alignLeft="@+id/textView1"
+		android:layout_marginTop="20dp" />
+
+	<Button	
+		android:id="@+id/button5"
+		android:text="Next"
+		android:textSize="30dp" 
+		android:background="@drawable/image_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignRight="@+id/textView1"
+		android:layout_alignBaseline="@+id/button4"
+		android:layout_toRightOf="@+id/button4"
+		android:layout_marginLeft="20dp" />
+
+</RelativeLayout>

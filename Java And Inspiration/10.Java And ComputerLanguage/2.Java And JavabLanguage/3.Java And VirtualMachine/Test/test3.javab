@@ -1,0 +1,19 @@
+int a(int b)
+{
+	return b+3;
+}
+public test3()
+{
+	int c=a(3)+a(a(5+a(2)));
+	int d=this.nextInt()*(2+this.nextInt());
+	int[] e=new int[5];
+	int l=this.length(e)+3;
+	this.println("l="+l);
+	this.println("d="+d);
+	e[0]=2;
+	int k=a(e[0]);
+	this.println("k="+k);
+	double PI=3.1415926;
+	this.println("sin90="+this.sin(PI/2));
+	this.println("cos0="+this.cos(45-45));
+}

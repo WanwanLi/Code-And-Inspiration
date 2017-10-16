@@ -1,0 +1,15 @@
+#  XSEDE User Portal Access
+# User name: wa448855 
+# Password: RhinoEiton@126.com
+
+# Log on to XSEDE Single Sign-On (SSO) Hub
+ssh wa448855@login.xsede.org
+RhinoEiton@126.com
+
+# Log on to HPC Maverick Server
+gsissh -p 2222 maverick.tacc.xsede.org
+
+# Check Left Time to Expire
+grid-proxy-info -timeleft
+
+# If Expire: logout of the SSO hub and log back in again

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<records>
+	<XMLTable outcome="pass" type="Scheduled Self-Test" timestamp="5/13/2014 11:00:04 AM" stationSN="UAA025" elapsedTime="Elapsed time: 681 seconds" stationOS="2.036" stationSSW="RT-APPS-1.007" stationPowerCycles="638">
+		<Asset name="SLOT0#00" serialNumber="N/A" elapsedTime="62.5" outcome="pass" timestamp="5/13/2014 10:47:39 AM" />
+		<Asset name="SLOT0#01" serialNumber="N/A" elapsedTime="46.875" outcome="pass" timestamp="5/13/2014 10:47:39 AM" />
+		<Asset name="DCPSLVA#07" serialNumber="0548A01407" elapsedTime="6640.625" outcome="pass" timestamp="5/13/2014 10:50:32 AM" />
+		<Asset name="DCPSLVB#00" serialNumber="1133A02297" elapsedTime="6656.25" outcome="pass" timestamp="5/13/2014 10:50:39 AM" />
+		<Asset name="DCPSLVC#00" serialNumber="0649A00047" elapsedTime="6656.25" outcome="pass" timestamp="5/13/2014 10:50:46 AM" />
+		<Asset name="DCPSLVC#01" serialNumber="0347A00029" elapsedTime="6656.25" outcome="pass" timestamp="5/13/2014 10:50:52 AM" />
+		<Asset name="ACPSHV#00" serialNumber="0715A01266" elapsedTime="78.125" outcome="pass" timestamp="5/13/2014 10:50:59 AM" />
+		<Asset name="ACPSHV#01" serialNumber="0817A01013" elapsedTime="78.125" outcome="pass" timestamp="5/13/2014 10:50:59 AM" />
+		<Asset name="ACPSHV#02" serialNumber="0645A03856" elapsedTime="78.125" outcome="pass" timestamp="5/13/2014 10:50:59 AM" />
+		<Asset name="DTI#00" serialNumber="304E1FF" elapsedTime="24468.75" outcome="pass" timestamp="5/13/2014 10:50:59 AM" />
+		<Asset name="DTI#01" serialNumber="300956B" elapsedTime="20921.875" outcome="pass" timestamp="5/13/2014 10:51:24 AM" />
+		<Asset name="DTI#02" serialNumber="304EA0B" elapsedTime="20875" outcome="pass" timestamp="5/13/2014 10:51:45 AM" />
+		<Asset name="DTI#03" serialNumber="3025AAE" elapsedTime="20937.5" outcome="pass" timestamp="5/13/2014 10:52:06 AM" />
+		<Asset name="DTI#04" serialNumber="301C391" elapsedTime="20968.75" outcome="pass" timestamp="5/13/2014 10:52:27 AM" />
+		<Asset name="DTI#05" serialNumber="3004B7D" elapsedTime="21000" outcome="pass" timestamp="5/13/2014 10:52:47 AM" />
+		<Asset name="DTI#06" serialNumber="301C393" elapsedTime="20906.25" outcome="pass" timestamp="5/13/2014 10:53:08 AM" />
+		<Asset name="DTI#07" serialNumber="3029249" elapsedTime="20859.375" outcome="pass" timestamp="5/13/2014 10:53:29 AM" />
+		<Asset name="ATI#00" serialNumber="3024B53 3022703" elapsedTime="76203.125" outcome="pass" timestamp="5/13/2014 10:53:50 AM" />
+		<Asset name="ATI#01" serialNumber="3058D45 305917B" elapsedTime="77218.75" outcome="pass" timestamp="5/13/2014 10:55:06 AM" />
+		<Asset name="ATI#02" serialNumber="301BB29 30147E2" elapsedTime="81531.25" outcome="pass" timestamp="5/13/2014 10:56:24 AM" />
+		<Asset name="GPI#00" serialNumber="581316 584395" elapsedTime="5203.125" outcome="pass" timestamp="5/13/2014 10:57:45 AM" />
+		<Asset name="GPI#01" serialNumber="667336 651949 635442 561573" elapsedTime="4468.75" outcome="pass" timestamp="5/13/2014 10:57:51 AM" />
+		<Asset name="GPI#02" serialNumber="668658 662513 668665 662508 666658 662468" elapsedTime="14203.125" outcome="pass" timestamp="5/13/2014 10:57:55 AM" />
+		<Asset name="PPLDL#00" serialNumber="561573" elapsedTime="93.75" outcome="pass" timestamp="5/13/2014 10:58:09 AM" />
+		<Asset name="WFRD#00" serialNumber="22075" elapsedTime="671.875" outcome="pass" timestamp="5/13/2014 10:58:09 AM" />
+		<Asset name="DMM#00" serialNumber="MY45000491" elapsedTime="15140.625" outcome="pass" timestamp="5/13/2014 10:58:10 AM" />
+		<Asset name="FTIC#00" serialNumber="05033296" elapsedTime="62.5" outcome="pass" timestamp="5/13/2014 10:58:25 AM" />
+		<Asset name="SGMA#00" serialNumber="36830" elapsedTime="47953.125" outcome="pass" timestamp="5/13/2014 10:58:25 AM" />
+		<Asset name="AWFG#00" serialNumber="0702809" elapsedTime="78.125" outcome="pass" timestamp="5/13/2014 10:59:13 AM" />
+		<Asset name="BTI#00" serialNumber="30132D6" elapsedTime="5937.5" outcome="pass" timestamp="5/13/2014 10:59:13 AM" />
+		<Asset name="PGEN#00" serialNumber="DE42B00598" elapsedTime="7187.5" outcome="pass" timestamp="5/13/2014 10:59:19 AM" />
+		<Asset name="ACPSPM#00" serialNumber="0117467" elapsedTime="1312.5" outcome="pass" timestamp="5/13/2014 10:59:26 AM" />
+		<Asset name="SPECAN#00" serialNumber="US46400178" elapsedTime="36281.25" outcome="pass" timestamp="5/13/2014 10:59:28 AM" />
+	</XMLTable>
+</records>

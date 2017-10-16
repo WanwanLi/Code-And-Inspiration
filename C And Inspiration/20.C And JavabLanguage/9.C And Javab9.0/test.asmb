@@ -1,0 +1,98 @@
+methodNumber=1
+methodTable[0]=test
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=0
+classNumber=0
+identifierNumber=15
+integerNumber=17
+integerTableLength=16
+integerTable[0]=0
+integerTable[1]=0
+integerTable[2]=1
+integerTable[3]=0
+integerTable[4]=1
+integerTable[5]=1
+integerTable[6]=2
+integerTable[7]=2
+integerTable[8]=2
+integerTable[9]=2
+integerTable[10]=10
+integerTable[11]=20
+integerTable[12]=20
+integerTable[13]=80
+integerTable[14]=0
+integerTable[15]=0
+doubleNumber=53
+doubleTableLength=7
+doubleTable[0]=2.000000
+doubleTable[1]=2.000000
+doubleTable[2]=1.500000
+doubleTable[3]=2.000000
+doubleTable[4]=2.000000
+doubleTable[5]=12.566370
+doubleTable[6]=0.005000
+stringNumber=0
+stringTableLength=0
+vectorNumber=2
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=58
+0: MOV #7,@0
+1: MOV #8,@1
+2: NEG @16,@2
+3: MOV #9,@16
+4: LIGHT #0,~7
+5: MOV #10,@3
+6: MOV #11,@4
+7: MOV #12,@5
+8: COLOR ~10
+9: MOV %3, 13
+10: MOV %4, 14
+11: MOV %6, 15
+12: MOV #15,#1
+13: MOV %7, 16
+14: MOV #16,#2
+15: MOV %8, 17
+16: MUL #19,^4,/@6
+17: COS #18,#19
+18: SIN #21,^3
+19: MUL #20,#18,*#21
+20: MUL #24,^4,/@7
+21: SIN #23,#24
+22: MUL #27,#3,*^3
+23: SIN #26,#27
+24: MUL #25,#23,*#26
+25: ADD #22,#20,-#25
+26: MOV #17,#22
+27: MOV %11, 28
+28: MUL #30,^4,/@8
+29: SIN #29,#30
+30: SIN #32,^3
+31: MUL #31,#29,*#32
+32: MUL #35,^4,/@9
+33: COS #34,#35
+34: MUL #38,#4,*^3
+35: SIN #37,#38
+36: MUL #36,#34,*#37
+37: ADD #33,#31,+#36
+38: MOV #28,#33
+39: ADD #42,^6,+^8
+40: COS #44,^4
+41: MUL #43,#42,*#44
+42: MOV #39,#43
+43: MUL #45,^7,*^11
+44: MOV #40,#45
+45: ADD #46,^6,+^8
+46: SIN #48,^4
+47: MUL #47,#46,*#48
+48: MOV #41,#47
+49: VMUL \0,~39,/@10
+50: MOV \1,\0
+51: MOV #49,@11
+52: MOV #50,@12
+53: MOV #51,@13
+54: STEP ~49
+55: MOVPI #52
+56: MESH3D \1,13,14,@14,#52,@15,#5,11,51,#6
+57: EXIT

@@ -1,0 +1,10 @@
+public test3()
+{
+	this.setScale(10,10,10);
+	for(int i=0;i<360;i++)
+	{
+		this.setTranslation(this.cos(i),this.sin(i),i);
+		this.setColor(255,i,0);
+		this.addText3D("A");
+	}
+}

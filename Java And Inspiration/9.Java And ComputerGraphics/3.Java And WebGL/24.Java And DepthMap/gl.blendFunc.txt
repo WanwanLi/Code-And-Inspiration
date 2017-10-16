@@ -1,0 +1,31 @@
+webgl里面有一个函数gl.blendFunc函数来进行颜色混合设置,它有两个参数
+
+	gl.blendFunc(gl.SRC_FACTOR,gl.DST_FACTOR);
+	gl_FragColor=gl.SRC_FACTOR*gl_FrontColor+gl.DST_FACTOR*gl_BackColor;
+
+        gl.SRC_FACTOR: 表示源因子，
+        gl.DST_FACTOR: 表示目标因子
+        这两个参数可以有多个值，
+        gl.ZERO: 表示使用0.0作为因子，实际上相当于不使用这种颜色参与混合运算
+        gl.ONE: 表示使用1.0作为因子，实际上相当于完全使用这种颜色参与混合运算
+        gl.SRC_ALPHA: 表示使用源颜色的alpha值作为因子
+        gl.DST_ALPHA: 表示使用目标颜色的alpha值作为因子
+        gl.ONE_MINUS_SRC_ALPHA: 表示用1.0减去源因子的alpha值来作为因子
+        gl.ONE_MINUS_DST_ALPHA: 表示用1.0减去目标因子的alpha值来作为因子
+
+        除此之外，还有gl.SRC_COLOR(把源颜色的四个分量分别作为因子的四个分量),
+        gl.ONE_MINUS_SRC_COLOR, gl.DST_COLOR, gl.ONE_MINUS_DST_COLOR等
+        旧版本的opengl的可能有一些限制，就目前来说都应该可以使用,还有其他的一些
+        值，gl.CONST_COLOR(设置一个常量颜色，将其四个分量分别作为因子的四个分量),
+        gl.ONE_MINUS_CONST_COLOR, gl.CONST_ALPHA,gl.ONE_MINUS_CONST_ALPHA,
+        gl.SRC_ALPHA_SATURATE等,
+
+        举例来说
+        glBlendFunc(gl.ONE,gl.ZERO); 表示完全使用源颜色，完全不使用目标颜色
+        隐藏画面效果和使用混合前一样(当然效率可能低一些),
+        glBlendFunc(gl.ZERO,gl.ONE) 完全使用目标颜色，完全不使用源颜色，这时
+        画什么都没有画上去，
+        glBlendFunc(gl.SRC_ALPHA, gl.ONEMINUS_SRC_ALPHA); 使用源颜色的alpha值作为源因子
+        使用1.0减去源alpha值作为目标因子.
+        glBlendFunc(gl.ONE,gl.ONE); 这完全使用源颜色和目标颜色，比如红色(1,0,0)和
+        绿色(0,1,1) 相加的(1,1,0)黄色

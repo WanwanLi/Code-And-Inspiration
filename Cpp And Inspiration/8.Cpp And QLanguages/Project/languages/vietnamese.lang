@@ -1,0 +1,25 @@
+﻿Languages : Ngôn ngữ
+chinese : Trung Quốc
+hindi : tiếng Hin-ddi
+japanese : tiếng Nhật
+korean : Hàn Quốc
+thai : Thái Lan
+vietnamese : Tiếng Việt
+french : người Pháp
+english : Anh
+wood : Cây
+snow : Tuyết
+grass : cỏ
+flame : lửa
+QHBoxLayout : bố trí hộp
+QGridLayout : bố trí lưới
+QFormLayout : bố trí bàn
+QTextEdit : hộp văn bản
+QLineEdit : chỉnh sửa thanh
+QRadioButton : nút radio
+QPushButton : Nhấp vào nút 
+Line : một dòng văn bản
+File : Tập tin
+Quit : Thoát
+OK : ĐƯỢC
+Cancel : hủy bỏ

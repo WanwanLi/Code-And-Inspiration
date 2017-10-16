@@ -1,0 +1,25 @@
+{
+  "RuntimeTotalizerReport" : 
+  {
+      "RTT_Version" : "",
+      "lastUpdate" : "13-01-2011 07:34:31",
+    "Station" : 
+    {
+            "name" : "NA",
+        "StationNomenclature" : "NA",
+        "StationPartNumber" : "NA",
+        "StationSerialNumber" : "NA",
+        "StationConfigFile" : "NA",
+        "StationOS_Version" : "2.030",
+        "StationSoftwareVersion" : "1.0.74.5 ",
+        "StationSMAT_Version" : "NA",
+        "StationDevVersion" : "NA",
+        "StationTotalHoursOn" : "0",
+        "StationPowerOnCycles" : "1",
+        "StationTotalHealhtyHoursOn" : "0"
+    },
+    "Assets" : 
+    {
+    }
+  }
+}

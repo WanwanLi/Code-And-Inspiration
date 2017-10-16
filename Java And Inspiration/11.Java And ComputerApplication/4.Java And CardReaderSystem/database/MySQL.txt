@@ -1,0 +1,3 @@
+Create Database CardReaderDatabase;
+use CardReaderDatabase;
+Create Table UserInfoTable (ID int primary key not null auto_increment ,NO text,Name text,Balance int,Occupation text);

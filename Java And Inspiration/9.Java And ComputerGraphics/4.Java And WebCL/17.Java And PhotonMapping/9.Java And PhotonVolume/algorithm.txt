@@ -1,0 +1,61 @@
+
+			kernel_emit_photons(kernel i,j)
+			{
+				photonInfo.position=lightPosition;
+				photonInfo.color=lightColor/photonNum;
+				photonInfo.direction=lightDirection(i,j);
+				ray=[photonInfo.position,photonInfo.direction];
+				if(intersect(ray,Object))
+				{
+					photonInfo.position=intersection.position;
+					photonInfo.normal=intersection.normal;
+					photonInfo.diffuse=intersection.color;
+				}
+				else invalidate(photonTexture.position[i,j]);
+				writeBackPhotonTexture(i,j,photonInfo);
+			}
+
+			kernel_render_photons(kernel i,j)
+			{
+				position=eyePosition;
+				direction=viewDirection(i,j);
+				ray=[position,direction];
+				if(intersect(ray,Object))
+				{
+					position=intersection.position;
+					normal=intersection.normal;
+					color=intersection.color;
+					irradiance=gather_Photons();
+					resultColor=color*irradiance;
+				}
+				writeBackCanvasPixel(i,j,resultColor);
+			}
+
+			kernel_scatter_photons(kernel i,j,k)
+			{
+				photonInfo.color=lightColor/photonNum;
+				photonInfo.direction=lightDirection(i,j);
+				photonInfo.distance=k*interval;
+				if(photonInfo.distance>=maxDistance[i,j])invalidate(photonTexture.position[i,j,k]);
+				photonInfo.position=lightPosition+photonInfo.distance*photonInfo.direction;
+			}
+
+
+			kernel_gather_photons(kernel i,j,pixelColor)
+			{
+				position=eyePosition;
+				direction=viewDirection(i,j);
+				ray=[position,direction];
+				near=minDistance(i,j);
+				far=maxDistance(i,j);
+				if(far>0)
+				{
+					irradiance=marching_ray(near,far);
+					resultColor=irradiance+pixelColor;
+				}
+				writeBackCanvasPixel(i,j,resultColor);
+			}	
+
+
+
+

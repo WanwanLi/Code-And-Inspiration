@@ -1,0 +1,49 @@
+methodNumber=1
+methodTable[0]=FileReader
+methodPointerTable[0]=0
+methodReturnTypeTable[0]=5
+objectNumber=1
+classNumber=1
+classTable[0]=FileWriter
+identifierNumber=12
+integerNumber=4
+integerTableLength=2
+integerTable[0]=0
+integerTable[1]=43
+doubleNumber=0
+doubleTableLength=0
+stringNumber=10
+stringTableLength=6
+stringTable[0]=file1.txt
+stringTable[1]=file.txt
+stringTable[2]= 
+stringTable[3]==(
+stringTable[4]=)GetProcAddress(hinstance.'
+stringTable[5]=');
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=23
+0: NEW 1,0
+1: ENQ $0
+2: RUN 1
+3: OPEN $1
+4: MOV %4, 2
+5: MOV @2,@0
+6: LT @3,&4,@1
+7: JZ @3,20
+8: OUT &4
+9: MOV %6, 6
+10: READ $7
+11: MOV $6,$7
+12: MOV %8, 8
+13: ADD $9,$2,+*6,+$3,+*6,+$4,+*6,+$5
+14: MOV $8,$9
+15: OUT *8
+16: ENQ *8
+17: INVOKE 1,6
+18: INC &4
+19: JMP 6
+20: CLOSE
+21: INVOKE 1,12
+22: EXIT

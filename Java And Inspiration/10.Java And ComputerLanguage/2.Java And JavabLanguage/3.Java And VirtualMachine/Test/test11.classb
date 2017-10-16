@@ -1,0 +1,58 @@
+3
+Test11
+5
+0
+0
+0
+15
+3
+3
+a==b
+a<b
+a>b
+7
+3
+3.1415926
+0.1
+1.0E-10
+0
+0
+38
+DOU &1
+MOV &1,#0
+DOU &7
+MOV &7,#3
+DOU &8
+MOV &8,#4
+MUL #4,&1,/ 6
+SIN #3,&8
+PRINT &7
+INT &4
+MOV &4, 10
+INT &5
+MOV &5, 10
+ARY &6
+MOV &6, 5
+LEN 16,&6, 2
+MOV #5,#1
+MOV #6,#2
+INT &9
+ADD &9, 0,+ 5
+INT &11
+ADD &11, 1,+ 5
+INT &10
+EQ &10,^9,^11
+JZ &10,27
+PRINT $0
+JMP 37
+INT &12
+ADD &12, 0,+ 5
+INT &14
+ADD &14, 1,+ 5
+INT &13
+LT &13,^12,^14
+JZ &13,36
+PRINT $1
+JMP 37
+PRINT $2
+EXIT

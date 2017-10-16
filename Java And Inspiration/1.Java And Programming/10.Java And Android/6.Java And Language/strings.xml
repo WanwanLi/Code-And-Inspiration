@@ -1,0 +1,8 @@
+﻿<resources>
+	<string name="app_name">project</string>
+	<string name="english">Hello Android!</string>
+	<string name="hindi">ట్యుటోరియల్స్ పాయింట్</string>
+	<string name="marathi">शिकवण्या बिंदू</string>
+	<string name="arabic">نقطة الدروس</string>
+	<string name="chinese">你好！安卓</string>
+</resources>

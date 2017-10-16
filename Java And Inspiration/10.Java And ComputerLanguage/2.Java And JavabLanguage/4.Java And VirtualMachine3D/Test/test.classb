@@ -1,0 +1,17 @@
+1
+test2
+0
+8
+1
+1
+my Java Flat 3D OK Hello : 
+0
+8
+NEW test2
+FONT  1, 0
+COLOR  255, 255, 0
+SCALE  20, 50, 100
+MUL &7, 20,* -1
+TRANS  20, 0,&7
+TEXT $0
+EXIT

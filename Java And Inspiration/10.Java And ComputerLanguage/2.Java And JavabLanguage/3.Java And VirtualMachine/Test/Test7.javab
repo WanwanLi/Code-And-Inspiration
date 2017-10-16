@@ -1,0 +1,60 @@
+public Test7()
+{
+	int k=0;
+	while(k<3||(k+5<10))
+	{
+		if(k>=3.0)
+		{
+			this.println("k="+k);
+		}
+		k++;
+	}
+	for(int i=0;i<10&&i<20-15;i++)
+	{
+		if(i<3.0)
+		{
+			this.println("i="+i);
+		}
+		else
+		{
+			this.println("i>=3.0");
+		}
+	}
+	String[] s1=new String[]{"a.1","s.2"};
+	s1[0]=s1[0]+","+s1[1];
+	this.println(s1[0]);
+	double[] d1=new double[]{1.1,1.2};
+	d1[0]=d1[0]+d1[1];
+	this.println("d1[0]="+d1[0]);
+	double[] a1=new double[10];
+	int[] k1=new int[10];
+	for(int i=0;i<10&&i<20;i++)
+	{
+		a1[i]=0.2*i;
+		k1[i]=2*i;
+	}
+	for(int i=0;i<10;i++)
+	{
+		this.println("a1="+a1[i]);
+		this.println("k1="+k1[i]);
+	}
+	double d2=0.5,d3;
+	String i1,i2,i3="i3",i4;
+	i1="i1";
+	String s5,s6="s6";
+	String a="abc";
+	s5="s5";
+	int c=8.4,d=3,e,f=4;
+	this.println(a);
+	int[] p=new int[]{2,4,6,9};
+	double k=c+d;
+	this.println("c="+c);
+	if(!(c>p[d]&&3<5)||c+d<d&&c<10.5)
+	{
+		this.println("greater");
+	}
+	else
+	{
+		this.println("less");
+	}
+}

@@ -1,0 +1,37 @@
+methodNumber=3
+methodTable[0]=FileWriter
+methodTable[1]=writeString
+methodTable[2]=closeFile
+methodPointerTable[0]=0
+methodPointerTable[1]=6
+methodPointerTable[2]=12
+methodReturnTypeTable[0]=5
+methodReturnTypeTable[1]=4
+methodReturnTypeTable[2]=4
+objectNumber=0
+classNumber=0
+identifierNumber=8
+integerNumber=0
+integerTableLength=0
+doubleNumber=0
+doubleTableLength=0
+stringNumber=2
+stringTableLength=0
+vectorNumber=0
+declarationsLength=0
+beginInstructionPointer=0
+instructionsLength=14
+0: PUSH *1
+1: MOV %1, 0
+2: DEQ $0
+3: OPEN *1
+4: POP *1
+5: EXIT
+6: PUSH *4
+7: MOV %4, 1
+8: DEQ $1
+9: WRITE *4
+10: POP *4
+11: RET
+12: CLOSE
+13: RET

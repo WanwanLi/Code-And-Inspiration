@@ -1,0 +1,22 @@
+Introduction to Algorithms	Thomas H. Cormen	1
+Introduction to Algorithms	Charles E. Leiserson	2
+Introduction to Algorithms	Ronald L. Rivest	3
+Introduction to Algorithms	Clifford Stein	4
+Algorithm Design	Jon Kleinberg	1
+Algorithm Design	Eva Tardos	2
+Computational Complexity:A Modern Approach	Sanjeev Arora	1
+Computational Complexity:A Modern Approach	Boaz Barak	2
+Approximation Algorithms	Vijay V. Vazirani	1
+Network Flows:Theory, Algorithms, and Applications	Ravindra K.Ahuja	1
+Network Flows:Theory, Algorithms, and Applications	Thomas L.Magnanti	2
+Network Flows:Theory, Algorithms, and Applications	James B. Orlin	3
+Randomized Algorithms	Rajeev Motwani	1
+Randomized Algorithms	Prabhakar Raghavan	2
+The Probabilistic Method	Noga Alon	1
+Randomized Algorithms	Joel H. Spencer	2
+Probability and Computing:Randomized Algorithms and Probabilistic Analysis	Michael Mitzenmacher	1
+Probability and Computing:Randomized Algorithms and Probabilistic Analysis	Eli Upfal	2
+Combinatorial Optimization:Algorithms and Complexity	Christos H. Papadimitriou	1
+Combinatorial Optimization:Algorithms and Complexity	Kenneth Steiglitz	2
+Convex Optimization	Stephen Boyd	1
+Convex Optimization	Lieven Vandenberghe	2

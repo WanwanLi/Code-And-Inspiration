@@ -1,0 +1,27 @@
+For copy source code:
+cd c:
+cd Code\ And\ Inspiration/C\ And\ Inspiration/20.C\ And\ OpenCL/5.C\ And\ GraphFile/
+scp CAndGraphFile.c wa448855@maverick.tacc.xsede.org:CAndOpenCL/5.CAndGraphFile/CAndGraphFile.c 
+RhinoEiton@126.com
+scp graph-kernel.cl wa448855@maverick.tacc.xsede.org:CAndOpenCL/5.CAndGraphFile/graph-kernel.cl
+RhinoEiton@126.com
+scp CSVFile.csv wa448855@maverick.tacc.xsede.org:CAndOpenCL/5.CAndGraphFile/CSVFile.csv
+RhinoEiton@126.com
+
+For copy output file: 
+scp  wa448855@maverick.tacc.xsede.org:CAndOpenCL/5.CAndGraphFile/GraphFile.txt GraphFile.txt
+RhinoEiton@126.com
+
+To log on to the maverick server:
+ssh wa448855@maverick.tacc.xsede.org
+RhinoEiton@126.com
+cd CAndOpenCL/5.CAndGraphFile
+
+To complie the code:
+module load cuda
+gcc -I $TACC_CUDA_DIR/include -lOpenCL -o CAndGraphFile CAndGraphFile.c 
+
+To run this code under Interactive Development mode:
+idev
+./CAndGraphFile
+

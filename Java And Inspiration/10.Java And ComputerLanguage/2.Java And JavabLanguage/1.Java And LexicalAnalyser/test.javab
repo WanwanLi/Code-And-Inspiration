@@ -1,0 +1,15 @@
+public class Test
+{
+	public Test()
+	{
+		int a=3;
+		int b=a*3+(a+5);
+		char a='b';
+		char b='c';
+		String s="The Test of Java Flat Language ! ..;"
+		for(int i=0;i<10;i++)if(!equal(i,a))println("not equal");
+		println(s);
+		println(a);
+		println(b);
+	}
+}

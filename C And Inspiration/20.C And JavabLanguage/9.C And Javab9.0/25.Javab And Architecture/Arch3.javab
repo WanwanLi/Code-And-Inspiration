@@ -1,0 +1,16 @@
+public test()
+{
+	addLight(0.3,<0,0,-1>);
+	double A=0.05,u=10.0;
+	func(w,v) f=[H=2.85,R=0.85,Rv=R*cos(v)]<Rv*cos(w),H*sin(v),Rv*sin(w)>;
+	func(x,z) g=A*sin(z*cos(u*x)-z*sin(u*x)),q=-A*sin(z*cos(u*x)-z*sin(u*x));
+	translate(<0,-H/3,0>);
+	[
+		addSurface3D
+		(
+			f,0:2.1PI,-0.2PI:0.5PI,
+			g,-2.0PI:2.0PI,-2.0PI,4.0PI,
+			q,-2.0PI:2.0PI,-2.0PI,4.0PI
+		);
+	]
+}

@@ -1,0 +1,13 @@
+public test()
+{
+	addLight(2,<0,0,-1>);
+	func(x,y) f=<x,x*y,y>,g=[k=2]<k*x,x+y,k*y>,q=x-y,t=<x,y,0>;
+	setColors(g,0:0.5,0:0.5);
+	setTexture("JavaAndOpenGL",237,291);
+	setTexCoords(t,0:2,0:2);
+	setTexCoords(default);
+	setTexture(null);
+	setTexCoords(null);
+	setColors(null);
+	addSurface(f,-0.4:0.4,-0.4:0.4);
+}

@@ -1,0 +1,458 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Java And RayTracing</title>
+		<style>
+			body{ background-color:white;}
+			canvas{ background-color:black;}
+		</style>
+		<script src="webgl-matrix.js"></script>
+		<script src="webgl-object.js"></script>
+		<script src="webgl-grid.js"></script>
+		<script id="vertex-shader" type="x-shader/x-vertex">
+			uniform mat4 viewMatrix;
+			uniform mat4 lookAtMatrix;
+			attribute vec3 coordinate;
+			varying vec3 fragPosition;
+			void main(void)
+			{
+				gl_Position=viewMatrix*vec4(coordinate,1.0);
+				fragPosition=(lookAtMatrix*vec4(coordinate,1.0)).xyz;
+			}
+		</script>
+		<script id="fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+			varying vec3 fragPosition;
+			uniform vec3 eyePosition;
+			uniform vec3 lightDirection;
+			float shininess=20.0;
+			vec3 directionalLightColor=vec3(1.0,1.0,1.0);
+			vec3 objectColor=vec3(1.0,0.0,0.0);
+			float MaxError=0.001,MaxDistance=10000.0;
+			const int MaxTriangleNum=1024;
+			float MaxTriangleNumf=1024.0;
+			uniform sampler2D objectSampler2D[3];
+			bool intersectTriangle(vec3 v0,vec3 v1,vec3 v2,vec3 origin,vec3 direction,out float distance,out vec3 weight)
+			{
+				float error=0.00001;
+				vec3 d=direction,p=origin;
+				vec3 e1=v1-v0,e2=v2-v0;
+				vec3 h=cross(d,e2);
+				float a=dot(e1,h);
+				if(abs(a)<error){distance=MaxDistance;return false;}
+				float f=1.0/a;
+				vec3 s=p-v0;
+				float u=f*dot(s,h);
+				if (u < 0.0 || u > 1.0){distance=MaxDistance;return false;}
+				vec3 q=cross(s,e1);
+				float v=f*dot(d,q);
+				if (v < 0.0 || u + v > 1.0){distance=MaxDistance;return false;}
+				float t=f*dot(e2,q);
+				if(t>error){distance=t;weight=vec3(1.0-u-v,u,v);return true;}
+				else {distance=MaxDistance;return false;}
+			}
+			vec3 normalVector(vec3 v0,vec3 v1,vec3 v2)
+			{
+				vec3 e1=v1-v0,e2=v2-v0;
+				return normalize(cross(e1,e2));
+			}
+			vec3 interpolateVector(vec3 t,vec3 v0,vec3 v1,vec3 v2)
+			{
+				return v0*t.x+v1*t.y+v2*t.z;
+			}
+			bool intersectScene(vec3 origin,vec3 direction,out vec3 position,out vec3 normal, out vec3 color)
+			{
+				vec3 weight,v0,v1,v2,n0,n1,n2;
+				float minDistance=MaxDistance,distance;
+				float ds=1.0/(MaxTriangleNumf-1.0),s=0.0;
+				vec2 texCoord=vec2(0.0),texCoord0=vec2(0.0);
+				vec2 texCoord1=vec2(0.0),texCoord2=vec2(0.0);
+				for(int i=0;i<MaxTriangleNum;i++)
+				{
+					float index0=texture2D(objectSampler2D[0],texCoord).r;
+					if(index0<0.0)break;else texCoord0.s=index0*ds;
+					texCoord1.s=texture2D(objectSampler2D[0],texCoord).g*ds;
+					texCoord2.s=texture2D(objectSampler2D[0],texCoord).b*ds;
+					v0=texture2D(objectSampler2D[1],texCoord0).rgb;
+					v1=texture2D(objectSampler2D[1],texCoord1).rgb;
+					v2=texture2D(objectSampler2D[1],texCoord2).rgb;
+					bool b=intersectTriangle(v0,v1,v2,origin,direction,distance,weight);
+					if(b&&distance<minDistance)
+					{
+						position=origin+distance*direction;
+						n0=texture2D(objectSampler2D[2],texCoord0).rgb;
+						n1=texture2D(objectSampler2D[2],texCoord1).rgb;
+						n2=texture2D(objectSampler2D[2],texCoord2).rgb;
+						normal=normalize(interpolateVector(weight,n0,n1,n2));
+						color=objectColor;
+						minDistance=distance;
+					}
+					texCoord.s+=ds;
+				}
+				return minDistance<MaxDistance?true:false;
+			}
+			vec3 lightColor(vec3 normalDirection,vec3 viewDirection,vec3 color)
+			{
+				vec3 L=lightDirection,N=normalDirection;
+				vec3 R=reflect(-L,N),V=viewDirection;
+				float L_N=dot(L,N),R_V=max(dot(R,-V),0.0);
+				float reflectance=0.8*pow(R_V,shininess);
+				return clamp(L_N*color+reflectance*directionalLightColor,0.0,1.0);
+			}
+			void main(void)
+			{
+				vec3 viewDirection=normalize(fragPosition-eyePosition);
+				vec3 position,normal,color,viewColor=vec3(0.0);
+				if(intersectScene(eyePosition,viewDirection,position,normal,color))
+				{
+					viewColor=lightColor(normal,viewDirection,color);
+				}
+				gl_FragColor=vec4(viewColor,1.0);
+			}
+		</script>
+		<script>
+			var gl=null;
+			var selects=[];
+			function main()
+			{
+				var canvas=document.getElementById("canvas1");
+				try
+				{
+					gl=canvas.getContext("webgl");
+				}
+				catch(e){}
+				if(gl!=null)
+				{
+					gl.canvas=canvas;
+					gl.MaxTriangleNum=1024;
+					gl.objectDir="object/";
+					glInitShaders();
+					glCreateObjectTexture();
+				//	glSetObjectTexture("Teapot");
+					glSetObjectTexture("Pyramid");
+					glActiveMultiLevelTexture3(gl.objectDir);
+					glCreateGeometryInfo()
+					glCreateElementsBuffer();
+					glAddEventListener()
+					glDisplayFunc();
+				}
+				else alert( "Error: Your browser does not appear to support WebGL.");
+			}
+			function glInitShaders()
+			{
+				gl.vertexShader=glCreateShader(gl.VERTEX_SHADER);
+				gl.fragmentShader=glCreateShader(gl.FRAGMENT_SHADER);
+				gl.program=gl.createProgram();
+				gl.attachShader(gl.program,gl.vertexShader);
+				gl.attachShader(gl.program,gl.fragmentShader);
+				gl.linkProgram(gl.program);
+				if(!gl.getProgramParameter(gl.program,gl.LINK_STATUS))
+				{
+					alert("Unable to initialize the shader program.");
+				}
+				gl.useProgram(gl.program);
+				gl.program.viewMatrix=gl.getUniformLocation(gl.program,"viewMatrix");
+				gl.program.lookAtMatrix=gl.getUniformLocation(gl.program,"lookAtMatrix");
+				gl.program.eyePosition=gl.getUniformLocation(gl.program,"eyePosition");
+				gl.program.coordinate=gl.getAttribLocation(gl.program,"coordinate");
+				gl.enableVertexAttribArray(gl.program.coordinate);
+				gl.program.lightDirection=gl.getUniformLocation(gl.program,"lightDirection");
+				gl.program.objectSampler2D=glGetUniformLocations("objectSampler2D",3);
+				glUniform1i(gl.program.objectSampler2D,[0,1,2]);
+			}
+			function glGetUniformLocations(uniformName,length)
+			{
+				var uniformLocations=[];
+				for(var i=0;i<length;i++)
+				{
+					var uniformName_i=uniformName+"["+i+"]";
+					uniformLocations.push(gl.getUniformLocation(gl.program,uniformName_i));
+				}
+				return uniformLocations;
+			}
+			function glUniform1i(uniformName,array)
+			{
+				for(var i=0;i<array.length;i++)
+				{
+					gl.uniform1i(uniformName[i],array[i]);
+				}
+			}
+			function glCreateShader(SHADER_TYPE)
+			{
+				var shader=gl.createShader(SHADER_TYPE),shaderSource=null;
+				if(SHADER_TYPE==gl.VERTEX_SHADER)shaderSource=document.getElementById('vertex-shader').innerHTML;
+				else shaderSource=document.getElementById('fragment-shader').innerHTML;
+				gl.shaderSource(shader,shaderSource);
+				gl.compileShader(shader);
+				if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+				{
+					alert("Error compiling shader: "+gl.getShaderInfoLog(shader));
+				}
+				return shader;
+			}
+			var translate=[0,0,0],scale=0.05;
+			function glSetObjectTextureImagebuffer(objectData,op)
+			{
+				var imageBuffer=gl.texture[gl.objectDir][op].imageBuffer,pixelData;
+				if(op==0)pixelData=objectData.indices;
+				else if(op==1)pixelData=objectData.coordinates;
+				else if(op==2)pixelData=objectData.normals;
+				else return;
+				var length=pixelData.length;
+				if(op==0){for(var i=0;i<length;i++)imageBuffer.pixels[i]=pixelData[i];imageBuffer.pixels[length]=-1.0;}
+				else if(op==1)for(var i=0;i<length;i++)imageBuffer.pixels[i]=pixelData[i]*scale+translate[i%3];
+				else if(op==2)for(var i=0;i<length;i++)imageBuffer.pixels[i]=pixelData[i];
+			}
+			function glSetObjectTexture(objectName)
+			{
+				var objectData=getObjectData(gl.objectDir+objectName);
+				for(var i=0;i<3;i++)
+				{
+					var texture=gl.texture[gl.objectDir][i];
+					var imageBuffer=texture.imageBuffer;
+					glSetObjectTextureImagebuffer(objectData,i);
+					gl.bindTexture(gl.TEXTURE_2D,texture);
+					gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,imageBuffer.width,imageBuffer.height,0,gl.RGB,gl.FLOAT,imageBuffer.pixels);
+					gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+					gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+					gl.generateMipmap(gl.TEXTURE_2D);
+					gl.bindTexture(gl.TEXTURE_2D,null);
+				}
+			}
+			function glCreateTextureImagebuffer(width,height)
+			{
+				var imageBuffer=[];
+				imageBuffer.width=width;
+				imageBuffer.height=height;
+				imageBuffer.pixels=new Float32Array(height*width*3);
+				return imageBuffer;
+			}
+			function glCreateObjectTexture()
+			{
+				gl.getExtension("OES_texture_float");
+				gl.texture=[];var glObjectTexture=[];
+				for(var i=0;i<3;i++)
+				{
+					var texture=gl.createTexture();
+					var imageBuffer=glCreateTextureImagebuffer(gl.MaxTriangleNum,1);
+					texture.imageBuffer=imageBuffer;
+					glObjectTexture.push(texture);
+				}
+				gl.texture[gl.objectDir]=glObjectTexture;
+			}
+			function glActiveMultiLevelTexture3(textureName)
+			{
+				var texture=gl.texture[textureName];
+				gl.activeTexture(gl.TEXTURE0);
+				gl.bindTexture(gl.TEXTURE_2D,texture[0]);
+				gl.activeTexture(gl.TEXTURE1);
+				gl.bindTexture(gl.TEXTURE_2D,texture[1]);
+				gl.activeTexture(gl.TEXTURE2);
+				gl.bindTexture(gl.TEXTURE_2D,texture[2]);
+			}
+			function glCreateGeometryInfo()
+			{
+				var geometryInfo=[],f=-1.0;
+				geometryInfo.coordinates=
+				[
+					-1, -1, f,
+					 1,  -1, f,
+					 1,   1,  f,
+					-1,   1,  f
+				];
+				geometryInfo.indices=[0,1,2,2,3,0];
+				gl.geometryInfo=geometryInfo;
+			}
+			function glCreateElementsBuffer()
+			{
+				var coordinates=gl.geometryInfo.coordinates;
+				var indices=gl.geometryInfo.indices;
+				var coordinatesData=new Float32Array(coordinates);
+				var indicesData=new Uint16Array(indices);
+				gl.coordinatesBuffer=gl.createBuffer();
+				gl.indicesBuffer=gl.createBuffer();
+				glBindBufferData(gl.ARRAY_BUFFER,gl.coordinatesBuffer,coordinatesData,3);
+				glBindBufferData(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer,indicesData,1);
+			}
+			function glBindBufferData(gl_ARRAY_BUFFER,buffer,data,itemSize)
+			{
+				gl.bindBuffer(gl_ARRAY_BUFFER,buffer);
+				gl.bufferData(gl_ARRAY_BUFFER,data,gl.STATIC_DRAW);
+				buffer.itemSize=itemSize;
+				buffer.numItems=data.length/itemSize;
+			}
+			function glDrawElements()
+			{
+				gl.bindBuffer(gl.ARRAY_BUFFER,gl.coordinatesBuffer);
+				gl.vertexAttribPointer(gl.program.coordinate,gl.coordinatesBuffer.itemSize,gl.FLOAT,false,0,0);
+				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gl.indicesBuffer);
+				gl.drawElements(gl.TRIANGLES,gl.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glDisplayFunc()
+			{
+				gl.enable(gl.DEPTH_TEST);
+				gl.clearColor(0.0,0.0,0.0,0.0);
+				gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+				glDrawElements();
+				glAnimation();
+			}
+			var screenDistance=0.3;
+			function glAnimation()
+			{
+				gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+				glLoadIdentity();
+				glUpdateViewPoint();
+				gluPerspective(30,gl.canvas.width/gl.canvas.height,1,100);
+				gluLookAt(0,0,screenDistance,0,0,0,0,1,0);
+				gl.uniform3fv(gl.program.lightDirection,lightDirection.elements);
+				glUniformLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				gl.uniformMatrix4fv(gl.program.viewMatrix,false,gl.viewMatrix.elements);
+				gl.drawElements(gl.TRIANGLES,gl.indicesBuffer.numItems,gl.UNSIGNED_SHORT,0);
+			}
+			function glLoadIdentity()
+			{
+				gl.viewMatrix=new Matrix4();
+			}
+			function gluPerspective(fieldOfView,widthHeightRatio,near,far)
+			{
+				gl.viewMatrix.setPerspective(fieldOfView,widthHeightRatio,near,far);
+			}
+			function gluLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				var lookAtMatrix=new Matrix4();
+				lookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				gl.viewMatrix.multiply(lookAtMatrix);
+			}
+			function glUniformLookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ)
+			{
+				var lookAtMatrix=new Matrix4();
+				lookAtMatrix.lookAt(eyeX,eyeY,eyeZ,centerX,centerY,centerZ,upX,upY,upZ);
+				lookAtMatrix.invert();
+				gl.uniformMatrix4fv(gl.program.lookAtMatrix,false,lookAtMatrix.elements);
+			}
+			var viewDistance=3.0;
+			var viewDirection=new Vector3([0,0,-1]);
+			var viewUpDirection=new Vector3([0,1,0]);
+			var viewRightDirection=new Vector3([1,0,0]);
+			var eyeX=0.0,eyeY=0.0,eyeZ=viewDistance,centerX=0.0,centerY=0.0,centerZ=0.0,upX=0,upY=1,upZ=0;
+			var currentMouseX=0,currentMouseY=0,currentMouseZ=0,mouseIsDown=false;
+			var translateMouseX=0,translateMouseY=0,translateMouseZ=0;
+			function glTransformViewPoint()
+			{
+				var k=-0.01;
+				eyeX+=viewDirection.x()*k*translateMouseZ;
+				eyeY+=viewDirection.y()*k*translateMouseZ;
+				eyeZ+=viewDirection.z()*k*translateMouseZ;
+				centerX=eyeX+viewDirection.x()*viewDistance;
+				centerY=eyeY+viewDirection.y()*viewDistance;
+				centerZ=eyeZ+viewDirection.z()*viewDistance;
+			}
+			function glUpdateViewPoint()
+			{
+				eyeX=-viewDirection.x()*viewDistance;
+				eyeY=-viewDirection.y()*viewDistance;
+				eyeZ=-viewDirection.z()*viewDistance;
+				gl.uniform3fv(gl.program.eyePosition,[eyeX,eyeY,eyeZ]);
+			}
+			function glRotateViewDirection()
+			{
+				var k=0.5;
+				var rotUp=-k*translateMouseX;
+				var rotRight=-k*translateMouseY;
+				viewDirection.rotate(viewUpDirection,rotUp);
+				viewRightDirection.rotate(viewUpDirection,rotUp);
+				viewDirection.rotate(viewRightDirection,rotRight);
+				viewUpDirection.rotate(viewRightDirection,rotRight);
+				upX=viewUpDirection.x();
+				upY=viewUpDirection.y();
+				upZ=viewUpDirection.z();
+			}
+			var lightDistance=2.0;
+			var lightDirection=new Vector3([0.383,0.604,0.698]);
+			var lightUpDirection=new Vector3([0,1,0]);
+			var lightRightDirection=new Vector3([0.876,0,-0.481]);
+			var lightX=0,lightY=0,lightZ=lightDistance,lightCenterX=0,lightCenterY=0,lightCenterZ=0;
+			var rotLight=0,lightR=1,lightG=1,lightB=1,lightAngle=Math.PI/4;
+			var translateUpDown=0,translateRightLeft=0,translateMouseZ=0;
+			function glRotateLightDirection()
+			{
+				var k=1.2;
+				var rotUp=k*translateRightLeft;
+				var rotRight=-k*translateUpDown;
+				lightDirection.rotate(lightUpDirection,rotUp);
+				lightRightDirection.rotate(lightUpDirection,rotUp);
+				lightDirection.rotate(lightRightDirection,rotRight);
+				requestAnimationFrame(glAnimation,gl.canvas);
+			}
+			function glAddEventListener()
+			{
+				gl.canvas.onmousemove=mouseDragged;
+				gl.canvas.onmousedown=mouseDown;
+				gl.canvas.onmouseup=mouseUp;
+				document.onkeydown=keyPressed;
+			}
+			function mouseDragged(e)
+			{
+				if(!mouseIsDown)return;
+				var x=e.clientX,y=e.clientY;
+				translateMouseX=x-currentMouseX;
+				translateMouseY=y-currentMouseY;
+				currentMouseX=x;
+				currentMouseY=y;
+				glRotateViewDirection();
+				requestAnimationFrame(glAnimation,gl.canvas);
+			}
+			function mouseDown(e)
+			{
+				var x=e.clientX,y=e.clientY;
+				currentMouseX=x;
+				currentMouseY=y;
+				mouseIsDown=true;
+			}
+			function mouseUp(e)
+			{
+				mouseIsDown=false;
+			}
+			var KEY_LEFT=37,KEY_UP=38,KEY_RIGHT=39,KEY_DOWN=40;
+			function keyPressed(e)
+			{
+				if(e.keyCode==KEY_LEFT)
+				{
+					translateRightLeft=-1;
+					glRotateLightDirection();
+				}
+				else if(e.keyCode==KEY_RIGHT)
+				{
+					translateRightLeft=1;
+					glRotateLightDirection();
+				}
+				else if(e.keyCode==KEY_UP)
+				{
+					translateUpDown=1;
+					glRotateLightDirection();
+				}
+				else if(e.keyCode==KEY_DOWN)
+				{
+					translateUpDown=-1;
+					glRotateLightDirection();
+				}
+				translateRightLeft=0;
+				translateUpDown=0;
+			}
+		</script>
+	</head>
+	<body onload="main()">
+	<center>
+		<h1>Sample Rendering</h1>
+		<div>
+			<Canvas Id="canvas1" Width=550 Height=400>
+				Your browser does not support the HTML5 canvas element.
+			</canvas>
+		</div>
+		------------------------------------------------------------------------------------------------------------------------
+		<div>if( you want to rotate the camera )please drag this Object with your mouse.leftButton;</div>
+		<div>if( you want to rotate the light direction)please press right or left key;</div>
+		------------------------------------------------------------------------------------------------------------------------
+	</center>
+	</body>
+</html>
