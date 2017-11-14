@@ -1,0 +1,4 @@
+javac -d . ClassA.java
+javac -d . packageA\ClassA.java
+javac -d .\class -classpath .\classes\packageA packageA\packageB\ClassB.java
+javac -d .\class packageA\packageB\packageC\ClassC.java

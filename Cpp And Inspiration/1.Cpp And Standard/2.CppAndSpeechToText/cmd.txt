@@ -1,0 +1,1 @@
+g++ ASR.cpp -I/Windows/WINAPI/header/"Microsoft SDKs"/Windows/v7.0A/Include/ -I/Windows/WINAPI/header/"Microsoft Visual Studio 10.0"/VC/include/

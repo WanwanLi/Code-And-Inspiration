@@ -1,28 +1,32 @@
+#include <QFile>
 #include "QWindow.h"
-#include "QSolver.h"
+#include "QOptimizer.h"
+#include <QTextStream>
 #include <QMessageBox>
 
 QWindow::QWindow(QWidget* widget) : QWidget(widget)
 {
  	this->counter=0;
 	this->thread=new QThread();
- 	this->setFixedSize(500, 400);
+ 	this->setFixedSize(500, 450);
+	this->textEdit=new QTextEdit(this);
 	this->basicTimer=new QBasicTimer();
 	this->basicTimer->start(500, this);
-	this->solver=new QSolver(thread);
  	this->pushButton=newQPushButton
 	(
 		tr("Button"), tr("Tooltip"), 
-		this, QPixmap("button.png"), 
+		this, QPixmap("button.png"),
 		QFont("Courier", 20, 1, true), QIcon("icon.gif")
 	);
- 	this->pushButton->setGeometry(175, 150, 150, 45);
+	this->pushButton->setGeometry(175, 50, 150, 45);
+	this->textEdit->setGeometry(100, 125, 300, 200);
  	this->pushButton->setCheckable(true);
-	this->progressBar=new QProgressBar(this); 
-	this->progressBar->setGeometry(100, 250, 320, 20);
+	this->optimizer=new QOptimizer(thread);
+	this->progressBar=new QProgressBar(this);
+	this->progressBar->setGeometry(100, 350, 320, 20);
+	connect(optimizer, &QOptimizer::setValue, this, &QWindow::setValue);
 	connect(pushButton, &QPushButton::clicked, this, &QWindow::clicked);
 	connect(this, &QWindow::quit, QApplication::instance(), &QApplication::quit);
-	connect(solver, &QSolver::valueChanged, progressBar, &QProgressBar::setValue);
 }
 QPushButton* QWindow::newQPushButton(QString& name, QString& tooltip, QWidget* widget, QPixmap& pixmap, QFont& font, QIcon& icon)
 {
@@ -35,6 +39,15 @@ QPushButton* QWindow::newQPushButton(QString& name, QString& tooltip, QWidget* w
 	pushButton->setIcon(icon);
 	pushButton->setFlat(true);
 	return pushButton;
+}
+void QWindow::setValue(int value)
+{
+	this->progressBar->setValue(value);
+	QFile file(optimizer->fileName+"."+QString::number(value));
+	if(!file.open(QIODevice::ReadOnly))return;
+	QTextStream textStream(&file);
+	this->textEdit->setText(textStream.readAll());
+	file.close();  file.remove();
 }
 void QWindow::clicked(bool clicked)
 {

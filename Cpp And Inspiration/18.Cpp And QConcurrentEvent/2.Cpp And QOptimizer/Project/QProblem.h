@@ -12,7 +12,7 @@ class QProblem :  public QObject, public Problem<double>
 	Q_OBJECT
 
 	signals:
-	void valueUpdated(int iteration, const VectorXd& x);
+	void valueChanged(int iteration, const VectorXd& variable);
 
 	public:
 	double val;

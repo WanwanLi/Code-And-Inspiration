@@ -37,6 +37,7 @@ void QProblem::gradient(const VectorXd& variable, VectorXd &grad)
 #define emitUnderLine(x) {QString s=""; for(int i=0; i<x; i++)s+="_"; qDebug()<<s.left(30);}
 bool QProblem::callback(const Criteria<double> &criteria, const VectorXd& variable) 
 {
-	emit valueUpdated(criteria.iterations, variable);
-	emitUnderLine(100000); return true;
+	emit valueChanged(criteria.iterations, variable);
+	//emitUnderLine(100000); 
+	return true;
 }

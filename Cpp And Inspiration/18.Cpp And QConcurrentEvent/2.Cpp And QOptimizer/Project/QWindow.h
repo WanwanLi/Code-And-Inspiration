@@ -1,10 +1,11 @@
 #include <QThread>
+#include <QTextEdit>
 #include <QApplication>
 #include <QBasicTimer>
 #include <QPushButton>
 #include <QProgressBar>
 
-class QSolver;
+class QOptimizer;
 class QWindow : public QWidget
 {
 	Q_OBJECT
@@ -14,10 +15,14 @@ class QWindow : public QWidget
 	signals:
 	void quit();
 
+	private slots:
+	void setValue(int value);
+
 	private:	
 	int counter;
-	QSolver* solver;
 	QThread* thread;
+	QTextEdit* textEdit;
+	QOptimizer* optimizer;
 	QBasicTimer* basicTimer;
 	QPushButton* pushButton;
 	QProgressBar* progressBar;

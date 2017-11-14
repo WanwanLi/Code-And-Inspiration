@@ -161,6 +161,48 @@ MatrixXd transform2d(const Matrix3d& M, const VectorXd& X, const VectorXd& Y)
 }
 void testAlgebra7()
 {
+	cout<<"2D Transform Matrix Fitting(least-square):"<<endl;
+	cout<<"Where 2D Transform only rotate, translate, scale:"<<endl;
+	cout<<"Find best 2D transform matrix H that :"<<endl;
+	cout<<"	x2=[ a b c]x1	"<<endl;
+	cout<<"	y2=[-b a d]y1	"<<endl;
+	cout<<"	 1=[ 0 0 1] 1	"<<endl;
+	cout<<"So we have linear equation: Ah=b, where h=[a, b, c, d]"<<endl;
+	cout<<"a.x1+b.y1+c=x2"<<endl;
+	cout<<"a.y1-b.x1+d=y2"<<endl;
+	cout<<"where A[x]=[x1  y1 1  0]"<<endl;
+	cout<<"where A[y]=[y1 -x1 0  1]"<<endl;
+	VectorXd x1(6); x1<<1, 2, 3, 4, 5, 6;
+	VectorXd y1(6); y1<<2.1, 3.5, 4.2, 3.1, 4.4, 6.8;
+	Matrix3d H=Matrix3d::Random(); 
+	H(0, 0)++; H(1, 1)=H(0, 0); H(0, 1)=-H(1, 0);
+	H.row(2)=Vector3d(0.0, 0.0, 1.0);
+	MatrixXd M=transform2d(H, x1, y1);
+	VectorXd x2=M.col(0), y2=M.col(1);
+	cout<<"Original sample points (x1, y1) are:"<<endl;
+	cout<<"x1="<<endl<<x1<<endl; 
+	cout<<"y1="<<endl<<y1<<endl;
+	cout<<"2D Transform matrix is:"<<endl;
+	cout<<"H="<<endl<<H<<endl;
+	cout<<"Transformed sample points (x2, y2) are:"<<endl;
+	cout<<"x2="<<endl<<x2<<endl; 
+	cout<<"y2="<<endl<<y2<<endl;
+	cout<<"The least-square matrix equation is: Ah=b, h=[a, b, c, d]"<<endl;	
+	MatrixXd A(x1.size()*2, 4); VectorXd b(x1.size()*2); 
+	for(int i=0; i<x1.size(); i++)
+	{
+		VectorXd X(4); X<<x1(i),  y1(i), 1, 0; A.row(i*2+0)=X; b(i*2+0)=x2(i);
+		VectorXd Y(4); Y<<y1(i), -x1(i), 0, 1; A.row(i*2+1)=Y; b(i*2+1)=y2(i);
+	}
+	cout<<"A="<<endl<<A<<endl; cout<<"b="<<endl<<b<<endl; 
+	VectorXd h=A.jacobiSvd(ComputeThinU|ComputeThinV).solve(b);
+	Matrix3d T; T.row(0)=Vector3d(h(0), h(1), h(2)); 
+	T.row(1)=Vector3d(-h(1), h(0), h(3)); T.row(2)=Vector3d(0.0, 0.0, 1.0);
+	cout<<"The least-squares solution of Ah=b, h=[a, b, c, d] is:"<<endl<<T<<endl;
+	cout<<"Using solution to transform sample points:"<<endl<<transform2d(T, x1, y1)<<endl;
+}
+void testAlgebra8()
+{
 	cout<<"2D Affine Transform Matrix Fitting(least-square):"<<endl;
 	cout<<"Find best affine transform matrix H that :"<<endl;
 	cout<<"	x2=[h1 h2 h3]x1	"<<endl;
@@ -199,7 +241,7 @@ void testAlgebra7()
 	cout<<"The least-squares solution of Ah=b, h=(h1, ..., h6) is:"<<endl<<T<<endl;
 	cout<<"Using solution to transform sample points:"<<endl<<transform2d(T, x1, y1)<<endl;
 }
-void testAlgebra8()
+void testAlgebra9()
 {
 	cout<<"2D Homography Matrix Fitting(least-square):"<<endl;
 	cout<<"Find best homography matrix H that :"<<endl;
@@ -252,4 +294,5 @@ int main()
 	testAlgebra6();
 	testAlgebra7();
 	testAlgebra8();
+	testAlgebra9();
 }

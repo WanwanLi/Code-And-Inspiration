@@ -1,0 +1,11 @@
+Compile a java file:
+javac JavaAndConsole.java
+
+Execute a java file:
+java JavaAndConsole
+
+Create a jar file: 
+jar cfe JavaAndConsole.jar JavaAndConsole *.class
+
+Run a jar file:
+java -jar JavaAndConsole.jar

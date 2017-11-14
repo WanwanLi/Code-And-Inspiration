@@ -45,6 +45,6 @@ void QWindow::saveFile()
 	QFile file(fileName);
 	if(!file.open(QIODevice::WriteOnly)){QMessageBox::critical(this, "Error", "Can not save file"); return;}
 	QTextStream textStream(&file);
-	textStream<<textEdit->toPlainText();
+	textStream<<textEdit->toPlainText().toUpper();
 	file.close();
 }
