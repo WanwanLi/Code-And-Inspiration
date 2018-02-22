@@ -1,0 +1,104 @@
+Script started on Sun 03 Dec 2017 12:27:24 PM EST
+
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ pwd
+/home/wdubuque/CS262/project3_wdubuque_204
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ uname-a
+bash: uname-a: command not found
+bash-4.1$ una e[K[Kme -a
+Linux Zeus-2 2.6.32-696.10.2.el6.centos.plus.x86_64 #1 SMP Tue Sep 12 23:39:53 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ ls
+bin	   half.pgm	  inc  Makefile  Project3_wdubuque_typescript  yes.txt
+cs262.pgm  important.txt  lib  obj	 src
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ make
+gcc -O0 -I./inc -g -c src/image.c -o obj/image.o
+gcc -O0 -I./inc -g -c src/Stego.c -o obj/Stego.o
+gcc -O0 -I./inc -g -c src/StegoExtract.c -o obj/StegoExtract.o
+gcc -O0 -I./inc -g -o bin/image ./obj/image.o ./obj/Stego.o ./obj/StegoExtract.o
+./obj/StegoExtract.o: In function `main':
+/home/wdubuque/CS262/project3_wdubuque_204/src/StegoExtract.c:26: multiple definition of `main'
+./obj/Stego.o:/home/wdubuque/CS262/project3_wdubuque_204/src/Stego.c:22: first defined here
+collect2: error: ld returned 1 exit status
+Makefile:52: recipe for target 'bin/image' failed
+make: *** [bin/image] Error 1
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ ls[K[Kcd p[K[K o[Kobj
+bash-4.1$ 
+bash-4.1$ gcc -[K[K[K[K[Kls
+image.o  StegoExtract.o  Stego.o
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ gcc -0[Ko Stego Stego.o image.o
+bash-4.1$ gcc -o StegoExtract.o Steog[K[KgoExtract.o image.o
+[01m[Kgcc:[m[K [01;31m[Kfatal error: [m[Kinput file ‘[01m[KStegoExtract.o[m[K’ is the same as output file
+compilation terminated.
+bash-4.1$ gcc -o StegoExtract.o StegoExtract.o image.oStegoExtract.o image.o[KStegoExtract.o image.o[KStegoExtract.o image.o[K StegoExtract.o image.o
+bash-4.1$ 
+bash-4.1$ mv Stego.o ../Stego.o[K=[K[K[K[K[K[K[K[K[K[K[K[K[K ../Stego
+bash-4.1$ mv StegoExtract ../StegoExtract
+bash-4.1$ ..
+bash: ..: command not found
+bash-4.1$ cd ..
+bash-4.1$ ls
+bin	   important.txt  Makefile			src	      yes.txt
+cs262.pgm  inc		  obj				Stego
+half.pgm   lib		  Project3_wdubuque_typescript	StegoExtract
+bash-4.1$ Stego m[Khalft[K [K.pgm newhalf.pgm yest[K.txt
+
+Reading input file 'half.pgm'
+
+Reading binary file 'yes.txt'
+
+Writing file 'newhalf.pgm'
+bash-4.1$ s[KStegoExtract nw[Kewhalf.pgm newYes[K[K[Kyes.[K.txt
+
+Reading input file 'newhalf.pgm'
+
+size: 
+9
+01001452
+Writing file 'newyes.txt'
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ s[KStego ha[K[Kcs262.pgm impo[K[K[K[Knew C[Kcs262.pgm [K[K[K[K[K[K[K[K[K[K[Kcst[K262.pgm important.txt
+
+Reading input file 'cs262.pgm'
+
+Reading binary file 'important.txt'
+
+Writing file 'newcs262.pgm'
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ StegoExtract newcs262.pgm newimportant.txt
+
+Reading input file 'newcs262.pgm'
+
+size: 
+23
+01001452
+Writing file 'newimportant.txt'
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ exit
+
+Script done on Sun 03 Dec 2017 12:31:09 PM EST

@@ -1,0 +1,28 @@
+https://pypi.python.org/pypi/SpeechRecognition/
+
+Add Python & Pip into system path:
+
+C:\Python27\
+C:\Python27\Scripts\
+
+Then run cmd:
+
+pip install SpeechRecognition
+pip install pyaudio
+pip install pypiwin32
+
+
+Run python PythonAndSpeechRecognition.py cmd
+
+A moment of silence
+Say something!
+Trying to recognize audio
+You just said: letter A
+A moment of silence
+Say something!
+Trying to recognize audio
+You just said: exit
+
+
+more info about google API:
+http://www.geeksforgeeks.org/speech-recognition-in-python-using-google-speech-api/

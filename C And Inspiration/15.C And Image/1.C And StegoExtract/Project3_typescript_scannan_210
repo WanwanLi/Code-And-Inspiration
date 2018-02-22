@@ -1,0 +1,520 @@
+Script started on Wed 29 Nov 2017 08:53:22 PM EST
+bash-4.1$ 
+bash-4.1$ uname -a
+Linux Zeus-2 2.6.32-696.10.2.el6.centos.plus.x86_64 #1 SMP Tue Sep 12 23:39:53 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+bash-4.1$ 
+bash-4.1$ pwd
+/home/scannan/CS262/Project3_scannan_210
+bash-4.1$ 
+bash-4.1$ ls
+cs262.pgm  half.pgm  image.c  image.h  Makefile  Otten.ppm  payload.txt  Project3_typescript_scannan_210  Stego.c  StegoExtract.c  zd.ppm
+bash-4.1$ 
+bash-4.1$ cat Stego.c
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*
+ * Stego.c: A program for manipulating images                           *
+ *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+#include <string.h>
+#include "image.h"
+
+void setlsbs(unsigned char *p, unsigned char b0);
+
+int main(int argc, char *argv[])
+{  
+  int i, j, k, cover_bits, bits;
+  struct Buffer b = {NULL, 0, 0};
+  struct Image img = {0, NULL, NULL, NULL, NULL, 0, 0};
+  byte b0;
+   
+  if (argc != 4) 
+    {
+      printf("\n%s <cover_file> <stego_file> <file_to_hide> \n", argv[0]);
+      exit(1);
+    }
+  ReadImage(argv[1],&img);       // read image file into the image buffer img
+                                 // the image is an array of unsigned chars (bytes) of NofR rows
+                                 // NofC columns, it should be accessed using provided macros
+  ReadBinaryFile(argv[3],&b);    // Read binary data
+ 
+
+  // hidden information
+  // 
+  if (!GetColor)
+    cover_bits = img.NofC*img.NofR;
+  else 
+    cover_bits = 3*img.NofC*img.NofR;    
+  bits = (8 + b.size)*8;
+  if (bits > cover_bits)
+    {
+      printf("Cover file is not large enough %d (bits) > %d (cover_bits)\n",bits,cover_bits);
+      exit(1);
+    }
+
+  // embed four size bytes for the Buffer's size field
+  printf("b.size=%d \n", b.size);
+  int getGrayC = 0; //a counter for GetGray()
+  int setGrayC = 0; //a counter for SetGray()
+  int getRedC = 0; //a counter for GetRed()
+  int getGreenC = 0; //a counter for GetGreen()
+  int getBlueC = 0; //a counter for GetBlue()
+  int setRedC = 0; //a counter for SetRed()
+  int setGreenC = 0; //a counter for SetGreen()
+  int setBlueC = 0; //a counter for SetBlue()
+  int getColorCounter = 0; //a counter to tell which pixel (rgb) to get
+  int setColorCounter = 0; //a counter to tell which pixel (rgb) to set
+  unsigned char arr[8]; //storage for a byte
+  unsigned char A;
+  for(int i=0; i<4; i++){ //for each byte
+    A = (unsigned char)((b.size >> (i*8)) & 0xFF); //takes 8 bits from b.size
+    for(int x=0; x<8; x++){ //for each of those 8 bits, take a byte of the image
+      if(GetColor){ //if the image is color
+        if(getColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          arr[x] = GetRed(getRedC); //fills position x of arr with a red byte (pixel)
+          getRedC++; //incriments the position of the next time you get a red byte
+        }
+        if(getColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          arr[x] = GetGreen(getGreenC); //fills position x of arr with a green byte (pixel)
+          getGreenC++; //incriments the position of the next time you get a green byte (pixel)
+        }
+        if(getColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          arr[x] = GetBlue(getBlueC); //fills position x of arr with a blue byte (pixel)
+          getBlueC++; //incriments the position of the next time you get a blue byte (pixel)
+        }
+        getColorCounter++; //keeps track of the color that was just gotten and moves to the next color 
+      }
+      else{ //if the image is not color
+        arr[x] = GetGray(getGrayC); //fills position x of arr with a gray byte (pixel)
+        getGrayC++; //incriments the position of the next time you get a gray byte (pixel)
+      }
+    }
+    setlsbs(arr,A); //sets the lsbs for those bytes
+    for(int x=0; x<8; x++){ //for each of those 8 bits, take a byte of the image
+      if(GetColor){ //if the image is color
+        if(setColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          SetRed(setRedC,arr[x]); //sets the red byte (pixel) of position setRedC of the new image with the red byte (pixel) of arr
+          setRedC++; //incriments the position of the next time you set a red byte
+        }
+        if(setColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          SetGreen(setGreenC,arr[x]); //sets the green byte (pixel) of position setGreenC of the new image with the green byte (pixel) of arr
+          setGreenC++; //incriments the position of the next time you set a green byte 
+        }
+        if(setColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          SetBlue(setBlueC,arr[x]); //sets the blue byte (pixel) of position setBlueC of the new image with the blue byte (pixel) of arr
+          setBlueC++; //incriments the position of the next time you set a blue byte
+        }
+        setColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //if the image is not color
+        SetGray(setGrayC, arr[x]); //sets the gray byte (pixel) of position setGrayC of the new image with the gray byte (pixel) of arr
+        setGrayC++; //incriments the position of the next time you set a gray byte (pixel)
+      }
+    }
+  }
+  
+
+  // embed the eight digits of your G# using 4 bits per digit
+  unsigned char gnum[8] = {0,1,0,1,3,3,2,3};
+  printf("GNUM=");
+  for(int x=0; x<8;x++){ //prints out the gnumber
+    printf("%d",gnum[x]);
+  }
+  printf("\n");
+
+  for(int i=0; i<4; i++){ //for each byte
+    A = (unsigned char)(gnum[i*2] <<= 4) | gnum[(i*2)+1]; //this combines 2 of the numbers that are next to each other into 1 byte of data
+    for(int x=0; x<8; x++){ //for each of those 8 bits
+      if(GetColor){ //if the image is color
+        if(getColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          arr[x] = GetRed(getRedC); //fills position x of arr with a red byte (pixel)
+          getRedC++; //incriments the position of the next time you get a red byte
+        }
+        if(getColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          arr[x] = GetGreen(getGreenC); //fills position x of arr with a green byte (pixel)
+          getGreenC++; //incriments the position of the next time you get a green byte (pixel)
+        }
+        if(getColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          arr[x] = GetBlue(getBlueC); //fills position x of arr with a blue byte (pixel)
+          getBlueC++; //incriments the position of the next time you get a blue byte (pixel)
+        }
+        getColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //if the image is not color
+        arr[x] = GetGray(getGrayC); //fills position x of arr with a gray byte (pixel)
+        getGrayC++; //incriments the position of the next time you get a gray byte (pixel)
+      }
+    }
+    setlsbs(arr, A); //sets the lsbs for those bytes
+    for(int x=0; x<8; x++){ //for each of those 8 bits, take a byte of the image
+      if(GetColor){ //if the image is color
+        if(setColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          SetRed(setRedC,arr[x]); //sets the red byte (pixel) of position setRedC of the new image with the red byte (pixel) of arr
+          setRedC++; //incriments the position of the next time you set a red byte
+        }
+        if(setColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          SetGreen(setGreenC,arr[x]); //sets the green byte (pixel) of position setGreenC of the new image with the green byte (pixel) of arr
+          setGreenC++; //incriments the position of the next time you set a green byte
+        }
+        if(setColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          SetBlue(setBlueC,arr[x]); //sets the blue byte (pixel) of position setBlueC of the new image with the blue byte (pixel) of arr
+          setBlueC++; //incriments the position of the next time you set a blue byte
+        }
+        setColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //if the image is not color
+        SetGray(setGrayC, arr[x]); //sets the gray byte (pixel) of position setGrayC of the new image with the gray byte (pixel) of arr
+        setGrayC++; //incriments the position of the next time you set a gray byte
+      }
+    }
+  }	   
+  for (i=0; i<b.size; i++){
+  // here you embed information into the image one byte at the time
+  // note that you should change only the least significant bits of the image   
+    A = GetByte(i); //gets a byte of the payload
+    for(int x=0; x<8; x++){ //for each of those 8 bits
+      if(GetColor){ //if the image is color
+        if(getColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          arr[x] = GetRed(getRedC); //fills position x of arr with a red byte (pixel)
+          getRedC++; //incriments the position of the next time you get a red byte
+        }
+        if(getColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          arr[x] = GetGreen(getGreenC); //fills position x of arr with a green byte (pixel)
+          getGreenC++; //incriments the position of the next time you get a green byte (pixel)
+        }
+        if(getColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          arr[x] = GetBlue(getBlueC); //fills position x of arr with a blue byte (pixel)
+          getBlueC++; //incriments the position of the next time you get a blue byte (pixel)
+        }
+        getColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //the image is not color
+        arr[x] = GetGray(getGrayC); //fills position x of arr with a gray byte (pixel)
+        getGrayC++; //incriments the position of the next time you get a gray byte (pixel)
+      }
+    }
+    setlsbs(arr, A); //sets the lsbs for those bytes
+    for(int x=0; x<8; x++){ //for each of those 8 bits, take a byte of the image
+      if(GetColor){ //if the image is color
+        if(setColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          SetRed(setRedC,arr[x]); //sets the red byte (pixel) of position setRedC of the new image with the red byte (pixel) of arr
+          setRedC++; //incriments the position of the next time you set a red byte
+        }
+        if(setColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          SetGreen(setGreenC,arr[x]); //sets the green byte (pixel) of position setGreenC of the new image with the green byte (pixel) of arr
+          setGreenC++; //incriments the position of the next time you set a green byte
+        }
+        if(setColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          SetBlue(setBlueC,arr[x]); //sets the blue byte (pixel) of position setBlueC of the new image with the blue byte (pixel) of arr
+          setBlueC++; //incriments the position of the next time you set a blue byte
+        }
+        setColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //if the image is not color
+        SetGray(setGrayC, arr[x]); //sets the gray byte (pixel) of position setGrayC of the new image with the gray byte (pixel) of arr
+        setGrayC++; //incriments the position of the next time you set a gray byte
+      }
+    }
+  }
+
+  WriteImage(argv[2],img);  // output stego file (cover_file + file_to_hide)
+}
+
+//This function sets the least significant bit of a byte to whatever the bit of b0 is for each bit of b0 
+//Takes in an array of bytes(unsigned char array) and a byte(unsigned char)
+void setlsbs(unsigned char *p, unsigned char b0){
+  for(int i=0; i<8; i++){ //for each bit of b0
+    p[i] = (p[i] & 0xFE) | ((b0 >> i)&1); //mask the byte from the array and ors it with the bit of b0
+  }
+}
+
+bash-4.1$ 
+bash-4.1$ cat StegoExtract.c
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*
+ * StegoExtract.c: A program for manipulating images                           *
+ *++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+#include <string.h>
+#include "image.h"
+
+unsigned char getlsbs(unsigned char *p);
+
+int main(int argc, char *argv[])
+{  
+  int i, j, k, cover_bits, bits;
+  struct Buffer b = {NULL, 0, 0};
+  struct Image img = {0, NULL, NULL, NULL, NULL, 0, 0};
+  byte b0;
+   
+  if (argc != 3) 
+    {
+      printf("\n%s <stego_file> <file_to_extract> \n", argv[0]);
+      exit(1);
+    }
+  ReadImage(argv[1],&img);       // read image file into the image buffer img
+                                 // the image is an array of unsigned chars (bytes) of NofR rows
+                                 // NofC columns, it should be accessed using provided macros
+
+  // hidden information 
+  // first four bytes is the size of the hidden file
+  // next 4 bytes is the G number (4 bits per digit)
+  if (!GetColor)
+    cover_bits = img.NofC*img.NofR;
+  else 
+    cover_bits = 3*img.NofC*img.NofR;    
+
+
+  b.size = 0;
+
+  // extract four size bytes for the Buffer's size field
+  // Set this to b.size
+  int y =0; //a temp variable for b.size
+  unsigned char A;
+  int a = 0; //a temp variable for b.size
+  int getGrayC = 0; //a counter for GetGray()
+  int getRedC = 0; //a counter for GetRed()
+  int getGreenC = 0; //a counter for GetGreen()
+  int getBlueC = 0; //a counter for GetBlue()
+  int getColorCounter = 0; //a counter to keep tack of what color you should be getting
+  unsigned char arr[8]; //storage for a byte
+  for(int i=3; i>=0; i--){ //for each byte 
+    for(int x=0; x<8; x++){ //for each of those 8 bits
+      if(GetColor){ //if the image is color
+        if(getColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          arr[x] = GetRed(getRedC); //fills position x of arr with a red byte (pixel)
+          getRedC++; //incriments the position of the next time you get a red byte
+        }
+        if(getColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          arr[x] = GetGreen(getGreenC); //fills position x of arr with a green byte (pixel)
+          getGreenC++; //incriments the position of the next time you get a green byte (pixel)
+        }
+        if(getColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          arr[x] = GetBlue(getBlueC); //fills position x of arr with a blue byte (pixel)
+          getBlueC++; //incriments the position of the next time you get a blue byte (pixel)
+        }
+        getColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //the image is not color
+        arr[x] = GetGray(getGrayC); //fills position x of arr with a gray byte (pixel)
+        getGrayC++; //incriments the position of the next time you get a gray byte (pixel)
+      }
+    }
+    A = getlsbs(arr); //gets the lsbs from that array
+    a=0; //sets a to 0
+    a = a|A; //combines the byte A with the int a
+    a = a<<24; //shifts the byte you got all the way to the left
+    y = a|y; //combines the int a with the int y
+    if (i != 0) //makes sure you only shift 3 times so bits arent lost
+      y = ((unsigned int)y) >>8; //here you cast to unsigned int because for gcc if the left most digit is a 1 and you with shift instead of 0s you will get 1s
+  }
+  b.size = y; 
+  printf("\nb.size=%d\n", b.size); //prints b.size
+  b.data = malloc(b.size); // Allocates room for the output data file
+  if (b.data == NULL){ //if there is an error allocating memory, print error and exit
+    printf("ERROR ALLOCATING MEMORY");
+    exit(1);
+  }
+  // extract the eight digits of your G# using 4 bits per digit
+  int gnum[8] = {0,0,0,0,0,0,0,0};
+  for(int i=0; i<4; i++){ //for each byte
+    for(int x=0; x<8; x++){ //for each of those 8 bits
+      if(GetColor){ //if the image is color
+        if(getColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          arr[x] = GetRed(getRedC); //fills position x of arr with a red byte (pixel)
+          getRedC++; //incriments the position of the next time you get a red byte
+        }
+        if(getColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          arr[x] = GetGreen(getGreenC); //fills position x of arr with a green byte (pixel)
+          getGreenC++; //incriments the position of the next time you get a green byte (pixel)
+        }
+        if(getColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          arr[x] = GetBlue(getBlueC); //fills position x of arr with a blue byte (pixel)
+          getBlueC++; //incriments the position of the next time you get a blue byte (pixel)
+        }
+        getColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //the image is not color
+        arr[x] = GetGray(getGrayC); //fills position x of arr with a gray byte (pixel)
+        getGrayC++; //incriments the position of the next time you get a gray byte (pixel)
+      }
+    }
+    A = getlsbs(arr); //gets the lsbs from that array
+    gnum[i*2]= (A & 0xF0) | gnum[i*2]; //sets the number of the gnum to the first 4 bits of the byte
+    gnum[i*2] = gnum[i*2] >> 4; 
+    gnum[(i*2)+1]= (A & 0x0F) | gnum[(i*2)+1]; //sets the number of the gnum to the last 4 bits of the byte
+  }
+  printf("GNUM=");
+  for(int x=0; x<8;x++){ //prints the gnum
+    printf("%d",gnum[x]);
+  }
+ 
+  for (i=0; i<b.size; i++){
+  // here you extract information from the image one byte at the time
+  // note that you should extract only the least significant bits of the image
+    for(int x=0; x<8; x++){ //for each of those 8 bits
+      if(GetColor){ //if the image is color
+        if(getColorCounter%3 == 0){ //red is first, and should happen 1/3 times
+          arr[x] = GetRed(getRedC); //fills position x of arr with a red byte (pixel)
+          getRedC++; //incriments the position of the next time you get a red byte
+        }
+        if(getColorCounter%3 == 1){ //green is second, and should happen 1/3 times
+          arr[x] = GetGreen(getGreenC); //fills position x of arr with a green byte (pixel)
+          getGreenC++; //incriments the position of the next time you get a green byte (pixel)
+        }
+        if(getColorCounter%3 == 2){ //blue is third, and should happen 1/3 times
+          arr[x] = GetBlue(getBlueC); //fills position x of arr with a blue byte (pixel)
+          getBlueC++; //incriments the position of the next time you get a blue byte (pixel)
+        }
+        getColorCounter++; //keeps track of the color that was just gotten and moves to the next color
+      }
+      else{ //if the image is not color
+        arr[x] = GetGray(getGrayC); //fills position x of arr with a gray byte (pixel)
+        getGrayC++; //incriments the position of the next time you get a gray byte (pixel)
+      }
+    }
+    A = getlsbs(arr); //gets the lsbs from that array
+    SetByte(i,A); //sets the byte of the payload
+  }
+
+  WriteBinaryFile(argv[2],b);  // output payload file
+  free(b.data); //frees the allocated memory
+}
+
+//This function gets the last bit of each byte of an array of bytes
+//It returns 1 byte composed of all the least significant bits
+unsigned char getlsbs(unsigned char *p){
+  unsigned char b0 = 0x0;
+  for(int x=7; x>=0;x--){
+    b0 = (p[x]&1) | (b0 <<= 1); //uses masking to only take the last bit of a byte from the array
+  }
+  return b0;
+}
+
+
+
+
+
+
+bash-4.1$ 
+bash-4.1$ cat Makefile
+CFLAGS=-Wall -g -O0
+
+all:
+	gcc -c image.c
+	gcc -c Stego.c
+	gcc -c StegoExtract.c
+	gcc -o Stego Stego.o image.o
+	gcc -o StegoExtract StegoExtract.o image.o
+
+
+Stego:Stego.c image.c
+	gcc -c image.c
+	gcc -c Stego.c
+	gcc -o Stego Stego.o image.o
+
+
+StegoExtract:StegoExtract.c image.c
+	gcc -c StegoExtract.c
+	gcc -o StegoExtract StegoExtract.o image.o
+
+
+clean:
+	rm -f Stego
+	rm -f StegoExtract
+	rm -f *.o;
+bash-4.1$ 
+bash-4.1$ make
+gcc -c image.c
+gcc -c Stego.c
+gcc -c StegoExtract.c
+gcc -o Stego Stego.o image.o
+gcc -o StegoExtract StegoExtract.o image.o
+bash-4.1$ 
+bash-4.1$ ls
+cs262.pgm  half.pgm  image.c  image.h  image.o	Makefile  Otten.ppm  payload.txt  Project3_typescript_scannan_210  Stego  Stego.c  StegoExtract  StegoExtract.c  StegoExtract.o  Stego.o  zd.ppm
+bash-4.1$ 
+bash-4.1$ lsmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C half.pgm blackWhite1.pgm StegoExtract.c[C[C[C[C[C[C[C[C[C[Cdiff Stego.c recovered.txt[K[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite.pgm recovered.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C cs262.pgm blackWhite.pgm Stego.c[K[C[C[C[C[C[C[C[C[C[Cls[Kmakels[KStego cs262.pgm blackWhite.pgm Stego.c
+
+Reading input file 'cs262.pgm'
+
+Reading binary file 'Stego.c'
+b.size=11445 
+GNUM=01013323
+
+Writing file 'blackWhite.pgm'
+bash-4.1$ 
+bash-4.1$ Stego cs262.pgm blackWhite.pgm Stego.c[C[C[C[C[C[C[C[C[C[Cls[Kmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C half.pgm blackWhite1.pgm StegoExtract.c[C[C[C[C[C[C[C[C[C[Cdiff Stego.c recovered.txt[K[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite.pgm recovered.txt 
+
+Reading input file 'blackWhite.pgm'
+
+b.size=11445
+GNUM=01013323
+Writing file 'recovered.txt'
+bash-4.1$ 
+bash-4.1$ StegoExtract blackWhite.pgm recovered.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C cs262.pgm blackWhite.pgm Stego.c[K[C[C[C[C[C[C[C[C[C[Cls[Kmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C half.pgm blackWhite1.pgm StegoExtract.c[C[C[C[C[C[C[C[C[C[Cdiff Stego.c recovered.txt[K
+bash-4.1$ 
+bash-4.1$ diff Stego.c recovered.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite.pgm recovered.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C cs262.pgm blackWhite.pgm Stego.c[K[C[C[C[C[C[C[C[C[C[Cls[Kmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C half.pgm blackWhite1.pgm StegoExtract.c
+
+Reading input file 'half.pgm'
+
+Reading binary file 'StegoExtract.c'
+b.size=7442 
+GNUM=01013323
+
+Writing file 'blackWhite1.pgm'
+bash-4.1$ 
+bash-4.1$ Stego half.pgm blackWhite1.pgm StegoExtract.c[C[C[C[C[C[C[C[C[C[Cdiff Stego.c recovered.txt[K[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite.pgm recovered.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C cs262.pgm blackWhite.pgm Stego.c[K[C[C[C[C[C[C[C[C[C[Cls[Kmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt 
+
+Reading input file 'blackWhite1.pgm'
+
+b.size=7442
+GNUM=01013323
+Writing file 'recovered1.txt'
+bash-4.1$ 
+bash-4.1$ StegoExtract blackWhite1.pgm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C half.pgm blackWhite1.pgm StegoExtract.c[C[C[C[C[C[C[C[C[C[Cdiff Stego.c recovered.txt[K[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite.pgm recovered.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C cs262.pgm blackWhite.pgm Stego.c[K[C[C[C[C[C[C[C[C[C[Cls[Kmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt
+bash-4.1$ 
+bash-4.1$ diff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C half.pgm blackWhite1.pgm StegoExtract.c[C[C[C[C[C[C[C[C[C[Cdiff Stego.c recovered.txt[K[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite.pgm recovered.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C cs262.pgm blackWhite.pgm Stego.c[K[C[C[C[C[C[C[C[C[C[Cls[Kmakecat MakefileStegoExtract.c.c[Kls[Kpwduname -aStego zd.ppm color.ppm payload.c[Ktxt
+
+Reading input file 'zd.ppm'
+
+Reading binary file 'payload.txt'
+b.size=21434 
+GNUM=01013323
+
+Writing file 'color.ppm'
+bash-4.1$ 
+bash-4.1$ Stego zd.ppm color.ppm payload.txt[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStegoExtract blackWhite1.pgm recovered1.txt m recovered1.txt [Kpm recovered1.txt .ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [K.ppm recovered1.txt [Kc.ppm recovered1.txt o.ppm recovered1.txt l.ppm recovered1.txt o.ppm recovered1.txt r.ppm recovered1.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C.txt [K2.txt 
+
+Reading input file 'color.ppm'
+
+b.size=21434
+GNUM=01013323
+Writing file 'recovered2.txt'
+bash-4.1$ 
+bash-4.1$ StegoExtract color.ppm recovered2.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C zd.ppm color.ppm payload.txt[K[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[K recovered1.txt[Kp recovered1.txta recovered1.txty recovered1.txtl recovered1.txto recovered1.txta recovered1.txtd recovered1.txt. recovered1.txtt recovered1.txtx recovered1.txtt recovered1.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C.txt[K2.txt
+bash-4.1$ 
+bash-4.1$ 11[K[Kdiff payload.txt recovered2.txt[C[C[C[C[C[C[C[C[C[CStegoExtract color.ppm recovered2.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C zd.ppm color.ppm payload.txt[K[C[C[C[C[C[C[C[C[C[Cdiff StegoExtract.c recovered1.txt[C[C[C[C[C[C[C[C[C[CStego zd.ppm color.ppm payload.txt.ppm color.ppm payload.txt[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C.ppm color.ppm payload.txt[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CO.ppm color.ppm payload.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct.ppm color.ppm payload.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct.ppm color.ppm payload.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ce.ppm color.ppm payload.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cn.ppm color.ppm payload.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C1.ppm payload.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K image.c
+
+Reading input file 'Otten.ppm'
+
+Reading binary file 'image.c'
+b.size=6827 
+GNUM=01013323
+
+Writing file 'color1.ppm'
+bash-4.1$ 
+bash-4.1$ Stego Otten.ppm color1.ppm image.c[C[C[C[C[C[C[C[C[C[Cdiff payload.txt recovered2.txt[K[C[C[C[C[C[C[C[C[C[CStego Otten.ppm color1.ppm image.c[C[C[C[C[C[C[C[C[C[Cdiff payload.txt recovered2.txt[K[C[C[C[C[C[C[C[C[C[CStegoExtract color.ppm recovered2.txt 1.ppm recovered2.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C.txt [K3.txt 
+
+Reading input file 'color1.ppm'
+
+b.size=6827
+GNUM=01013323
+Writing file 'recovered3.txt'
+bash-4.1$ 
+bash-4.1$ StegoExtract color1.ppm recovered3.txt [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C Otten.ppm color1.ppm image.c[K[C[C[C[C[C[C[C[C[C[Cdiff payload.txt recovered2.txt[K[C[C[C recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[K recovered2.txt[Ki recovered2.txtm recovered2.txta recovered2.txtg recovered2.txte recovered2.txt. recovered2.txtc recovered2.txt[C[C[C[C[C[C[C[C[C[C[C.txt[K3.txt
+bash-4.1$ 
+bash-4.1$ make clean
+rm -f Stego
+rm -f StegoExtract
+rm -f *.o;
+bash-4.1$ exit
+
+Script done on Wed 29 Nov 2017 08:56:18 PM EST
