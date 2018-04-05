@@ -1,22 +1,13 @@
-﻿生成启动时间为 2014/2/23 12:41:14。
-     1>项目“E:\C And OpenGL\CAndWave3D\CAndWave3D.vcxproj”在节点 2 上(build 个目标)。
+﻿Build started 2/27/2018 6:50:06 PM.
+     1>Project "C:\Code-And-Inspiration\C And Inspiration\18.C And OpenGL\6.C And Wave3D\CAndWave3D.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         正在创建“Release\CAndWave3D.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+         Creating "Release\CAndWave3D.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CAndWave3D.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CAndWave3D.cpp
          CAndWave3D.cpp
-       Link:
-         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C And OpenGL\CAndWave3D\Release\CAndWave3D.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\CAndWave3D.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\C And OpenGL\CAndWave3D\Release\CAndWave3D.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C And OpenGL\CAndWave3D\Release\CAndWave3D.lib" /MACHINE:X86 Release\CAndWave3D.obj
-         正在生成代码
-         已完成代码的生成
-         CAndWave3D.vcxproj -> E:\C And OpenGL\CAndWave3D\Release\CAndWave3D.exe
-       Manifest:
-         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"E:\C And OpenGL\CAndWave3D\Release\CAndWave3D.exe;#1" /manifest Release\CAndWave3D.exe.intermediate.manifest
-       FinalizeBuildStatus:
-         正在删除文件“Release\CAndWave3D.unsuccessfulbuild”。
-         正在对“Release\CAndWave3D.lastbuildstate”执行 Touch 任务。
-     1>已完成生成项目“E:\C And OpenGL\CAndWave3D\CAndWave3D.vcxproj”(build 个目标)的操作。
+     1>CAndWave3D.cpp(1): fatal error C1083: Cannot open include file: 'glut.h': No such file or directory
+     1>Done Building Project "C:\Code-And-Inspiration\C And Inspiration\18.C And OpenGL\6.C And Wave3D\CAndWave3D.vcxproj" (build target(s)) -- FAILED.
 
-生成成功。
+Build FAILED.
 
-已用时间 00:00:05.95
+Time Elapsed 00:00:00.49
