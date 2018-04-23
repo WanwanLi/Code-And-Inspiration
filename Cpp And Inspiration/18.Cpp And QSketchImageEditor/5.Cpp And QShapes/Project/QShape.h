@@ -9,10 +9,15 @@ class QShape : public QSketch
 	void operator=(QPoint point);
 	void operator<<(QPoint point);
 	void drawPoints(QPainter& painter);
-	void drawEndPoints(QPainter& painter);
 	bool isEditable=false, isAutoAligned=true;
+	void drawBeginEndPoints(QPainter& painter);
 
 	private:
+	QPoint last();
+	void updateLast();
+	void start(QPoint point);
+	void end(QPoint point);
+	QPoint pointAt(int index);
 	void getIndex(QPoint point);
 	vec2 getPoint(QPoint point);
 	QPoint toQPoint(vec2 point);
@@ -20,6 +25,6 @@ class QShape : public QSketch
 	QPoint NONE=QPoint(-100, -100);
 	bool isStarted=false; int index=-1;
 	bool equals(QPoint point1, QPoint point2);
-	QPoint movePoint=NONE, lastPoint=NONE;
+	QPoint beginPoint=NONE, endPoint=NONE;
 	qreal error=20; bool is(int type); int type=LINE;
 };

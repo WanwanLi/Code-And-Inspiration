@@ -89,14 +89,14 @@ bool QSketch::save(QString fileName)
 void QSketch::operator=(QPoint point)
 {
 	this->path<<MOVE;
-	this->moveTo(point.x(), point.y());
-	this->point2D<<vec2(point.x(), point.y());
+	this->moveTo(point);
+	this->point2D<<vec2(point);
 }
 void QSketch::operator+=(QPoint point)
 {
 	this->path<<LINE;
-	this->lineTo(point.x(), point.y());
-	this->point2D<<vec2(point.x(), point.y());
+	this->lineTo(point);
+	this->point2D<<vec2(point);
 }
 vec2 devide(QSize x, QSize y)
 {
@@ -118,6 +118,22 @@ void QSketch::update()
 		{
 			vec2 p1=point2D[j++], p2=point2D[j++], p3=point2D[j++];
 			this->cubicTo(p1.x(), p1.y(), p2.x(), p2.y(), p3.x(), p3.y());
+		}
+	}
+}
+void QSketch::removeLast()
+{
+	if(path.size()==2)
+	{
+		if(point2D[0]==point2D[1])this->clear();
+	}
+	else if(path.size()>2)
+	{
+		int last=path.size()-1;
+		if(point2D[last]==point2D[last-1])
+		{
+			this->path.removeLast();
+			this->point2D.removeLast();
 		}
 	}
 }

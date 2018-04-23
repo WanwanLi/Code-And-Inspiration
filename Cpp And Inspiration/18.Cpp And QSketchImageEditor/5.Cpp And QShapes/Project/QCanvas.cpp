@@ -65,7 +65,7 @@ void QCanvas::paintEvent(QPaintEvent* event)
 	painter.drawPath(shape);
 	painter.setPen(marker);
 	shape.drawPoints(painter);
-	shape.drawEndPoints(painter);
+	shape.drawBeginEndPoints(painter);
 }
 void QCanvas::mousePressEvent(QMouseEvent* event)
 {
