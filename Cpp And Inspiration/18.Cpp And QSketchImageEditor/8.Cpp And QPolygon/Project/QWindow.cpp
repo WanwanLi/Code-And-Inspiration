@@ -22,14 +22,21 @@ QBoxLayout* QWindow::newQBoxLayout()
 QMenuBar* QWindow::newQMenuBar()
 {
 	QMenuBar* menuBar=new QMenuBar(); QMenu* menu=new QMenu("File", this);
-	QAction* action=menu->addAction("Open", this,  &QWindow::loadImage, QKeySequence(tr("Ctrl+o")));
+	QAction* action=menu->addAction("Open", this,  &QWindow::openImage, QKeySequence(tr("Ctrl+o")));
 	action=menu->addAction("Save", this,  &QWindow::saveImage, QKeySequence(tr("Ctrl+s")));
 	menuBar->addMenu(menu); menu=new QMenu("Edit", this);
-	action=menu->addAction("Clear", canvas, &QCanvas::clearImage, QKeySequence(tr("Ctrl+c")));
-	action=menu->addAction("Resize", canvas, &QCanvas::resizeImage, QKeySequence(tr("Ctrl+r")));
+	action=menu->addAction("Clear", canvas, &QCanvas::clear, QKeySequence(tr("Ctrl+c")));
+	action=menu->addAction("Resize", canvas, &QCanvas::resizeCanvas, QKeySequence(tr("Ctrl+r")));
+	action=menu->addAction("Create Polygon", canvas, &QCanvas::createPolygon, QKeySequence(tr("Ctrl+p")));
+	action=menu->addAction("is Line Mode", canvas, &QCanvas::switchLineCurveMode, QKeySequence(tr("Ctrl+w")));
+	action->setCheckable(true); action->setChecked(true);
+	action=menu->addAction("Editing Mode", canvas, &QCanvas::setEditable, QKeySequence(tr("Ctrl+e")));
+	action->setCheckable(true); action->setChecked(false);
+	action=menu->addAction("Auto-align", canvas, &QCanvas::setAutoAligned, QKeySequence(tr("Ctrl+a")));
+	action->setCheckable(true); action->setChecked(true);
 	menuBar->addMenu(menu); return menuBar;
 }
-bool QWindow::loadImage()
+bool QWindow::openImage()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, "Load Image", QDir::currentPath());
 	if(fileName.isEmpty()||!this->canvas->loadImage(fileName))
@@ -40,12 +47,14 @@ bool QWindow::loadImage()
 }
 bool QWindow::saveImage()
 {
-	QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "JEPG (*.jpg)");
-	if(fileName.isEmpty()||!this->canvas->saveImage(fileName, "jpg"))
+	QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "SKY(*.sky);; JEPG(*.jpg)");
+	if(!fileName.isEmpty())
 	{
-		QMessageBox::critical(this, "Error", "Can not save image."); return false;
+		QStringList fileNames=fileName.split("."); 
+		QByteArray fileFormat=fileNames[fileNames.size()-1].toLatin1();
+		if(this->canvas->saveImage(fileName, fileFormat.data()))return true;
 	}
-	return true;
+	QMessageBox::critical(this, "Error", "Can not save image."); return false;
 }
 void QWindow::closeEvent(QCloseEvent* event)
 {
