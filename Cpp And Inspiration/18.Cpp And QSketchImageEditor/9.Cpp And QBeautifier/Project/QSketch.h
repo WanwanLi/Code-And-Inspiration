@@ -26,11 +26,12 @@ class QSketch : public QObject
 	QSize size; void resize(QSize size);
 	QVector<vec2> point2D; veci path;
 	void drawPath(QPainter& painter);
-	void update(), clear(), removeLast();
 	void save(QTextStream& textStream);
+	void saveAsSVGFile(QString fileName);
 	void drawRegularity(QPainter& painter);
 	void drawProgressBar(QPainter& painter);
 	void moveTo(QPoint point), lineTo(QPoint point);
+	void update(), clear(), removeLast(), getCircles();
 	void moveTo(qreal x, qreal y), lineTo(qreal x, qreal y);
 	void cubicTo(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3);
 
@@ -39,7 +40,7 @@ class QSketch : public QObject
     void setValue(int value);
 
 	private:
-	int iterations=0;
+	int iterations=0; void copySamePoints();
 	QThread*  beautifier; QOptimizer* optimizer;
 	QOptimizer* newQOptimizer(QThread* thread, int iterations);
 };

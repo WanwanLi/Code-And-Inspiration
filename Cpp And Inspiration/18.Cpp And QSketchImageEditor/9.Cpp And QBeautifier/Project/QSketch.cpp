@@ -20,26 +20,30 @@ QOptimizer* QSketch::newQOptimizer(QThread* thread, int iterations)
 	QOptimizer* optimizer=new QOptimizer(thread);
 	connect(optimizer, &QOptimizer::setValue, this, &QSketch::setValue);
 	connect(optimizer, &QOptimizer::finished, this, &QSketch::finished);
-    optimizer->iterations=iterations; return optimizer;
+	optimizer->iterations=iterations; return optimizer;
 }
 void QSketch::setValue(int value)
 {
-    QString fileName=QOptimizer::fileName+num(value);
-    vec variables=QOptimizer::load(fileName);
-    if(variables.isEmpty())return;
-    for(int i=0; i<variables.size()/2; i++)
-    {
-        qreal x=variables[i*2+0];
-        qreal y=variables[i*2+1];
-        this->point2D[i]=vec2(x, y);
-    }
-	this->iterations=value;
+	QString fileName=QOptimizer::fileName+num(value);
+	vec variables=QOptimizer::load(fileName);
+	if(variables.isEmpty())return;
+	for(int i=0; i<variables.size()/2; i++)
+	{
+		qreal x=variables[i*2+0];
+		qreal y=variables[i*2+1];
+		this->point2D[i]=vec2(x, y);
+	}
+	this->iterations=value; this->copySamePoints();
+	QVector<vec4> endPoints=analyzer->getEndPointsOfChords(point2D);
+	this->analyzer->updateChords(point2D, endPoints); this->update();
+}
+void QSketch::copySamePoints()
+{
 	for(vec2 loop : analyzer->loops)
 	{
 		int start=loop.x(), end=loop.y();
 		this->point2D[end]=this->point2D[start];
 	}
-    this->update();
 }
 void QSketch::finished()
 {
@@ -126,6 +130,40 @@ void QSketch::save(QTextStream& textStream)
 		}
 	}
 }
+void QSketch::saveAsSVGFile(QString fileName)
+{
+	QFile file(fileName); QString endl="\r\n";
+	if(!file.open(QIODevice::WriteOnly))return;
+	QString svgStart="<svg height=\"1000\" width=\"1000\" ";
+	svgStart+="version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">";
+	QString svgEnd="\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\"/></svg>";
+	QTextStream textStream(&file); textStream<<svgStart<<endl; textStream<<"<path d=\""<<endl;
+	for(int i=0, j=0; i<path.size(); i++)
+	{
+		if(path[i]==MOVE)
+		{
+			vec2 point=point2D[j++];
+			textStream<<"M "<<(int)point.x();
+			textStream<<" "<<(int)point.y()<<endl;
+		}
+		else if(path[i]==LINE)
+		{
+			vec2 point=point2D[j++];
+			textStream<<"L "<<(int)point.x();
+			textStream<<" "<<(int)point.y()<<endl;
+		}
+		else if(path[i]==CUBIC)
+		{
+			vec2 p1=point2D[j++], p2=point2D[j++], p3=point2D[j++];
+			textStream<<"C "<<(int)p1.x()<<" "<<(int)p1.y(); i++;
+			textStream<<" "<<(int)p2.x()<<" "<<(int)p2.y(); i++;
+			textStream<<" "<<(int)p3.x()<<" "<<(int)p3.y()<<endl;
+		}
+		if(i+1>=path.size()||path[i+1]==MOVE)textStream<<" Z ";
+	}
+	textStream<<svgEnd<<endl;
+	file.close();
+}
 bool QSketch::save(QString fileName)
 {
 	QFile file(fileName);
@@ -187,8 +225,17 @@ bool QSketch::beautify()
 	if(beautifier->isRunning())return false;
 	this->beautifier->start(); return true;
 }
+void QSketch::getCircles()
+{
+	this->analyzer->point2D=point2D;
+	this->analyzer->getCircles();
+	this->copySamePoints();
+	this->update();
+	this->isUpdated=true;
+}
 void QSketch::drawRegularity(QPainter& painter)
 {
+	this->analyzer->drawChords(painter);
 	this->analyzer->drawRegularity(painter);
 }
 void QSketch::removeLast()

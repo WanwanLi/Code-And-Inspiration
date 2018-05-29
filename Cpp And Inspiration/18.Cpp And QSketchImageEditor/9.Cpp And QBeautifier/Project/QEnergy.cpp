@@ -15,30 +15,24 @@ var QEnergy::distanceBetweenDirections(Vector2v dir1, Vector2v dir2)
 {
 	var dot=dir1.normalized().dot(dir2.normalized()); return 1-dot*dot;
 }
-var QEnergy::verticalEnergy(Vector2v start, Vector2v end)
-{
-	return distanceBetweenDirections(end-start, Vector2v(0, 1));
-}
-var QEnergy::horizontalEnerg(Vector2v start, Vector2v end)
-{
-	return distanceBetweenDirections(end-start, Vector2v(1, 0));
-}
 var QEnergy::parallelEnergy(Vector2v start1, Vector2v end1, Vector2v start2, Vector2v end2)
 {
 	return distanceBetweenDirections(end1-start1, end2-start2);
 }
-var QEnergy::perpendicularEnergy(Vector2v prev, Vector2v center, Vector2v next)
+var QEnergy::equalLengthEnergy(Vector2v start1, Vector2v end1, Vector2v start2, Vector2v end2)
 {
-	return 1-distanceBetweenDirections(prev-center, next-center);
+	var length1= (end1-start1).norm();
+	var length2=(end2-start2).norm();
+	return (length1-length2)*(length1-length2);
 }
 var QEnergy::weight(int type)
 {
 	#define R QAnalyzer
 	switch(type)
 	{
-		case R::VERTICAL: return 1;
 		case R::PARALLEL: return 2;
-		case R::HORIZONTAL: return 1;
+		case R::EQUAL: return 0.002;
+		case R::PERPENDICULAR: return 2;
 	}
 	return 1;
 	#undef R
@@ -53,10 +47,9 @@ var QEnergy::totalEnergy(VectorXv variables)
 		#define pointOf(x) variables.segment((x)*2, 2)
 		switch(t(0))
 		{
-			case R::VERTICAL: energy+=weight(t(0))*verticalEnergy(pointOf(t(1)), pointOf(t(2))); break;
-			case R::HORIZONTAL: energy+=weight(t(0))*horizontalEnerg(pointOf(t(1)), pointOf(t(2))); break;
 			case R::PARALLEL: energy+=weight(t(0))*parallelEnergy(pointOf(t(1)), pointOf(t(2)), pointOf(t(3)), pointOf(t(4))); break;
-			case R::PERPENDICULAR: energy+=weight(t(0))*perpendicularEnergy(pointOf(t(1)), pointOf(t(2)), pointOf(t(3))); break;
+			case R::EQUAL: energy+=weight(t(0))*equalLengthEnergy(pointOf(t(1)), pointOf(t(2)), pointOf(t(3)), pointOf(t(4))); break;
+			case R::PERPENDICULAR: energy+=weight(t(0))*(1-parallelEnergy(pointOf(t(1)), pointOf(t(2)), pointOf(t(3)), pointOf(t(4)))); ; break;
 		}
 		i+=R::count(t(0));
 		#undef t(x)

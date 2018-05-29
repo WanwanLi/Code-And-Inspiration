@@ -3,3 +3,8 @@
 3. Press "Configure Project" button to 
 creat the "Project.pro.user" file
 4. Press Ctrl+R to run the code
+5. Deploy Qt Apps in the release folder:
+5.1 Go to release folder:  say "C: ...\release\" there is Project.exe
+5.2 Start System Menu to Find a (Black) console icon in QT:
+5.3 Click the Icon: QT-..-bit for Desktop (MSVC 2015)
+5.4 type: cd "C: ...\release\"  and:  windeployqt --quick . 

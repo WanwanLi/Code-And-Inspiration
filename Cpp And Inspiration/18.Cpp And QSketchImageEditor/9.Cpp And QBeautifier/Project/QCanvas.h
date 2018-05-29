@@ -18,6 +18,7 @@ class QCanvas : public QWidget
 
 	public slots:
 	void clear();
+	void getCircles();
 	bool isModified();
 	void setEditable();
 	void resizeCanvas();

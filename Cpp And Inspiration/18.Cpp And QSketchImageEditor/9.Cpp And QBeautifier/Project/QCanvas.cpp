@@ -37,6 +37,7 @@ bool QCanvas::loadImage(QString fileName)
 bool QCanvas::saveImage(QString fileName, const char* fileFormat)
 {
 	if(tr(fileFormat)=="sky")return this->shape.save(fileName);
+	else if(tr(fileFormat)=="svg")this->shape.saveAsSVGFile(fileName);
 	else if(!image.save(fileName, fileFormat))return false;
 	else this->isImageModified=false; return true;
 }
@@ -124,6 +125,10 @@ void QCanvas::beautifySketch()
 	if(shape.beautify())
 	this->isImageModified=true;
 	else critical("beautify");
+}
+void QCanvas::getCircles()
+{
+	this->shape.getCircles();
 }
 bool QCanvas::isModified()
 {

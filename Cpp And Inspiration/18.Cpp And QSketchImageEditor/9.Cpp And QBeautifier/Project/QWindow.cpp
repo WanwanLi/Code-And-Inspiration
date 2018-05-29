@@ -27,6 +27,7 @@ QMenuBar* QWindow::newQMenuBar()
 	menuBar->addMenu(menu); menu=new QMenu("Edit", this);
 	action=menu->addAction("Clear", canvas, &QCanvas::clear, QKeySequence(tr("Ctrl+c")));
 	action=menu->addAction("Resize", canvas, &QCanvas::resizeCanvas, QKeySequence(tr("Ctrl+r")));
+	action=menu->addAction("Get Circles", canvas, &QCanvas::getCircles, QKeySequence(tr("Ctrl+g")));
 	action=menu->addAction("Beautify Sketch", canvas, &QCanvas::beautifySketch, QKeySequence(tr("Ctrl+b")));
 	action=menu->addAction("is Line Mode", canvas, &QCanvas::switchLineCurveMode, QKeySequence(tr("Ctrl+w")));
 	action->setCheckable(true); action->setChecked(true);
@@ -47,7 +48,8 @@ bool QWindow::openImage()
 }
 bool QWindow::saveImage()
 {
-	QString fileName = QFileDialog::getSaveFileName(this, "Save Image", QString(), "SKY(*.sky);; JEPG(*.jpg)");
+	QString fileFormat="SKY(*.sky);; SVG(*.svg);; JEPG(*.jpg)";
+	QString fileName=QFileDialog::getSaveFileName(this, "Save Image", QString(), fileFormat);
 	if(!fileName.isEmpty())
 	{
 		QStringList fileNames=fileName.split("."); 

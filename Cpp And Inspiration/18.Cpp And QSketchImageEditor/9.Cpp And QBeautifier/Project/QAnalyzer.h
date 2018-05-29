@@ -8,35 +8,46 @@ class QAnalyzer
 	enum
 	{
 		LOOP,
-		VERTICAL,
+		EQUAL,
 		PARALLEL, 
-		HORIZONTAL,
 		PERPENDICULAR
 	};
-
+	void getRegularity();
+	void getCircles();
+	void getChords();
 	void run(), clear();
 	QSketch* sketch;
 	veci path, regularity;
-	vec2 yAxis=vec2(0, 1);
-	vec2 xAxis=vec2(1, 0);
-	vec2 tangentAt(int index);
+	void iterate(int& index);
+	qreal distanceError=20;
+	qreal parallelError=0.01;
 	static int count(int value);
+	vec2 tangentAt(int index);
+	QVector<vec4> endPoints;
 	int toValue(QString string);
+	void getCircle(vec2 chord);
 	QString toString(int value);
 	bool isLoop(int startIndex);
 	void load(QSketch* sketch);
 	void save(QString fileName);
-	QVector<veci> parallelLines;
+	qreal circleFittingError=0.5;
+	qreal equalLengthError=0.05;
 	bool isParallel(vec2 x, vec2 y);
+	qreal perpendicularError=0.02;
 	int prev(int index), next(int index);
 	void operator<<(QStringList& list);
-	qreal error=0.01, maxError=0.05;
-	QVector<vec2> avgLineDirections;
-	QVector<vec2> point2D, curves, loops;
+	bool equals(int index1, int index2);
+	bool isClose(int index1, int index2);
+	void toCircle(QVector<vec2> args);
+	bool isPerpendicular(vec2 x, vec2 y);
+	vec2 toChordIndices(int chordIndex);
+	QVector<vec2> getPoints(vec2 chord);
+	void drawChords(QPainter& painter);
 	void drawRegularity(QPainter& painter);
-	bool isParallelToLines(int lines, int line);
-	void updateAvgLineDirections(int index);
-	void addParallelLines(int line1, int line2);
-	vec2 addLineDirection(vec2 dir1, vec2 dir2);
-	void getCurveRegularity(int startIndex, int endIndex);
+	void alignLeftTangent(int index, vec2 center);
+	void alignRightTangent(int index, vec2 center);
+	void getRegularity(int startIndex, int endIndex);
+	QVector<vec2> point2D, curves, loops, chords, circles;
+	QVector<vec4> getEndPointsOfChords(QVector<vec2>points);
+	void updateChords(QVector<vec2>& points, QVector<vec4> endPoints);
 };
